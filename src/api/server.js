@@ -14,9 +14,14 @@ import {StaticRouter, matchPath} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
+import { graphqlExpress } from 'graphql-server-express';
+
+import graphiqlMiddleware from './graphiql';
 import './mongodb';
 import './modules/Product/schemas';
 import mongoose from 'mongoose';
+import modules from './modules';
+import schema from './schema';
 
 import createHistory from 'history/createMemoryHistory';
 import configureStore from '../redux/store';
@@ -36,6 +41,29 @@ app.use(hpp());
 app.use(compression());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use('/graphql',
+  graphqlExpress((req, res) => {
+    const query = req.query.query || req.body.query;
+    if (query && query.length > 4000) {
+      throw new Error('Query too large.');
+    }
+    console.log(65666);
+    console.log(schema);
+    return {
+      schema,
+      context: { ...modules.createContext(), req, res }
+    };
+  }));
+app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
+app.use((req, res, next) => {
+  if (req.originalUrl === '/') {
+    express.static('assets')(req, res, next);
+  } else {
+    express.static('dist')(req, res, next)
+  }
+});
+
 app.use('/api/addProduct', async (reg, res, next) => {
   let query = {
     title: 'Test prod1',

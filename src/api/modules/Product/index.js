@@ -1,12 +1,12 @@
 import Product from './models';
-import schema from './schema.graphqls';
-import createResolversFunc from './resolvers';
+import schema from './schema.graphql';
+import createContextFunc from './resolvers';
 import Feature from '../connector';
-
+console.log(99);
 export default new Feature({
   schema,
-  createResolversFunc,
-  createContextFunc: () => {
+  createContextFunc,
+  createResolversFunc: () => {
     const product = new Product();
     return {
       Product: product

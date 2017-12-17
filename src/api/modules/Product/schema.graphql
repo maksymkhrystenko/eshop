@@ -72,9 +72,9 @@ type UpdateProductPayload {
 
 extend type Query {
     # Product
-    product(uid: Int): Product
+   product(uid: Int): Product
     # Products pagination query
-    productsQuery(limit: Int, offset: Int): ProductsQuery
+   productsQuery(limit: Int, offset: Int): ProductsQuery
 }
 
 extend type Mutation {

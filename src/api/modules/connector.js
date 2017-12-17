@@ -8,7 +8,6 @@ export default class {
   constructor({schema, createResolversFunc, subscriptionsSetup, createContextFunc}, ...features) {
     this.schema = combine(arguments, arg => arg.schema);
     this.createResolversFunc = combine(arguments, arg => arg.createResolversFunc);
-    this.subscriptionsSetup = combine(arguments, arg => arg.subscriptionsSetup);
     this.createContextFunc = combine(arguments, arg => arg.createContextFunc);
   }
 

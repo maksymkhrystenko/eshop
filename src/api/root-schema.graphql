@@ -1,0 +1,19 @@
+type Query {
+  product(uid: Int): Product
+  # Products pagination query
+  productsQuery(limit: Int, offset: Int): ProductsQuery
+}
+
+type Mutation {
+  dummy: Int
+}
+
+type Subscription {
+  dummy: Int
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
