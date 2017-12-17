@@ -1,7 +1,5 @@
 type Query {
-  product(uid: Int): Product
-  # Products pagination query
-  productsQuery(limit: Int, offset: Int): ProductsQuery
+  dummy: Int
 }
 
 type Mutation {

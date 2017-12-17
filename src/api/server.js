@@ -48,8 +48,6 @@ app.use('/graphql',
     if (query && query.length > 4000) {
       throw new Error('Query too large.');
     }
-    console.log(65666);
-    console.log(schema);
     return {
       schema,
       context: { ...modules.createContext(), req, res }

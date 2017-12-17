@@ -54,7 +54,7 @@
   },
   "betterScripts": {
     "start": {
-      "command": "nodemon -e js,graphql ./index.js --watch src",
+      "command": "cross-env BABEL_DISABLE_CACHE=1 nodemon -e js,graphql ./index.js --watch src",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
@@ -113,7 +113,7 @@
     "plugins": [
       "transform-runtime",
       "lodash",
-      "babel-plugin-inline-import"
+      "babel-plugin-inline-import-graphql-ast"
     ],
     "env": {
       "production": {
@@ -231,8 +231,8 @@
     "chalk": "2.3.0",
     "compression": "1.7.1",
     "express": "4.16.2",
-    "graphql": "^0.12.3",
-    "graphql-server-express": "^1.3.0",
+    "graphql": "0.9.0",
+    "graphql-server-express": "0.6.0",
     "graphql-subscriptions": "^0.5.5",
     "graphql-tag": "^2.6.0",
     "graphql-tools": "^2.13.0",
@@ -240,11 +240,13 @@
     "history": "^4.7.2",
     "hpp": "^0.2.2",
     "lodash": "^4.17.4",
+    "merge-graphql-schemas": "^1.4.0",
     "mongoose": "^4.13.7",
     "morgan": "1.9.0",
     "opn": "^5.1.0",
     "prop-types": "^15.6.0",
     "react": "16.2.0",
+    "react-apollo": "^2.0.4",
     "react-dom": "16.2.0",
     "react-helmet": "^5.2.0",
     "react-hot-loader": "3.1.3",
@@ -268,6 +270,7 @@
     "babel-loader": "^7.1.2",
     "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-inline-import": "^2.0.6",
+    "babel-plugin-inline-import-graphql-ast": "^2.0.4",
     "babel-plugin-istanbul": "^4.1.5",
     "babel-plugin-lodash": "3.3.2",
     "babel-plugin-transform-remove-console": "^6.8.5",
