@@ -2,7 +2,7 @@
   "watch": [
     "index.js",
     "tools/webpack/",
-    "src/server.js",
+    "src/api/server.js",
     "src/utils/Html.js"
   ]
 }

@@ -8,31 +8,56 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import favicon from 'serve-favicon';
 import React from 'react';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
-import { StaticRouter, matchPath } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import http from 'http';
+import {renderToString, renderToStaticMarkup} from 'react-dom/server';
+import {StaticRouter, matchPath} from 'react-router-dom';
+import {Provider} from 'react-redux';
 import chalk from 'chalk';
+import bodyParser from 'body-parser';
+import './mongodb';
+import './modules/Product/schemas';
+import mongoose from 'mongoose';
 
 import createHistory from 'history/createMemoryHistory';
 import configureStore from '../redux/store';
 import Html from '../utils/Html';
 import App from '../containers/App/index';
+
 import routes from '../routes';
-import { port, host } from '../config/index';
+import {port, host} from '../config/index';
 
 const app = express();
-
+let Product = mongoose.model('Product');
 // Using helmet to secure Express with various HTTP headers
 app.use(helmet());
 // Prevent HTTP parameter pollution.
 app.use(hpp());
 // Compress all requests
 app.use(compression());
-
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use('/api/addProduct', async (reg, res, next) => {
+  let query = {
+    title: 'Test prod1',
+    description: 'Test desc2',
+    shortDescription: 'Test short desc',
+    price: 34,
+    sku: '78666',
+    properties: null,
+    createdAt: new Date(),
+    uid: 1
+  };
+  let product = new Product(query);
+  await product.save().then(async (product) => {
+    return next(product);
+  }).catch((err) => {
+    throw new Error(err)});
+});
 // Use morgan for http request debug (only show error)
-app.use(morgan('dev', { skip: (req, res) => res.statusCode < 400 }));
+app.use(morgan('dev', {skip: (req, res) => res.statusCode < 400}));
 app.use(favicon(path.join(process.cwd(), './public/favicon.ico')));
 app.use(express.static(path.join(process.cwd(), './public')));
+
 
 // Run express as webpack dev server
 if (__DEV__) {
@@ -63,7 +88,7 @@ app.get('*', (req, res) => {
   // eslint-disable-next-line no-shadow
   const renderHtml = (store, htmlContent) => {
     const html = renderToStaticMarkup(
-      <Html store={store} htmlContent={htmlContent} />
+      <Html store={store} htmlContent={htmlContent}/>
     );
 
     return `<!doctype html>${html}`;
@@ -83,7 +108,7 @@ app.get('*', (req, res) => {
       const match = matchPath(req.path, route);
 
       if (match && route.loadData)
-        // $FlowFixMe: the params of pre-load actions are dynamic
+      // $FlowFixMe: the params of pre-load actions are dynamic
         promises.push(route.loadData(store.dispatch, match.params));
 
       return match;
@@ -102,7 +127,7 @@ app.get('*', (req, res) => {
       const htmlContent = renderToString(
         <Provider store={store}>
           <StaticRouter location={req.url} context={routerContext}>
-            <App />
+            <App/>
           </StaticRouter>
         </Provider>
       );
@@ -129,8 +154,18 @@ app.get('*', (req, res) => {
   })();
 });
 
+
+
+
+
 if (port) {
-  app.listen(port, host, err => {
+  let server = http.createServer(app);
+
+  server.listen(port, () => {
+    console.info(`API is now running on port ${port}`);
+  });
+
+/*  app.listen(port, host, err => {
     const url = `http://${host}:${port}`;
 
     if (err) console.error(`==> 😭  OMG!!! ${err}`);
@@ -139,7 +174,7 @@ if (port) {
 
     // Open Chrome
     require('../../tools/openBrowser/index')(url);
-  });
+  });*/
 } else {
   console.error(
     chalk.red('==> 😭  OMG!!! No PORT environment variable has been specified')
