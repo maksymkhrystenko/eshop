@@ -8,6 +8,9 @@ import _ from 'lodash/fp';
 
 import config from '../../config';
 import routes from '../../routes';
+
+import modules from '../../modules';
+
 // Import your global styles here
 import '../../theme/normalize.css';
 import styles from './styles.scss';
@@ -39,7 +42,8 @@ const App = (): Element<'div'> => {
         <h1>{config.app.title}</h1>
       </div>
       <hr />
-      <Switch>{routes.map(route => RouteWithSubRoutes(route))}</Switch>
+      {/*<Switch>{routes.map(route => RouteWithSubRoutes(route))}</Switch>*/}
+      <Switch>{modules.routes}</Switch>
     </div>
   );
 };

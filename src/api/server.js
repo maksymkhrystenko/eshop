@@ -9,27 +9,36 @@ import hpp from 'hpp';
 import favicon from 'serve-favicon';
 import React from 'react';
 import http from 'http';
+import mongoose from 'mongoose';
+import createHistory from 'history/createMemoryHistory';
 import {renderToString, renderToStaticMarkup} from 'react-dom/server';
 import {StaticRouter, matchPath} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
-import { graphqlExpress } from 'graphql-server-express';
+import {graphqlExpress} from 'graphql-server-express';
+import {ApolloProvider} from 'react-apollo';
+import { ApolloLink } from 'apollo-link';
+import {LoggingLink} from "apollo-logger";
+import {BatchHttpLink} from "apollo-link-batch-http";
+import {createApolloFetch} from "apollo-fetch";
+import {InMemoryCache} from "apollo-cache-inmemory";
 
 import graphiqlMiddleware from './graphiql';
+
 import './mongodb';
 import './modules/Product/schemas';
-import mongoose from 'mongoose';
 import modules from './modules';
 import schema from './schema';
 
-import createHistory from 'history/createMemoryHistory';
 import configureStore from '../client/redux/store';
 import Html from '../client/utils/Html';
 import App from '../client/containers/App/index';
 
 import routes from '../client/routes';
 import {port, host} from '../client/config/index';
+import createApolloClient from '../common/createApolloClient';
+import addGraphQLSubscriptions from './subscriptions';
 
 const app = express();
 let Product = mongoose.model('Product');
@@ -50,7 +59,7 @@ app.use('/graphql',
     }
     return {
       schema,
-      context: { ...modules.createContext(), req, res }
+      context: {...modules.createContext(), req, res}
     };
   }));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
@@ -77,7 +86,8 @@ app.use('/api/addProduct', async (reg, res, next) => {
   await product.save().then(async (product) => {
     return next(product);
   }).catch((err) => {
-    throw new Error(err)});
+    throw new Error(err)
+  });
 });
 // Use morgan for http request debug (only show error)
 app.use(morgan('dev', {skip: (req, res) => res.statusCode < 400}));
@@ -120,8 +130,8 @@ app.get('*', (req, res) => {
     return `<!doctype html>${html}`;
   };
 
-  // If __DISABLE_SSR__ = true, disable server side rendering
-  if (__DISABLE_SSR__) {
+  // If __SSR__ = false, disable server side rendering
+  if (!__SSR__) {
     res.send(renderHtml(store));
     return;
   }
@@ -143,6 +153,74 @@ app.get('*', (req, res) => {
     return Promise.all(promises);
   };
 
+
+  const apiUrl = 'http://localhost:3000/graphql';
+  const fetch = createApolloFetch({ uri: apiUrl, constructOptions: modules.constructFetchOptions });
+  fetch.batchUse(({ options }, next) => {
+    try {
+      options.credentials = 'include';
+      options.headers = req.headers;
+    } catch (e) {
+      console.error(e);
+    }
+
+    next();
+  });
+  const cache = new InMemoryCache();
+
+  let link = new BatchHttpLink({ fetch });
+
+
+
+
+
+ // const link = `http://localhost:3000/graphql`;
+
+  const client = createApolloClient({
+    link: ApolloLink.from(([new LoggingLink()]).concat([link])),
+    cache
+  });
+
+
+
+/*  const networkInterface = createNetworkInterface({uri: settingUrl});
+  networkInterface.use([{
+    applyMiddleware(req, next) {
+      if (!req.options.headers) {
+        req.options.headers = {};  // Create the header object if needed.
+      }
+
+      const token = localStorage.getItem('auth-token');
+      if (token) {
+        req.options.headers['Authorization'] = token;
+      }
+      next();
+    }
+  }]);
+
+  /!*const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+    networkInterface,
+    /!*wsClient,*!/
+  );*!/
+
+  const createApolloClient = (options) => new ApolloClient(Object.assign({}, {
+    queryTransformer: addTypename,
+    dataIdFromObject: (result) => {
+      if (result.id && result.__typename) { // eslint-disable-line no-underscore-dangle
+        return result.__typename + result.id; // eslint-disable-line no-underscore-dangle
+      }
+      return null;
+    },
+    // shouldBatch: true,
+  }, options));
+
+  const client = createApolloClient({
+    networkInterface: networkInterface,
+    initialState: window.__APOLLO_STATE__,
+    ssrForceFetchDelay: 100
+  });*/
+
+
   (async () => {
     try {
       // Load data from server-side first
@@ -152,9 +230,11 @@ app.get('*', (req, res) => {
       const routerContext = {};
       const htmlContent = renderToString(
         <Provider store={store}>
-          <StaticRouter location={req.url} context={routerContext}>
-            <App/>
-          </StaticRouter>
+          <ApolloProvider client={client}>
+            <StaticRouter location={req.url} context={routerContext}>
+              <App/>
+            </StaticRouter>
+          </ApolloProvider>
         </Provider>
       );
 
@@ -181,26 +261,18 @@ app.get('*', (req, res) => {
 });
 
 
-
-
-
 if (port) {
   let server = http.createServer(app);
-
+  const url = `http://${host}:${port}`;
   server.listen(port, () => {
     console.info(`API is now running on port ${port}`);
-  });
-
-/*  app.listen(port, host, err => {
-    const url = `http://${host}:${port}`;
-
-    if (err) console.error(`==> 😭  OMG!!! ${err}`);
-
-    console.info(chalk.green(`==> 🌎  Listening at ${url}`));
-
-    // Open Chrome
+    // Open Google Chrome
     require('../../tools/openBrowser/index')(url);
-  });*/
+  });
+  addGraphQLSubscriptions(server);
+  server.on('close', () => {
+    server = undefined;
+  });
 } else {
   console.error(
     chalk.red('==> 😭  OMG!!! No PORT environment variable has been specified')

@@ -1,0 +1,10 @@
+query productsQuery ($limit: Int!, $offset: Int) {
+  productsQuery(limit: $limit, offset: $offset) {
+    totalCount  edges{
+      node{
+        title
+        description
+      }
+    }
+  }
+}

@@ -182,7 +182,7 @@
     "globals": {
       "__CLIENT__": true,
       "__SERVER__": true,
-      "__DISABLE_SSR__": true,
+      "__SSR__": true,
       "__DEV__": true,
       "webpackIsomorphicTools": true
     }
@@ -223,6 +223,13 @@
     }
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.1.4",
+    "apollo-client": "^2.0.4",
+    "apollo-fetch": "^0.7.0",
+    "apollo-link": "^1.0.7",
+    "apollo-link-batch-http": "^1.0.4",
+    "apollo-link-ws": "^1.0.4",
+    "apollo-logger": "^0.1.1",
     "axios": "0.17.1",
     "babel-core": "^6.26.0",
     "babel-register": "^6.26.0",
@@ -241,6 +248,7 @@
     "hpp": "^0.2.2",
     "lodash": "^4.17.4",
     "merge-graphql-schemas": "^1.4.0",
+    "minilog": "^3.1.0",
     "mongoose": "^4.13.7",
     "morgan": "1.9.0",
     "opn": "^5.1.0",
@@ -258,6 +266,7 @@
     "redux-thunk": "^2.2.0",
     "serialize-javascript": "^1.4.0",
     "serve-favicon": "2.4.5",
+    "subscriptions-transport-ws": "^0.9.4",
     "webpack-isomorphic-tools": "^3.0.5",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"

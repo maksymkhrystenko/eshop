@@ -65,6 +65,7 @@ const getPlugins = () => {
     new webpack.DefinePlugin({
       __CLIENT__: true,
       __SERVER__: false,
+      __SSR__: true,
       __DEV__: isDev
     }),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -141,12 +142,12 @@ module.exports = {
   },
   module: {
     rules: [
-      {
+  /*    {
         test: /\.jsx?$/,
         enforce: 'pre',
         exclude: /node_modules/,
         loader: 'eslint'
-      },
+      },*/
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
