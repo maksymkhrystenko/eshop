@@ -56,7 +56,7 @@
     "start": {
       "command": "cross-env BABEL_DISABLE_CACHE=1 nodemon -e js,graphql ./index.js --watch src",
       "env": {
-        "NODE_PATH": "./src",
+        "NODE_PATH": "./src/client/",
         "NODE_ENV": "development",
         "PORT": 3000
       }
@@ -64,7 +64,7 @@
     "start:prod": {
       "command": "node ./index.js",
       "env": {
-        "NODE_PATH": "./src",
+        "NODE_PATH": "./src/client/",
         "NODE_ENV": "production",
         "PORT": 8080
       }
@@ -76,7 +76,7 @@
       }
     },
     "lint:js": {
-      "command": "eslint  --fix ./src ./tools ./index.js"
+      "command": "eslint  --fix ./src/client ./tools ./index.js"
     },
     "lint:style": {
       "command": "stylelint --fix \"./src/**/*.scss\""

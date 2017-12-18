@@ -24,12 +24,12 @@ import modules from './modules';
 import schema from './schema';
 
 import createHistory from 'history/createMemoryHistory';
-import configureStore from '../redux/store';
-import Html from '../utils/Html';
-import App from '../containers/App/index';
+import configureStore from '../client/redux/store';
+import Html from '../client/utils/Html';
+import App from '../client/containers/App/index';
 
-import routes from '../routes';
-import {port, host} from '../config/index';
+import routes from '../client/routes';
+import {port, host} from '../client/config/index';
 
 const app = express();
 let Product = mongoose.model('Product');

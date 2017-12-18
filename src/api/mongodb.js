@@ -4,7 +4,7 @@ let dbURI = 'mongodb://localhost:27017/eshop';
 
 mongoose.Promise = require('bluebird');
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, { useMongoClient: true });
 // When successfully connected
 mongoose.connection.on('connected', function () {
   console.log('Mongoose default connection open to ' + dbURI);

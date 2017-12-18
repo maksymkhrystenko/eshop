@@ -108,13 +108,13 @@ const getEntry = () => {
   let entry = [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client?reload=true',
-    './src/client.js'
+    './src/client/index.js'
   ];
 
   // For prodcution
   if (!isDev) {
     entry = {
-      main: './src/client.js',
+      main: './src/client/index.js',
       // Register vendors here
       vendor
     };
