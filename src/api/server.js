@@ -27,11 +27,11 @@ import {InMemoryCache} from "apollo-cache-inmemory";
 import graphiqlMiddleware from './graphiql';
 
 import './mongodb';
-import './modules/Product/schemas';
+//import './modules/Product/schemas';
 import modules from './modules';
 import schema from './schema';
 
-import configureStore from '../client/redux/store';
+import configureStore from '../common/createReduxStore';
 import Html from '../client/utils/Html';
 import App from '../client/containers/App/index';
 
@@ -41,7 +41,7 @@ import createApolloClient from '../common/createApolloClient';
 import addGraphQLSubscriptions from './subscriptions';
 
 const app = express();
-let Product = mongoose.model('Product');
+//let Product = mongoose.model('Product');
 // Using helmet to secure Express with various HTTP headers
 app.use(helmet());
 // Prevent HTTP parameter pollution.
@@ -51,16 +51,24 @@ app.use(compression());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+for (const applyMiddleware of modules.middlewares) {
+  applyMiddleware(app);
+}
+
 app.use('/graphql',
-  graphqlExpress((req, res) => {
+  graphqlExpress(async (req, res, next) => {
+    try {
     const query = req.query.query || req.body.query;
     if (query && query.length > 4000) {
       throw new Error('Query too large.');
     }
     return {
       schema,
-      context: {...modules.createContext(), req, res}
+      context: await modules.createContext(req, res),
     };
+    } catch (e) {
+      next(e);
+    }
   }));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use((req, res, next) => {
@@ -71,7 +79,7 @@ app.use((req, res, next) => {
   }
 });
 
-app.use('/api/addProduct', async (reg, res, next) => {
+/*app.use('/api/addProduct', async (reg, res, next) => {
   let query = {
     title: 'Test prod1',
     description: 'Test desc2',
@@ -88,7 +96,7 @@ app.use('/api/addProduct', async (reg, res, next) => {
   }).catch((err) => {
     throw new Error(err)
   });
-});
+});*/
 // Use morgan for http request debug (only show error)
 app.use(morgan('dev', {skip: (req, res) => res.statusCode < 400}));
 app.use(favicon(path.join(process.cwd(), './public/favicon.ico')));
@@ -106,8 +114,20 @@ if (__DEV__) {
     require('webpack-dev-middleware')(compiler, {
       publicPath: webpackConfig.output.publicPath,
       hot: true,
-      noInfo: true,
-      stats: 'minimal',
+      stats: {colors: true},
+      quiet: true,
+     /* quiet: true,
+      stats: 'errors-only',*/
+   /*   stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false,
+        errorDetails: true
+
+      },*/
       serverSideRender: true
     })
   );
@@ -154,7 +174,7 @@ app.get('*', (req, res) => {
   };
 
 
-  const apiUrl = 'http://localhost:3000/graphql';
+  const apiUrl = 'http://localhost:3004/graphql';
   const fetch = createApolloFetch({ uri: apiUrl, constructOptions: modules.constructFetchOptions });
   fetch.batchUse(({ options }, next) => {
     try {
@@ -174,7 +194,7 @@ app.get('*', (req, res) => {
 
 
 
- // const link = `http://localhost:3000/graphql`;
+ // const link = `http://localhost:3004/graphql`;
 
   const client = createApolloClient({
     link: ApolloLink.from(([new LoggingLink()]).concat([link])),
@@ -263,13 +283,22 @@ app.get('*', (req, res) => {
 
 if (port) {
   let server = http.createServer(app);
+
+  try {
+    addGraphQLSubscriptions(server);
+  } catch (error) {
+    console.log('-----------------');
+    console.log(error);
+  }
+
   const url = `http://${host}:${port}`;
   server.listen(port, () => {
     console.info(`API is now running on port ${port}`);
     // Open Google Chrome
-    require('../../tools/openBrowser/index')(url);
+    //equire('../../tools/openBrowser/index')(url);
+
+
   });
-  addGraphQLSubscriptions(server);
   server.on('close', () => {
     server = undefined;
   });

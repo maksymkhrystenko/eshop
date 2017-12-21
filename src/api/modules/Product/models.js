@@ -1,6 +1,6 @@
-import ProductSchema from './schemas';
+import ProductSchema from './schema-mongo';
 
-export default class Product {
+export default class ModelClass {
   getProductsPagination(limit, offset) {
     return new Promise((resolve, reject) => {
       let query = {};

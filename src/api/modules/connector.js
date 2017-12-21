@@ -1,25 +1,80 @@
+// @flow
+/* eslint-disable no-unused-vars */
+import type { DocumentNode } from 'graphql';
+import type { Middleware, $Request } from 'express';
+
 import { merge, map, union, without, castArray } from 'lodash';
 
-const combine = (features, extractor) =>
+import log from '../../common/log';
+
+const combine = (features, extractor): any =>
   without(union(...map(features, res => castArray(extractor(res)))), undefined);
 
-export default class {
-  // eslint-disable-next-line no-unused-vars
-  constructor({schema, createResolversFunc, subscriptionsSetup, createContextFunc}, ...features) {
+type FeatureParams = {
+  schema: DocumentNode | DocumentNode[],
+  createResolversFunc?: Function | Function[],
+  createContextFunc?: Function | Function[],
+  beforeware?: Middleware | Middleware[],
+  middleware?: Middleware | Middleware[],
+  createFetchOptions?: Function | Function[]
+};
+
+class Feature {
+  schema: DocumentNode[];
+  createResolversFunc: Function[];
+  createContextFunc: Function[];
+  createFetchOptions: Function[];
+  beforeware: Function[];
+  middleware: Function[];
+
+  constructor(feature?: FeatureParams, ...features: Feature[]) {
+    // console.log(feature.schema[0] instanceof DocumentNode);
     this.schema = combine(arguments, arg => arg.schema);
     this.createResolversFunc = combine(arguments, arg => arg.createResolversFunc);
     this.createContextFunc = combine(arguments, arg => arg.createContextFunc);
+    this.beforeware = combine(arguments, arg => arg.beforeware);
+    this.middleware = combine(arguments, arg => arg.middleware);
+    this.createFetchOptions = combine(arguments, arg => arg.createFetchOptions);
   }
 
-  get schemas() {
+  get schemas(): DocumentNode[] {
     return this.schema;
   }
 
-  createContext() {
-    return merge({}, ...this.createContextFunc.map(createContext => createContext()));
+  async createContext(req: $Request, connectionParams: any, webSocket: any) {
+    const results = await Promise.all(
+      this.createContextFunc.map(createContext => createContext(req, connectionParams, webSocket))
+    );
+    return merge({}, ...results);
   }
 
-  createResolvers(pubsub)  {
+  createResolvers(pubsub: any) {
     return merge({}, ...this.createResolversFunc.map(createResolvers => createResolvers(pubsub)));
   }
+
+  get beforewares(): Middleware[] {
+    return this.beforeware;
+  }
+
+  get middlewares(): Middleware[] {
+    return this.middleware;
+  }
+
+  get constructFetchOptions(): any {
+    return this.createFetchOptions.length
+      ? (...args) => {
+        try {
+          let result = {};
+          for (let func of this.createFetchOptions) {
+            result = { ...result, ...func(...args) };
+          }
+          return result;
+        } catch (e) {
+          log.error(e.stack);
+        }
+      }
+      : null;
+  }
 }
+
+export default Feature;

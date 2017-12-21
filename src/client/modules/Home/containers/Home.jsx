@@ -6,14 +6,17 @@ import { connect } from 'react-redux';
 import type { Connector } from 'react-redux';
 import Helmet from 'react-helmet';
 import { graphql, compose } from 'react-apollo';
-
+import { Label, Button } from '../../../common/components';
 import * as action from '../actions';
 import type { Home as HomeType, Dispatch, Reducer } from '../../../types';
 import UserList from '../components/UserList';
 import styles from './styles.scss';
 import PRODUCTS_QUERY from '../graphql/ProductsQuery.graphql';
 
+import {  Menu, Dropdown, Icon } from 'antd';
 type Props = { home: HomeType, fetchUsersIfNeeded: () => void };
+
+
 
 // Export this for unit testing more easily
 export class Home extends PureComponent<Props> {
@@ -40,9 +43,29 @@ export class Home extends PureComponent<Props> {
   };
 
   render() {
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">1st menu item</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+        </Menu.Item>
+      </Menu>
+    );
     return (
       <div className={styles.Home}>
         <Helmet title="Home" />
+        <Label>comment</Label>
+        <Button onPress={()=>{console.log(77);}}>Click to increase counter3</Button>
+        <Dropdown overlay={menu}>
+          <a className="ant-dropdown-link" href="#">
+            Hover me <Icon type="down" />
+          </a>
+        </Dropdown>
         {this.renderUserList()}
       </div>
     );

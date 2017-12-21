@@ -6,6 +6,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const parallelUglifyPlugin = new ParallelUglifyPlugin({uglifyES: {
+    compress: {
+      warnings: false
+    }
+  },});
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isDev = nodeEnv !== 'production';
@@ -36,7 +42,8 @@ const vendor = [
   'axios',
   'redbox-react',
   'chalk',
-  'lodash'
+  'lodash',
+  'antd'
 ];
 
 // Setting the plugins for development/prodcution
@@ -83,7 +90,8 @@ const getPlugins = () => {
   } else {
     plugins.push(
       // For production
-      new MinifyPlugin({}, { test: /\.jsx?$/, comments: false }),
+    //  new MinifyPlugin({}, { test: /\.jsx?$/, comments: false }),
+      parallelUglifyPlugin,
       new webpack.HashedModuleIdsPlugin(),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
@@ -93,7 +101,7 @@ const getPlugins = () => {
       new CompressionPlugin({
         asset: '[path].gz[query]',
         algorithm: 'gzip',
-        test: /\.jsx?$|\.css$|\.(scss|sass)$|\.html$/,
+        test: /\.jsx?$|\.css$|\.less$|\.(scss|sass|less)$|\.html$/,
         threshold: 10240,
         minRatio: 0.8
       }) // eslint-disable-line comma-dangle
@@ -129,7 +137,7 @@ module.exports = {
   name: 'client',
   target: 'web',
   cache: isDev,
-  devtool: isDev ? 'cheap-module-eval-source-map' : 'hidden-source-map',
+  devtool: isDev ? 'cheap-module-eval-source-map' :  'hidden-source-map',
   context: path.join(process.cwd()),
   entry: getEntry(),
   output: {
@@ -156,7 +164,7 @@ module.exports = {
           cacheDirectory: isDev,
           babelrc: false,
           presets: [['env', { modules: false }], 'react', 'stage-0', 'flow'],
-          plugins: ['transform-runtime', 'react-hot-loader/babel', 'lodash'],
+          plugins: ['transform-runtime', 'react-hot-loader/babel', 'lodash', ['import', { libraryName: "antd", style: true }]],
           env: { production: { plugins: ['transform-remove-console'] } }
         }
       },
@@ -211,6 +219,21 @@ module.exports = {
                 sourceMap: true,
                 sourceMapContents: !isDev
               }
+            }
+          ]
+        })
+      },
+      {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style',
+          use: [
+            {loader: "css"},
+            /*{ loader: 'postcss', options: { sourceMap: true } },*/
+            {loader: "less",
+              /* options: {
+                 modifyVars: themeVariables
+               }*/
             }
           ]
         })

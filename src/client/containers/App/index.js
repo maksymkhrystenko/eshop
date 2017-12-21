@@ -33,7 +33,7 @@ const App = (): Element<'div'> => {
   return (
     <div className={styles.App}>
       <Helmet {...config.app} />
-      <div className={styles.header}>
+      {/*<div className={styles.header}>
         <img
           src={require('./assets/logo.svg')}
           alt="Logo"
@@ -41,7 +41,7 @@ const App = (): Element<'div'> => {
         />
         <h1>{config.app.title}</h1>
       </div>
-      <hr />
+      <hr />*/}
       {/*<Switch>{routes.map(route => RouteWithSubRoutes(route))}</Switch>*/}
       <Switch>{modules.routes}</Switch>
     </div>

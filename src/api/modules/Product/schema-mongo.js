@@ -6,7 +6,7 @@ const productPropertySchema = mongoose.Schema({
   unit: Number
 });
 
-const ProductSchema = mongoose.model(
+const productSchema = mongoose.model(
   'Product',
   mongoose.Schema({
     title: String,
@@ -19,4 +19,4 @@ const ProductSchema = mongoose.model(
     uid: Number
   })
 );
-export default ProductSchema;
+export default productSchema;

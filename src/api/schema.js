@@ -1,11 +1,12 @@
 import {makeExecutableSchema, addErrorLoggingToSchema} from 'graphql-tools';
 import {PubSub} from 'graphql-subscriptions';
+import { addApolloLogging } from 'apollo-logger';
 
 import modules from './modules';
 import rootSchema from './root-schema.graphql';
 import {logger} from './winston';
 
-const pubsub = new PubSub();
+const pubsub = addApolloLogging(new PubSub());
 
 const schema = [rootSchema].concat(modules.schemas);
 

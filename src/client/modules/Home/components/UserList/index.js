@@ -10,7 +10,7 @@ type Props = { list: Array<Object> };
 
 const UserList = ({ list }: Props): Element<'div'> => (
   <div className={styles.UserList}>
-    <h4>User List</h4>
+    <h4>User List2</h4>
     <ul>
       {list.map(user => (
         <li key={user.id}>

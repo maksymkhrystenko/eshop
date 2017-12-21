@@ -18,7 +18,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { LoggingLink } from 'apollo-logger';
 import { ApolloProvider } from 'react-apollo';
 
-import configureStore from './redux/store';
+import configureStore from '../common/createReduxStore';
 import createApolloClient from '../common/createApolloClient';
 import modules from './modules';
 
@@ -60,7 +60,7 @@ for (const connectionParam of modules.connectionParams) {
   Object.assign(connectionParams, connectionParam());
 }
 
-const wsUri = ('http://localhost:3000/graphql').replace(/^http/, 'ws');
+const wsUri = ('http://localhost:3004/graphql').replace(/^http/, 'ws');
 
 const wsClient = new SubscriptionClient(wsUri, {
   reconnect: true,
