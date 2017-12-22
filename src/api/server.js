@@ -27,6 +27,7 @@ import cookiesMiddleware from 'universal-cookie-express';
 import graphiqlMiddleware from './graphiql';
 import './mongodb';
 import modules from './modules';
+import clientModules from '../client/modules';
 import schema from './schema';
 import configureStore from '../common/createReduxStore';
 import Html from '../client/utils/Html';
@@ -167,13 +168,13 @@ app.get('*', (req, res) => {
       // Setup React-Router server-side rendering
       const routerContext = {};
       const htmlContent = renderToString(
-        <Provider store={store}>
+        clientModules.getWrappedRoot(<Provider store={store}>
           <ApolloProvider client={client}>
             <StaticRouter location={req.url} context={routerContext}>
               <App/>
             </StaticRouter>
           </ApolloProvider>
-        </Provider>
+        </Provider>)
       );
       // Check if the render result contains a redirect, if so we need to set
       // the specific status and redirect header and end the response

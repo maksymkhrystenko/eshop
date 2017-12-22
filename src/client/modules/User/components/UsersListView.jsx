@@ -110,7 +110,7 @@ export default class UsersView extends React.PureComponent {
         key: 'actions',
         render: (text, record) => (
           <Button color="primary" size="sm" onClick={async () => {
-            let res = await this.handleDeleteUser(record.id, deleteUser, this.setState);
+            let res = await this.handleDeleteUser(record.id, deleteUser);
             this.setState(res)
           }}>
             Delete
