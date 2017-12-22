@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql, compose } from 'react-apollo';
+import {graphql, compose} from 'react-apollo';
+import {createApolloFetch} from 'apollo-fetch';
 
 import PostEditView from '../components/PostEditView';
-import { AddPost } from './Post';
+import {AddPost} from './Post';
 
 import POST_QUERY from '../graphql/PostQuery.graphql';
 import ADD_POST from '../graphql/AddPost.graphql';
@@ -13,7 +14,6 @@ import POST_SUBSCRIPTION from '../graphql/PostSubscription.graphql';
 class PostEdit extends React.Component {
   constructor(props) {
     super(props);
-
     this.subscription = null;
   }
 
@@ -26,18 +26,17 @@ class PostEdit extends React.Component {
       }
 
       // Subscribe or re-subscribe
-      if (!this.subscription && nextProps.post) {
+      if (!this.subscription && nextProps.post && nextProps.post.id !== 0) {
         this.subscribeToPostEdit(nextProps.post.id);
       }
     }
   }
 
   subscribeToPostEdit = postId => {
-    const { subscribeToMore } = this.props;
-
+    const {subscribeToMore} = this.props;
     this.subscription = subscribeToMore({
       document: POST_SUBSCRIPTION,
-      variables: { id: postId }
+      variables: {id: postId}
     });
   };
 
@@ -63,27 +62,26 @@ PostEdit.propTypes = {
 
 export default compose(
   graphql(POST_QUERY, {
-    options: props => {
+    options: (props) => {
       let id = 0;
-      if (props.match) {
+      if (props.match && props.match.params && props.match.params.id) {
         id = props.match.params.id;
       } else if (props.navigation) {
         id = props.navigation.state.params.id;
       }
-
       return {
-        variables: { id }
+        variables: {id},
       };
     },
-    props({ data: { loading, post, subscribeToMore } }) {
-      return { loading, post, subscribeToMore };
+    props({data: {loading, post, subscribeToMore}}) {
+      return {loading, post, subscribeToMore};
     }
   }),
   graphql(ADD_POST, {
-    props: ({ ownProps: { history, navigation }, mutate }) => ({
+    props: ({ownProps: {history, navigation}, mutate}) => ({
       addPost: async (title, content) => {
         let postData = await mutate({
-          variables: { input: { title, content } },
+          variables: {input: {title, content}},
           optimisticResponse: {
             __typename: 'Mutation',
             addPost: {
@@ -95,7 +93,7 @@ export default compose(
             }
           },
           updateQueries: {
-            posts: (prev, { mutationResult: { data: { addPost } } }) => {
+            posts: (prev, {mutationResult: {data: {addPost}}}) => {
               return AddPost(prev, addPost);
             }
           }
@@ -115,10 +113,10 @@ export default compose(
     })
   }),
   graphql(EDIT_POST, {
-    props: ({ ownProps: { history, navigation }, mutate }) => ({
+    props: ({ownProps: {history, navigation}, mutate}) => ({
       editPost: async (id, title, content) => {
         await mutate({
-          variables: { input: { id, title, content } }
+          variables: {input: {id, title, content}}
         });
 
         if (history) {

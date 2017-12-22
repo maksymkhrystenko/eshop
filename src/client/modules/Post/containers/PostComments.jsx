@@ -64,7 +64,6 @@ class PostComments extends React.Component {
 
   subscribeToCommentList = postId => {
     const { subscribeToMore } = this.props;
-
     this.subscription = subscribeToMore({
       document: COMMENT_SUBSCRIPTION,
       variables: { postId },

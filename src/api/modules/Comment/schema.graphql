@@ -1,9 +1,3 @@
-# Comment
-type Comment {
-  id: Int!
-  content: String!
-}
-
 extend type Query {
 }
 

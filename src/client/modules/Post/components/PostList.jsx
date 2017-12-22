@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
-import { PageLayout, Table, Button } from '../../../common/components';
+import {Link} from 'react-router-dom';
+import {PageLayout, Table, Button} from '../../../common/components';
 
 class PostList extends React.PureComponent {
   hendleDeletePost = id => {
-    const { deletePost } = this.props;
+    const {deletePost} = this.props;
     deletePost(id);
   };
 
@@ -33,7 +33,7 @@ class PostList extends React.PureComponent {
   );
 
   render() {
-    const { loading, posts, loadMoreRows } = this.props;
+    const {loading, posts, loadMoreRows} = this.props;
     if (loading) {
       return (
         <PageLayout>
@@ -73,11 +73,11 @@ class PostList extends React.PureComponent {
         <PageLayout>
           {this.renderMetaData()}
           <h2>Posts</h2>
-          <Link to="/post/0">
+          <Link to="/post/add">
             <Button color="primary">Add</Button>
           </Link>
-          <h1 />
-          <Table dataSource={posts.edges.map(({ node }) => node)} columns={columns} />
+          <h1/>
+          <Table dataSource={posts.edges.map(({node}) => node)} columns={columns}/>
           <div>
             <small>
               ({posts.edges.length} / {posts.totalCount})
