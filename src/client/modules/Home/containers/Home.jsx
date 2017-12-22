@@ -1,21 +1,22 @@
 /* @flow */
 
-import React, { PureComponent } from 'react';
-import type { Element } from 'react';
-import { connect } from 'react-redux';
-import type { Connector } from 'react-redux';
+import React, {PureComponent} from 'react';
+import type {Element} from 'react';
+import {connect} from 'react-redux';
+import type {Connector} from 'react-redux';
 import Helmet from 'react-helmet';
-import { graphql, compose } from 'react-apollo';
-import { Label, Button } from '../../../common/components';
+import {NavLink, Link} from 'react-router-dom';
+import {graphql, compose} from 'react-apollo';
+import {Label, Button} from '../../../common/components';
 import * as action from '../actions';
-import type { Home as HomeType, Dispatch, Reducer } from '../../../types';
+import type {Home as HomeType, Dispatch, Reducer} from '../../../types';
 import UserList from '../components/UserList';
 import styles from './styles.scss';
 import PRODUCTS_QUERY from '../graphql/ProductsQuery.graphql';
 
-import {  Menu, Dropdown, Icon } from 'antd';
-type Props = { home: HomeType, fetchUsersIfNeeded: () => void };
+import {Menu, Dropdown, Icon} from 'antd';
 
+type Props = { home: HomeType, fetchUsersIfNeeded: () => void };
 
 
 // Export this for unit testing more easily
@@ -25,7 +26,7 @@ export class Home extends PureComponent<Props> {
   }
 
   renderUserList = (): Element<'p' | typeof UserList> => {
-    const { home } = this.props;
+    const {home} = this.props;
 
     if (
       !home.readyStatus ||
@@ -39,7 +40,7 @@ export class Home extends PureComponent<Props> {
       return <p>Oops, Failed to load list!</p>;
     }
 
-    return <UserList list={home.list} />;
+    return <UserList list={home.list}/>;
   };
 
   render() {
@@ -58,12 +59,15 @@ export class Home extends PureComponent<Props> {
     );
     return (
       <div className={styles.Home}>
-        <Helmet title="Home" />
+        <Helmet title="Home"/>
+        <NavLink className="btn btn-primary" to="/register" activeClassName="active" style={{margin: 10}}>
+          Sign Up
+        </NavLink>
         <Label>comment</Label>
-        <Button onPress={()=>{console.log(77);}}>Click to increase counter3</Button>
+        <Button>Click to increase counter3</Button>
         <Dropdown overlay={menu}>
           <a className="ant-dropdown-link" href="#">
-            Hover me <Icon type="down" />
+            Hover me <Icon type="down"/>
           </a>
         </Dropdown>
         {this.renderUserList()}
@@ -80,14 +84,14 @@ const HomeWithApollo = compose(
         fetchPolicy: 'cache-and-network'
       };
     },
-    props({ data: { loading, productsQuery } }) {
-      return { loading, productsQuery };
+    props({data: {loading, productsQuery}}) {
+      return {loading, productsQuery};
     }
   })
 )(Home);
 
 const connector: Connector<{}, Props> = connect(
-  ({ home }: Reducer) => ({ home }),
+  ({home}: Reducer) => ({home}),
   (dispatch: Dispatch) => ({
     fetchUsersIfNeeded: () => dispatch(action.fetchUsersIfNeeded())
   })

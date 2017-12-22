@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/prefer-default-export
-export {default as Label} from './Label';
+export { default as Label} from './Label';
 export { default as Button } from './Button';
 export { default as PageLayout } from './PageLayout';
+export { default as LayoutCenter } from './LayoutCenter';
 export { default as MenuItem } from './MenuItem';
 export { default as Form } from './Form';
 export { default as FormItem } from './FormItem';

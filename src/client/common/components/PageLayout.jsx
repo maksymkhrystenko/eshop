@@ -6,17 +6,17 @@ import Layout from 'antd/lib/layout';
 
 import NavBar from './NavBar';
 
-const { Header, Content, Footer } = Layout;
+const {Header, Content, Footer} = Layout;
 
-const PageLayout = ({ children, navBar }) => {
+const PageLayout = ({children, navBar}) => {
   return (
     <LocaleProvider locale={enUS}>
       <Layout>
-        <Header>{navBar !== false && <NavBar />}</Header>
-        <Content id="content" style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+        <Header>{navBar !== false && <NavBar/>}</Header>
+        <Content id="content" style={{background: '#fff', padding: 24, minHeight: 280}}>
           {children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>&copy; 2017. eshop.</Footer>
+        <Footer style={{textAlign: 'center'}}>&copy; 2017. eshop.</Footer>
       </Layout>
     </LocaleProvider>
   );

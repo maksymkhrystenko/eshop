@@ -9,19 +9,18 @@ import createHistory from 'history/createBrowserHistory';
 import {ConnectedRouter} from 'react-router-redux';
 import {SubscriptionClient} from "subscriptions-transport-ws";
 import RedBox from 'redbox-react';
-import { getOperationAST } from 'graphql';
-import { createApolloFetch } from 'apollo-fetch';
-import { BatchHttpLink } from 'apollo-link-batch-http';
-import { ApolloLink } from 'apollo-link';
-import { WebSocketLink } from 'apollo-link-ws';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { LoggingLink } from 'apollo-logger';
-import { ApolloProvider } from 'react-apollo';
+import {getOperationAST} from 'graphql';
+import {createApolloFetch} from 'apollo-fetch';
+import {BatchHttpLink} from 'apollo-link-batch-http';
+import {ApolloLink} from 'apollo-link';
+import {WebSocketLink} from 'apollo-link-ws';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {LoggingLink} from 'apollo-logger';
+import {ApolloProvider} from 'react-apollo';
 
 import configureStore from '../common/createReduxStore';
 import createApolloClient from '../common/createApolloClient';
 import modules from './modules';
-
 
 
 const fetch = createApolloFetch({
@@ -31,7 +30,7 @@ const fetch = createApolloFetch({
 const cache = new InMemoryCache();
 
 for (const middleware of modules.middlewares) {
-  fetch.batchUse(({ requests, options }, next) => {
+  fetch.batchUse(({requests, options}, next) => {
     options.credentials = 'same-origin';
     options.headers = options.headers || {};
     const reqs = [...requests];
@@ -50,7 +49,7 @@ for (const middleware of modules.middlewares) {
 }
 
 for (const afterware of modules.afterwares) {
-  fetch.batchUseAfter(({ response, options }, next) => {
+  fetch.batchUseAfter(({response, options}, next) => {
     afterware(response, options, next);
   });
 }
@@ -95,7 +94,7 @@ let link = ApolloLink.split(
     return !!operationAST && operationAST.operation === 'subscription';
   },
   new WebSocketLink(wsClient),
-  new BatchHttpLink({ fetch })
+  new BatchHttpLink({fetch})
 );
 
 // if (__PERSIST_GQL__) {
@@ -103,15 +102,13 @@ let link = ApolloLink.split(
 // }
 
 const client = createApolloClient({
-  link: ApolloLink.from(( [new LoggingLink()] ).concat([link])),
+  link: ApolloLink.from(([new LoggingLink()]).concat([link])),
   cache
 });
 
 if (window.__APOLLO_STATE__) {
   cache.restore(window.__APOLLO_STATE__);
 }
-
-
 
 
 // Get initial state from server-side rendering
@@ -161,12 +158,11 @@ const client = createApolloClient({
 */
 
 
-
 const renderApp = () => {
   const App = require('./containers/App').default;
 
   hydrate(
-    <AppContainer errorReporter={({error}) => <RedBox error={error}/>}>
+    modules.getWrappedRoot(<AppContainer errorReporter={({error}) => <RedBox error={error}/>}>
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
@@ -174,7 +170,7 @@ const renderApp = () => {
           </ConnectedRouter>
         </ApolloProvider>
       </Provider>
-    </AppContainer>,
+    </AppContainer>),
     mountNode
   );
 };
