@@ -7,7 +7,7 @@ import ForgotPasswordView from '../components/ForgotPasswordView';
 
 import FORGOT_PASSWORD from '../graphql/ForgotPassword.graphql';
 
-class ForgotPassword extends React.Component {
+class ForgotPassword extends React.PureComponent {
   render() {
     return <ForgotPasswordView {...this.props} />;
   }

@@ -11,7 +11,7 @@ import ADD_POST from '../graphql/AddPost.graphql';
 import EDIT_POST from '../graphql/EditPost.graphql';
 import POST_SUBSCRIPTION from '../graphql/PostSubscription.graphql';
 
-class PostEdit extends React.Component {
+class PostEdit extends React.PureComponent {
   constructor(props) {
     super(props);
     this.subscription = null;

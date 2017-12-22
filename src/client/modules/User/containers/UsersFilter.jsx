@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 // Components
 import UsersFilterView from '../components/UsersFilterView';
 
-class UsersFilter extends React.Component {
+class UsersFilter extends React.PureComponent {
   render() {
     return <UsersFilterView {...this.props} />;
   }

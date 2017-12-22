@@ -7,7 +7,7 @@ import Col from 'antd/lib/col';
 
 import modules from '../../modules';
 
-class NavBar extends React.Component {
+class NavBar extends React.PureComponent {
   state = {
     current: '/'
   };

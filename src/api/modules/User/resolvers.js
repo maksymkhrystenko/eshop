@@ -209,14 +209,14 @@ export default pubsub => ({
 
           e.throwIf();
 
-          const [createdUserId] = await context.User.register({...input});
-          await context.User.editUserProfile({id: createdUserId, ...input});
+          let user = await context.User.register({...input});
+          await context.User.editUserProfile({id: user.id, ...input});
 
           if (settings.user.auth.certificate.enabled) {
-            await context.User.editAuthCertificate({id: createdUserId, ...input});
+            await context.User.editAuthCertificate({id: user.id, ...input});
           }
 
-          const user = await context.User.getUser(createdUserId);
+          user = await context.User.getUser(user.id);
 
           if (context.mailer && settings.user.auth.password.sendAddNewUserEmail && !emailExists && context.req) {
             // async email

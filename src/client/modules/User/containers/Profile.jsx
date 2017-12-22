@@ -9,7 +9,7 @@ import ProfileView from '../components/ProfileView';
 
 import CURRENT_USER_QUERY from '../graphql/CurrentUserQuery.graphql';
 
-class Profile extends React.Component {
+class Profile extends React.PureComponent {
   render() {
     return <ProfileView {...this.props} />;
   }

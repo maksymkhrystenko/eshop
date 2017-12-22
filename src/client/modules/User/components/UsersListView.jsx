@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {Table, Button} from '../../../common/components';
+import {SubmissionError} from "redux-form";
 
 export default class UsersView extends React.PureComponent {
   static propTypes = {
@@ -16,15 +17,15 @@ export default class UsersView extends React.PureComponent {
     errors: []
   };
 
-  hendleDeleteUser = async id => {
-    const {deleteUser} = this.props;
+  handleDeleteUser = async (id, deleteUser) => {
     const result = await deleteUser(id);
+    let errors = {errors: []};
     if (result && result.errors) {
-      this.setState({errors: result.errors});
-    } else {
-      this.setState({errors: []});
+      errors = {errors: result.errors};
     }
+    return errors;
   };
+
 
   renderOrderByArrow = name => {
     const {orderBy} = this.props;
@@ -58,7 +59,7 @@ export default class UsersView extends React.PureComponent {
   };
 
   render() {
-    const {loading, users} = this.props;
+    const {loading, users, deleteUser} = this.props;
     const {errors} = this.state;
 
     const columns = [
@@ -108,7 +109,10 @@ export default class UsersView extends React.PureComponent {
         title: 'Actions',
         key: 'actions',
         render: (text, record) => (
-          <Button color="primary" size="sm" onClick={() => this.hendleDeleteUser(record.id)}>
+          <Button color="primary" size="sm" onClick={async () => {
+            let res = await this.handleDeleteUser(record.id, deleteUser, this.setState);
+            this.setState(res)
+          }}>
             Delete
           </Button>
         )

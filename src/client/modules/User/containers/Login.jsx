@@ -10,7 +10,7 @@ import LoginView from '../components/LoginView';
 
 import LOGIN from '../graphql/Login.graphql';
 
-class Login extends React.Component {
+class Login extends React.PureComponent {
   render() {
     return <LoginView {...this.props} />;
   }

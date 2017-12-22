@@ -5,7 +5,7 @@ import ResetPasswordView from '../components/ResetPasswordView';
 
 import RESET_PASSWORD from '../graphql/ResetPassword.graphql';
 
-class ResetPassword extends React.Component {
+class ResetPassword extends React.PureComponent {
   render() {
     return <ResetPasswordView {...this.props} />;
   }

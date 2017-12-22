@@ -53,7 +53,7 @@ function DeletePost(prev, id) {
   });
 }
 
-class Post extends React.Component {
+class Post extends React.PureComponent {
   constructor(props) {
     super(props);
 

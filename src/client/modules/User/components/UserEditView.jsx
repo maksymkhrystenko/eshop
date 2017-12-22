@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import {SubmissionError} from 'redux-form';
 import {pick} from 'lodash';
-import {PageLayout} from '../../../common/components';
+import {PageLayout, LayoutCenter} from '../../../common/components';
 
 import UserForm from './UserForm';
 
@@ -16,8 +16,7 @@ export default class UserEditView extends React.PureComponent {
     editUser: PropTypes.func.isRequired
   };
 
-  onSubmit = async values => {
-    const {user, addUser, editUser} = this.props;
+  onSubmit = (user, addUser, editUser) => async values => {
     let result = null;
 
     let insertValues = pick(values, ['username', 'email', 'role', 'isActive', 'password']);
@@ -50,7 +49,7 @@ export default class UserEditView extends React.PureComponent {
   );
 
   render() {
-    const {loading, user} = this.props;
+    const {loading, user, addUser, editUser} = this.props;
 
     if (loading && !user) {
       return (
@@ -66,8 +65,10 @@ export default class UserEditView extends React.PureComponent {
           <Link id="back-button" to="/users">
             Back
           </Link>
-          <h2>{user ? 'Edit' : 'Create'} User</h2>
-          <UserForm onSubmit={this.onSubmit} initialValues={user}/>
+          <LayoutCenter>
+            <h2>{user ? 'Edit' : 'Create'} User</h2>
+            <UserForm onSubmit={this.onSubmit(user, addUser, editUser)} initialValues={user}/>
+          </LayoutCenter>
         </PageLayout>
       );
     }

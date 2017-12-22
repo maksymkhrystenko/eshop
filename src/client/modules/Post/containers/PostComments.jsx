@@ -44,7 +44,7 @@ function DeleteComment(prev, id) {
   });
 }
 
-class PostComments extends React.Component {
+class PostComments extends React.PureComponent {
   constructor(props) {
     super(props);
     this.subscription = null;

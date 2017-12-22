@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Menu from 'antd/lib/menu';
 
-class MenuItem extends React.Component {
+class MenuItem extends React.PureComponent {
   static propTypes = {
     children: PropTypes.node
   };

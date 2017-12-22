@@ -3,7 +3,7 @@ import {CookiesProvider} from 'react-cookie';
 import {NavLink} from 'react-router-dom';
 import Profile from './containers/Profile';
 import Users from './components/Users';
-//import UserEdit from './containers/UserEdit';
+import UserEdit from './containers/UserEdit';
 import Register from './containers/Register';
 import Login from './containers/Login';
 import ForgotPassword from './containers/ForgotPassword';
@@ -44,7 +44,7 @@ export default new Feature({
   route: [
     <AuthRoute exact path="/profile" scope="user" component={Profile}/>,
     <AuthRoute exact path="/users" scope="admin" component={Users}/>,
-    /*<AuthRoute exact path="/users/:id" component={UserEdit}/>,*/
+    <AuthRoute exact path="/users/:id" component={UserEdit}/>,
     <AuthLoggedInRoute exact path="/register" redirect="/profile" component={Register}/>,
     <AuthLoggedInRoute exact path="/login" redirect="/profile" component={Login}/>,
     <AuthLoggedInRoute exact path="/forgot-password" redirect="/profile" component={ForgotPassword}/>,

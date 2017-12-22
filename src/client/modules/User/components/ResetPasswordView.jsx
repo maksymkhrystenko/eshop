@@ -6,7 +6,7 @@ import {PageLayout} from '../../../common/components';
 
 import ResetPasswordForm from '../components/ResetPasswordForm';
 
-export default class ResetPasswordView extends React.Component {
+export default class ResetPasswordView extends React.PureComponent {
   static propTypes = {
     resetPassword: PropTypes.func.isRequired,
     match: PropTypes.shape({

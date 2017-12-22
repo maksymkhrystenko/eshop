@@ -6,7 +6,7 @@ import {PageLayout, LayoutCenter} from '../../../common/components';
 
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 
-export default class ForgotPasswordView extends React.Component {
+export default class ForgotPasswordView extends React.PureComponent {
   static propTypes = {
     forgotPassword: PropTypes.func.isRequired,
     onFormSubmitted: PropTypes.func.isRequired
