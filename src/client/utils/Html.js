@@ -8,7 +8,7 @@ import type { Store } from '../types';
 
 type Props = { store: Store, htmlContent?: string };
 
-const Html = ({ store, htmlContent }: Props): Element<'html'> => {
+const Html = ({ htmlContent , state,  token, refreshToken}: Props): Element<'html'> => {
   // Should be declared after "renderToStaticMarkup()" of "../server.js" or it won't work
   const head = Helmet.renderStatic();
   const attrs = head.htmlAttributes.toComponent();
@@ -73,8 +73,9 @@ const Html = ({ store, htmlContent }: Props): Element<'html'> => {
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
             __html:
-              store &&
-              `window.__INITIAL_STATE__=${serialize(store.getState())};`
+              `window.__APOLLO_STATE__=${serialize(state, {
+                isJSON: true
+              })};window.localStorage.setItem('token','${token}');window.localStorage.setItem('refreshToken','${refreshToken}');`
           }}
         />
         {_.keys(assets.javascript)

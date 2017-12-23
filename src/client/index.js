@@ -6,7 +6,7 @@ import {hydrate, unmountComponentAtNode} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import {Provider} from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import {ConnectedRouter} from 'react-router-redux';
+import {ConnectedRouter, routerMiddleware} from 'react-router-redux';
 import {SubscriptionClient} from "subscriptions-transport-ws";
 import RedBox from 'redbox-react';
 import {getOperationAST} from 'graphql';
@@ -112,9 +112,30 @@ if (window.__APOLLO_STATE__) {
 
 
 // Get initial state from server-side rendering
-const initialState = window.__INITIAL_STATE__;
+const initialState = window.__APOLLO_STATE__;
 const history = createHistory();
-const store = configureStore(history, initialState);
+
+let store;
+if (module.hot && module.hot.data && module.hot.data.store) {
+  // console.log("Restoring Redux store:", JSON.stringify(module.hot.data.store.getState()));
+  store = module.hot.data.store;
+  store.replaceReducer(storeReducer);
+} else {
+  store = configureStore(history,{});
+}
+
+if (module.hot) {
+  module.hot.dispose(data => {
+    // console.log("Saving Redux store:", JSON.stringify(store.getState()));
+    data.store = store;
+    // Force Apollo to fetch the latest data from the server
+    delete window.__APOLLO_STATE__;
+  });
+}
+
+
+
+//const store = configureStore(history, initialState);
 const mountNode = document.getElementById('react-view');
 
 /*

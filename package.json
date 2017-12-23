@@ -291,7 +291,7 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-form": "^7.2.0",
     "redux-thunk": "^2.2.0",
-    "serialize-javascript": "^1.4.0",
+    "serialize-javascript": "1.4.0",
     "serve-favicon": "2.4.5",
     "shelljs": "^0.7.8",
     "styled-components": "^2.3.2",

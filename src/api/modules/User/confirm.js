@@ -7,6 +7,5 @@ export default (SECRET, User, jwt) => async (req, res) => {
   } catch (e) {
     return res.send('error');
   }
-
   return res.redirect('/login');
 };

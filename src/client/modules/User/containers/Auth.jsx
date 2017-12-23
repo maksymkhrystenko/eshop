@@ -25,7 +25,6 @@ const checkAuth = (cookies, scope) => {
   if (!token || !refreshToken) {
     return false;
   }
-
   try {
     const {exp} = decode(refreshToken);
 
@@ -160,12 +159,13 @@ AuthLoggedIn.propTypes = {
   to: PropTypes.string
 };
 
-const AuthRoute = withCookies(({component: Component, cookies, scope, ...rest}) => {
+const AuthRoute = withCookies(({component: Component, cookies,path, scope, ...rest}) => {
   return (
     <Route
       {...rest}
       render={props =>
-        checkAuth(cookies, scope) ? <Component {...props} /> : <Redirect to={{pathname: '/login'}}/>
+      {
+        return checkAuth(cookies, scope) ? <Component {...props} /> : <Redirect to={{pathname: '/login'}}/>}
       }
     />
   );
@@ -176,12 +176,13 @@ AuthRoute.propTypes = {
   cookies: PropTypes.instanceOf(Cookies)
 };
 
-const AuthLoggedInRoute = withCookies(({component: Component, cookies, redirect, scope, ...rest}) => {
+const AuthLoggedInRoute = withCookies(({component: Component, cookies, redirect,path, scope, ...rest}) => {
   return (
     <Route
       {...rest}
       render={props =>
-        checkAuth(cookies, scope) ? <Redirect to={{pathname: redirect}}/> : <Component {...props} />
+      {
+      return  checkAuth(cookies, scope) ? <Redirect to={{pathname: redirect}}/> : <Component {...props} />}
       }
     />
   );

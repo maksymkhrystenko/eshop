@@ -107,12 +107,46 @@ if (__DEV__) {
 app.get('*', (req, res) => {
   if (__DEV__) webpackIsomorphicTools.refresh();
 
+
+  const apiUrl = 'http://localhost:3004/graphql';
+  const fetch = createApolloFetch({uri: apiUrl, constructOptions: modules.constructFetchOptions});
+  fetch.batchUse(({options}, next) => {
+    try {
+      options.credentials = 'include';
+      options.headers = req.headers;
+    } catch (e) {
+      console.error(e);
+    }
+
+    next();
+  });
+
+  const cache = new InMemoryCache();
+  let link = new BatchHttpLink({fetch});
+  const client = createApolloClient({
+    link: ApolloLink.from(([new LoggingLink()]).concat([link])),
+    cache
+  });
+
   const history = createHistory();
-  const store = configureStore(history);
+  const store = configureStore(history, {});
+
+  const apolloState = Object.assign({}, cache.extract());
+
+  const token = req.universalCookies.get('x-token') ? req.universalCookies.get('x-token') : null;
+  const refreshToken = req.universalCookies.get('x-refresh-token')
+    ? req.universalCookies.get('x-refresh-token')
+    : null;
+
   // eslint-disable-next-line no-shadow
   const renderHtml = (store, htmlContent) => {
     const html = renderToStaticMarkup(
-      <Html store={store} htmlContent={htmlContent}/>
+      <Html store={store}
+            htmlContent={htmlContent}
+            state={apolloState}
+            token={token}
+            refreshToken={refreshToken}
+      />
     );
 
     return `<!doctype html>${html}`;
@@ -142,24 +176,6 @@ app.get('*', (req, res) => {
   };
 
 
-  const apiUrl = 'http://localhost:3004/graphql';
-  const fetch = createApolloFetch({uri: apiUrl, constructOptions: modules.constructFetchOptions});
-  fetch.batchUse(({options}, next) => {
-    try {
-      options.credentials = 'include';
-      options.headers = req.headers;
-    } catch (e) {
-      console.error(e);
-    }
-
-    next();
-  });
-  const cache = new InMemoryCache();
-  let link = new BatchHttpLink({fetch});
-  const client = createApolloClient({
-    link: ApolloLink.from(([new LoggingLink()]).concat([link])),
-    cache
-  });
 
   (async () => {
     try {

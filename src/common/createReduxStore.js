@@ -32,7 +32,7 @@ const createReduxStore = (history, initialState) => {
     storeReducer,
     initialState, // initial state
     enhancers,
-    routerMiddleware ? composeWithDevTools(applyMiddleware(routerMiddleware)) : undefined
+   // routerMiddleware ? composeWithDevTools(applyMiddleware(routerMiddleware)) : undefined
   );
 };
 
