@@ -142,14 +142,14 @@ app.get('*', (req, res) => {
     : null;
 
   // eslint-disable-next-line no-shadow
-  const renderHtml = (store, htmlContent, loadableState) => {
+  const renderHtml = (store, htmlContent/*, loadableState*/) => {
     const html = renderToStaticMarkup(
       <Html store={store}
             htmlContent={htmlContent}
             state={apolloState}
             token={token}
             refreshToken={refreshToken}
-            loadableState={loadableState}
+            /*loadableState={loadableState}*/
       />
     );
     return `<!doctype html>${html}`;
@@ -193,10 +193,9 @@ app.get('*', (req, res) => {
         </ApolloProvider>
       </Provider>, req ? req : undefined);
       //   await getDataFromTree(component);
-      const loadableState = await getLoadableState(component);
+     // const loadableState = await getLoadableState(component);
       const htmlContent = renderToString(component);
-      console.log(888);
-      console.log(htmlContent);
+
       // Check if the render result contains a redirect, if so we need to set
       // the specific status and redirect header and end the response
       if (routerContext.url) {
@@ -206,8 +205,10 @@ app.get('*', (req, res) => {
       }
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200;
+      console.log(888);
+      console.log(renderHtml(store, htmlContent/*, loadableState*/));
       // Pass the route and initial state into html template
-      res.status(status).send(renderHtml(store, htmlContent, loadableState));
+      res.status(status).send(renderHtml(store, htmlContent/*, loadableState*/));
     } catch (err) {
       res.status(404).send('Not Found :(');
       console.error(`==> 😭  Rendering routes error: ${err}`);

@@ -8,7 +8,7 @@ import type { Store } from '../types';
 
 type Props = { store: Store, htmlContent?: string };
 
-const Html = ({ htmlContent , state,  token, refreshToken, loadableState}: Props): Element<'html'> => {
+const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: Props): Element<'html'> => {
   // Should be declared after "renderToStaticMarkup()" of "../server.js" or it won't work
   const head = Helmet.renderStatic();
   const attrs = head.htmlAttributes.toComponent();
@@ -87,7 +87,7 @@ const Html = ({ htmlContent , state,  token, refreshToken, loadableState}: Props
         <div
 
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: loadableState.getScriptTag() }}
+         /* dangerouslySetInnerHTML={{ __html: loadableState.getScriptTag() }}*/
         />
 
       </body>

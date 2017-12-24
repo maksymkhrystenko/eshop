@@ -6,9 +6,10 @@ import {MenuItem} from '../../common/components';
 // Component and helpers
 import reducers from './reducers';
 import Feature from '../connector';
-import asyncComponent from '../../../common/asyncComponent';
+//import asyncComponent from '../../../common/asyncComponent';
 
-const File = asyncComponent(() => import('./containers/File'));
+//const File = asyncComponent(() => import('./containers/File'));
+import File from './containers/File';
 
 export default new Feature({
   catalogInfo: { upload: true },

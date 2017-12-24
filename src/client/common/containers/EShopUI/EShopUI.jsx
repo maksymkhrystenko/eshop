@@ -10,8 +10,6 @@ import Footer from '../../components/EShop/Footer';
 import modules from '../../../modules';
 import './styles.scss';
 
-const NotFound = loadable(() => import('../../../../client/modules/PageNotFound'));
-
 class EShopUI extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +18,7 @@ class EShopUI extends React.Component {
   render() {
     const {history} = this.props;
     return (
-      <div className="eshop-main-wrapper">
+      /*<div className="eshop-main-wrapper">
         <TopMenu history={history} />
         <SearchMenu />
         <div className="container main-container" id="content">
@@ -28,14 +26,13 @@ class EShopUI extends React.Component {
             <SidebarMenu />
           </div>
           <div className="content-container">
-            <Switch>
-              {modules.routes}
-              <Route component={NotFound}/>
-            </Switch>
-          </div>
-        </div>
-        <Footer />
-      </div>
+            <Switch>*/
+              modules.routes
+    /*   </Switch>
+   /*  <iv>
+   </div>
+   <Footer />
+ </div>*/
     );
   }
 }
