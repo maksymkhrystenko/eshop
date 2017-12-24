@@ -4,9 +4,7 @@ import { Route } from 'react-router-dom';
 
 import reducers from './reducers/index';
 import Feature from '../connector';
-
-import Dashboard from './containers/Dashboard';
-//const Dashboard = loadable(() => import('./containers/dashboard'));
+import {Dashboard} from './chunks';
 
 export default new Feature({
   route: <Route exact path="/admin" component={Dashboard}/>,

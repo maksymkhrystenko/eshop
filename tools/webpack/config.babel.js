@@ -64,6 +64,10 @@ const getPlugins = () => {
         minimize: !isDev
       }
     }),
+    new webpack.NormalModuleReplacementPlugin(
+      /\/chunks/,
+      './asyncChunks'
+    ),
     // Style lint
    // new StyleLintPlugin({ failOnError: stylelint }),
     // Setup enviorment variables for client
@@ -175,28 +179,38 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style',
-          use: [
-            {
-              loader: 'css',
-              options: {
-                importLoaders: 1,
-                sourceMap: true,
-                modules: CSSModules,
-                // "context" and "localIdentName" need to be the same with server config,
-                // or the style will flick when page first loaded
-                context: path.join(process.cwd(), './src'),
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-                minimize: !isDev
-              }
-            },
-            { loader: 'postcss', options: { sourceMap: true } }
-          ]
-        })
+       /* use: [ 'style-loader', 'css-loader' ]*/
+           loader:
+
+          ExtractTextPlugin.extract({
+             fallback: 'style',
+             use: [
+               {
+                 loader: 'css',
+                 options: {
+                   importLoaders: 1,
+                   sourceMap: true,
+                   modules: CSSModules,
+                   // "context" and "localIdentName" need to be the same with server config,
+                   // or the style will flick when page first loaded
+                   context: path.join(process.cwd(), './src'),
+                   localIdentName: '[name]__[local]--[hash:base64:5]',
+                   minimize: !isDev
+                 }
+               },
+               { loader: 'postcss', options: { sourceMap: true } }
+             ]
+           })
       },
       {
         test: /\.(scss|sass)$/,
+   /*     use: [{
+          loader: "style-loader" // creates style nodes from JS strings
+        }, {
+          loader: "css-loader" // translates CSS into CommonJS
+        }, {
+          loader: "sass-loader" // compiles Sass to CSS
+        }]*/
         loader: ExtractTextPlugin.extract({
           fallback: 'style',
           use: [
@@ -207,7 +221,8 @@ module.exports = {
                 sourceMap: true,
                 modules: CSSModules,
                 context: path.join(process.cwd(), './src'),
-                localIdentName: '[name]__[local]--[hash:base64:5]',
+                //localIdentName: '[name]__[local]--[hash:base64:5]',
+                localIdentName: '[local]',
                 minimize: !isDev
               }
             },

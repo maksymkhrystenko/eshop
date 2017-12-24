@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Field, reduxForm} from 'redux-form';
 import {Form, RenderField, Button, Alert} from '../../../common/components';
-import {required, minLength} from '../../../../common/validation';
+import {required, minLength} from '../../../common/utils/validation';
 
 const validate = values => {
   const errors = {};

@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Dispatch, GetState, ThunkAction, Reducer } from '../../../types';
+import type { Dispatch, GetState, ThunkAction, Reducer } from '../../../common/types';
 
 export const API_URL = 'https://jsonplaceholder.typicode.com/users';
 

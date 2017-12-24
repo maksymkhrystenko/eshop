@@ -9,8 +9,9 @@ import {NavLink, Link} from 'react-router-dom';
 import {graphql, compose} from 'react-apollo';
 import {Label, Button} from '../../../common/components';
 import * as action from '../actions';
-import type {Home as HomeType, Dispatch, Reducer} from '../../../types';
+import type {Home as HomeType, Dispatch, Reducer} from '../../../common/types';
 import UserList from '../components/UserList';
+//import './styles.scss';
 import styles from './styles.scss';
 import PRODUCTS_QUERY from '../graphql/ProductsQuery.graphql';
 
@@ -63,6 +64,7 @@ export class Home extends PureComponent<Props> {
         <NavLink className="btn btn-primary" to="/register" activeClassName="active" style={{margin: 10}}>
           Sign Up
         </NavLink>
+        <div className={styles.Nigga}>test</div>
         <Label>comment</Label>
         <Button>Click to increase counter3</Button>
         <Dropdown overlay={menu}>

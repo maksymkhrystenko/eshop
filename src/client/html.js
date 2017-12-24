@@ -4,7 +4,8 @@ import Helmet from 'react-helmet';
 import serialize from 'serialize-javascript';
 import _ from 'lodash/fp';
 
-import type { Store } from '../types';
+import type { Store } from './common/types';
+import modules from '../client/modules';
 
 type Props = { store: Store, htmlContent?: string };
 
@@ -14,7 +15,6 @@ const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: P
   const attrs = head.htmlAttributes.toComponent();
   const { lang, ...rest } = attrs || {};
   const assets = webpackIsomorphicTools.assets();
-
   return (
     <html {...rest} lang={lang || 'en'}>
       <head>
@@ -42,23 +42,6 @@ const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: P
             type="text/css"
           />
         ))}
-        {/* Styles will be presented in development mode */}
-        {/* I put all of the styles here to smoothen the flick */}
-        {_.keys(assets.styles).length === 0 ? (
-          <style
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: ''
-             /*   require('../theme/normalize.css')._style +
-                require('../containers/App/styles.scss')._style +
-                require('../containers/Home/styles.scss')._style +
-                require('../containers/UserInfo/styles.scss')._style +
-                require('../containers/NotFound/styles.scss')._style +
-                require('../components/UserList/styles.scss')._style +
-                require('../components/UserCard/styles.scss')._style*/
-            }}
-          />
-        ) : null}
       </head>
       <body>
         <div
@@ -84,12 +67,6 @@ const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: P
             <script key={_.uniqueId()} src={assets.javascript[script]} />
           ))}
         {head.script.toComponent()}
-        <div
-
-          // eslint-disable-next-line react/no-danger
-         /* dangerouslySetInnerHTML={{ __html: loadableState.getScriptTag() }}*/
-        />
-
       </body>
     </html>
   );

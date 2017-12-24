@@ -5,7 +5,7 @@ import type { Middleware, $Request } from 'express';
 
 import { merge, map, union, without, castArray } from 'lodash';
 
-import log from '../../common/log';
+import log from '../../client/common/utils/log';
 
 const combine = (features, extractor): any =>
   without(union(...map(features, res => castArray(extractor(res)))), undefined);

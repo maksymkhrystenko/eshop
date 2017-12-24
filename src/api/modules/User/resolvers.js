@@ -3,7 +3,7 @@ import {pick} from 'lodash';
 import jwt from 'jsonwebtoken';
 import withAuth from 'graphql-auth';
 import {refreshTokens, tryLogin} from './auth';
-import FieldError from '../../../common/FieldError';
+import FieldError from '../../../client/common/utils/fieldError';
 import settings from '../../user-config';
 
 export default pubsub => ({

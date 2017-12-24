@@ -5,7 +5,7 @@ import {Route, Redirect, NavLink, withRouter} from 'react-router-dom';
 import {withCookies, Cookies} from 'react-cookie';
 import decode from 'jwt-decode';
 
-import log from '../../../../common/log';
+import log from '../../../common/utils/log';
 import CURRENT_USER_QUERY from '../graphql/CurrentUserQuery.graphql';
 import LOGOUT from '../graphql/Logout.graphql';
 

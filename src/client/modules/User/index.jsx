@@ -7,7 +7,7 @@ import {MenuItem} from '../../common/components';
 import {AuthRoute, AuthLoggedInRoute, AuthNav, AuthLogin, AuthProfile} from './containers/Auth';
 import Feature from '../connector';
 
-
+import {Profile,Users,UserEdit,Register,Login,ForgotPassword,ResetPassword} from './chunks';
 
 //import asyncComponent from '../../../common/asyncComponent';
 //const Register = asyncComponent(() => import('./containers/Register'));
@@ -21,13 +21,14 @@ const Register = asyncComponent(() => import('./containers/Register'));
 const Login = asyncComponent(() => import('./containers/Login'));
 const ForgotPassword = asyncComponent(() => import('./containers/ForgotPassword'));
 const ResetPassword = asyncComponent(() => import('./containers/ResetPassword'));*/
-import Profile from './containers/Profile';
+
+/*import Profile from './containers/Profile';
 import Users from './components/Users';
 import UserEdit from './containers/UserEdit';
 import Register from './containers/Register';
 import Login from './containers/Login';
 import ForgotPassword from './containers/ForgotPassword';
-import ResetPassword from './containers/ResetPassword';
+import ResetPassword from './containers/ResetPassword';*/
 
 function tokenMiddleware(req, options, next) {
   options.headers['x-token'] = window.localStorage.getItem('token');

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Field, reduxForm} from 'redux-form';
 
 import {Form, RenderField, Button, Alert} from '../../../common/components';
-import {required, email} from '../../../../common/validation';
+import {required, email} from '../../../common/utils/validation';
 
 const ForgotPasswordForm = ({handleSubmit, submitting, onSubmit, error, sent}) => {
   return (

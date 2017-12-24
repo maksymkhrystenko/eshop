@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
-import modules from '../client/modules';
+import modules from '../../../client/modules';
 
 export const storeReducer = combineReducers({
   router: routerReducer,

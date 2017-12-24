@@ -18,8 +18,8 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {LoggingLink} from 'apollo-logger';
 import {ApolloProvider} from 'react-apollo';
 
-import configureStore from '../common/createReduxStore';
-import createApolloClient from '../common/createApolloClient';
+import configureStore from '../client/common/utils/createReduxStore';
+import createApolloClient from './common/utils/createApolloClient';
 import modules from './modules';
 
 
@@ -138,49 +138,8 @@ if (module.hot) {
 //const store = configureStore(history, initialState);
 const mountNode = document.getElementById('react-view');
 
-/*
-const settingUrl = `http://localhost:3000/graphql`;
-const networkInterface = createNetworkInterface({uri: settingUrl});
-networkInterface.use([{
-  applyMiddleware(req, next) {
-    if (!req.options.headers) {
-      req.options.headers = {};  // Create the header object if needed.
-    }
-
-    const token = localStorage.getItem('auth-token');
-    if (token) {
-      req.options.headers['Authorization'] = token;
-    }
-    next();
-  }
-}]);
-
-/!*const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
-  /!*wsClient,*!/
-);*!/
-
-const createApolloClient = (options) => new ApolloClient(Object.assign({}, {
-  queryTransformer: addTypename,
-  dataIdFromObject: (result) => {
-    if (result.id && result.__typename) { // eslint-disable-line no-underscore-dangle
-      return result.__typename + result.id; // eslint-disable-line no-underscore-dangle
-    }
-    return null;
-  },
-  // shouldBatch: true,
-}, options));
-
-const client = createApolloClient({
-  networkInterface: networkInterface,
-  initialState: window.__APOLLO_STATE__,
-  ssrForceFetchDelay: 100
-});
-*/
-
-
 const renderApp = () => {
-  const App = require('./containers/App').default;
+  const App = require('./app').default;
   hydrate(
     modules.getWrappedRoot(<AppContainer errorReporter={({error}) => <RedBox error={error}/>}>
       <Provider store={store}>
@@ -205,7 +164,7 @@ if (module.hot) {
     }
   };
 
-  module.hot.accept('./containers/App', () => {
+  module.hot.accept('./app', () => {
     setImmediate(() => {
       // Preventing the hot reloading error from react-router
       unmountComponentAtNode(mountNode);

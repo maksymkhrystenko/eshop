@@ -4,7 +4,7 @@ import {Field, reduxForm} from 'redux-form';
 import url from 'url';
 import {NavLink, Link} from 'react-router-dom';
 import {Form, RenderField, Alert, Button} from '../../../common/components';
-import {required, email, minLength} from '../../../../common/validation';
+import {required, email, minLength} from '../../../common/utils/validation';
 
 const {protocol, hostname, port} = url.parse('http://localhost:3004');
 let serverPort = process.env.PORT || port;

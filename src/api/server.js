@@ -13,7 +13,7 @@ import createHistory from 'history/createMemoryHistory';
 import {renderToString, renderToStaticMarkup} from 'react-dom/server';
 import {matchPath, Switch} from 'react-router-dom';
 
-import App from '../client/containers/App/index';
+import App from '../client/app';
 import {StaticRouter} from 'react-router';
 import {Provider} from 'react-redux';
 import chalk from 'chalk';
@@ -33,11 +33,10 @@ import './mongodb';
 import modules from './modules';
 import clientModules from '../client/modules';
 import schema from './schema';
-import configureStore from '../common/createReduxStore';
-import Html from '../client/utils/Html';
-import routes from '../client/routes';
+import configureStore from '../client/common/utils/createReduxStore';
+import Html from '../client/html';
 import {port, host} from '../client/config/index';
-import createApolloClient from '../common/createApolloClient';
+import createApolloClient from '../client/common/utils/createApolloClient';
 import addGraphQLSubscriptions from './subscriptions';
 
 const app = express();
@@ -162,7 +161,7 @@ app.get('*', (req, res) => {
   }
 
   // Here's the method for loading data from server-side
- const loadBranchData = (): Promise<*> | Object => {
+/* const loadBranchData = (): Promise<*> | Object => {
     const promises = [];
 
     routes.some(route => {
@@ -176,13 +175,13 @@ app.get('*', (req, res) => {
     });
 
     return Promise.all(promises);
-  };
+  };*/
 
 
   (async () => {
     try {
       // Load data from server-side first
-      await loadBranchData();
+    //  await loadBranchData();
       // Setup React-Router server-side rendering
       const routerContext = {};
       let component = clientModules.getWrappedRoot(<Provider store={store}>
@@ -205,8 +204,6 @@ app.get('*', (req, res) => {
       }
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200;
-      console.log(888);
-      console.log(renderHtml(store, htmlContent/*, loadableState*/));
       // Pass the route and initial state into html template
       res.status(status).send(renderHtml(store, htmlContent/*, loadableState*/));
     } catch (err) {

@@ -1,15 +1,12 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import { constructUploadOptions } from 'apollo-fetch-upload';
-import {MenuItem} from '../../common/components';
 
 // Component and helpers
+import {MenuItem} from '../../common/components';
 import reducers from './reducers';
 import Feature from '../connector';
-//import asyncComponent from '../../../common/asyncComponent';
-
-//const File = asyncComponent(() => import('./containers/File'));
-import File from './containers/File';
+import {File} from './chunks';
 
 export default new Feature({
   catalogInfo: { upload: true },

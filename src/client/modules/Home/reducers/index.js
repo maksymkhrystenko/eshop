@@ -2,7 +2,7 @@
 
 import _ from 'lodash/fp';
 
-import type { Home, Action } from '../../../types';
+import type { Home, Action } from '../../../common/types';
 
 type State = Home;
 
