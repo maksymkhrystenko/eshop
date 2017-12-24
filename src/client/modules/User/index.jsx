@@ -1,19 +1,20 @@
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {NavLink} from 'react-router-dom';
-import Profile from './containers/Profile';
-import Users from './components/Users';
-import UserEdit from './containers/UserEdit';
-import Register from './containers/Register';
-import Login from './containers/Login';
-import ForgotPassword from './containers/ForgotPassword';
-import ResetPassword from './containers/ResetPassword';
+import loadable from 'loadable-components';
+
 import reducers from './reducers';
 import {MenuItem} from '../../common/components';
-
 import {AuthRoute, AuthLoggedInRoute, AuthNav, AuthLogin, AuthProfile} from './containers/Auth';
-
 import Feature from '../connector';
+
+const Profile = loadable(() => import('./containers/Profile'));
+const Users = loadable(() => import('./components/Users'));
+const UserEdit = loadable(() => import('./containers/UserEdit'));
+const Register = loadable(() => import('./containers/Register'));
+const Login = loadable(() => import('./containers/Login'));
+const ForgotPassword = loadable(() => import('./containers/ForgotPassword'));
+const ResetPassword = loadable(() => import('./containers/ResetPassword'));
 
 function tokenMiddleware(req, options, next) {
   options.headers['x-token'] = window.localStorage.getItem('token');

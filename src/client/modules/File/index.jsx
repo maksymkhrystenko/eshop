@@ -4,10 +4,11 @@ import { constructUploadOptions } from 'apollo-fetch-upload';
 import {MenuItem} from '../../common/components';
 
 // Component and helpers
-import File from './containers/File';
 import reducers from './reducers';
-
 import Feature from '../connector';
+import asyncComponent from '../../../common/asyncComponent';
+
+const File = asyncComponent(() => import('./containers/File'));
 
 export default new Feature({
   catalogInfo: { upload: true },

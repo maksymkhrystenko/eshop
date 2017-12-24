@@ -1,0 +1,55 @@
+@import '../../../styles/variables';
+
+.sidebar-menu {
+  width: 100%;
+  text-align: center;
+  min-height: 4px;
+  background: $white;
+  border: 1px solid $yellow;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  padding-bottom: 100px;
+  border-radius: 0;
+  .menu-caption {
+    background: $yellow;
+    width: 100%;
+    padding: 2px;
+    font-size: 16px;
+    color: $dark-gray;
+  }
+  ul.menu-items {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    padding: 20px 10px 30px 10px;
+    width: 100%;
+    a:hover {
+      text-decoration: none;
+    }
+    li {
+      &:hover {
+        background: $light-gray;
+        cursor: pointer;
+      }
+      width: 100%;
+      list-style: none;
+      padding-left: 10px;
+      color: $gray;
+      text-align: left;
+      line-height: 36px;
+      border-bottom: 1px solid $light-gray;
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+        padding-left: 6px;
+        color: $gray;
+      }
+    }
+  }
+}

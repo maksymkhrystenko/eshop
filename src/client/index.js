@@ -181,7 +181,6 @@ const client = createApolloClient({
 
 const renderApp = () => {
   const App = require('./containers/App').default;
-
   hydrate(
     modules.getWrappedRoot(<AppContainer errorReporter={({error}) => <RedBox error={error}/>}>
       <Provider store={store}>

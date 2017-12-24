@@ -1,0 +1,98 @@
+@import '../../../styles/variables';
+
+.top-menu {
+  width: 100%;
+  text-align: center;
+  min-height: 80px;
+  background: $white;
+  font-size: 12px;
+  position: fixed;
+  padding: 4px;
+  top: 0;
+  z-index: 99;
+  border-top: 3px solid $yellow;
+  .logo-link{
+    flex: 1;
+    .logo{
+      background: url(../../../images/logo.png) no-repeat center/contain;
+      width: 150px;
+      height: 80px;
+    }
+  }
+  .support-container{
+    display: flex;
+    margin-left: 30px;
+    .main-activities-container{
+      font-size: 16px;
+      justify-content: center;
+      font-weight: bold;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &:last-child{
+        border-left: none;
+        margin-right: 10px;
+      }
+      a{
+        font-size: 12px;
+        text-decoration: underline;
+        color: #ccc;
+      }
+      .cart{
+        font-size: 36px;
+        color: $yellow;
+        margin-top: 12px;
+        margin-bottom: 2px;
+        margin-right: 7px;
+      }
+    }
+    .avatar{
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      border: 1px solid $yellow;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    .support-image{
+      background: url(../../../images/support-icon.png) no-repeat center/contain;
+      width: 46px;
+      height: 50px;
+      margin-top: 12px;
+    }
+    .contacts{
+      margin-right: 16px;
+      display: flex;
+      flex-direction: column;
+      font-size: 16px;
+      justify-content: center;
+      margin-left: 10px;
+      font-weight: bold;
+      a{
+        font-size: 12px;
+        text-decoration: underline;
+        color: #ccc;
+      }
+    }
+  }
+  ul.menu-items{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+    li{
+      list-style: none;
+      padding-right: 12px;
+      margin-right: 0;
+      color: $dark-gray;
+      a{
+        padding-left: 6px;
+        color: $dark-gray;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 14px;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+      }
+    }
+  }
+}

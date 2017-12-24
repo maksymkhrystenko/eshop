@@ -26,6 +26,7 @@ import {BatchHttpLink} from "apollo-link-batch-http";
 import {createApolloFetch} from "apollo-fetch";
 import {InMemoryCache} from "apollo-cache-inmemory";
 import cookiesMiddleware from 'universal-cookie-express';
+import { getLoadableState } from 'loadable-components/server';
 
 import graphiqlMiddleware from './graphiql';
 import './mongodb';
@@ -141,13 +142,14 @@ app.get('*', (req, res) => {
     : null;
 
   // eslint-disable-next-line no-shadow
-  const renderHtml = (store, htmlContent) => {
+  const renderHtml = (store, htmlContent, loadableState) => {
     const html = renderToStaticMarkup(
       <Html store={store}
             htmlContent={htmlContent}
             state={apolloState}
             token={token}
             refreshToken={refreshToken}
+            loadableState={loadableState}
       />
     );
     return `<!doctype html>${html}`;
@@ -160,7 +162,7 @@ app.get('*', (req, res) => {
   }
 
   // Here's the method for loading data from server-side
-  const loadBranchData = (): Promise<*> | Object => {
+ const loadBranchData = (): Promise<*> | Object => {
     const promises = [];
 
     routes.some(route => {
@@ -191,9 +193,10 @@ app.get('*', (req, res) => {
         </ApolloProvider>
       </Provider>, req ? req : undefined);
       //   await getDataFromTree(component);
-
+      const loadableState = await getLoadableState(component);
       const htmlContent = renderToString(component);
-
+      console.log(888);
+      console.log(htmlContent);
       // Check if the render result contains a redirect, if so we need to set
       // the specific status and redirect header and end the response
       if (routerContext.url) {
@@ -204,7 +207,7 @@ app.get('*', (req, res) => {
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200;
       // Pass the route and initial state into html template
-      res.status(status).send(renderHtml(store, htmlContent));
+      res.status(status).send(renderHtml(store, htmlContent, loadableState));
     } catch (err) {
       res.status(404).send('Not Found :(');
       console.error(`==> 😭  Rendering routes error: ${err}`);

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import PageNotFound from './containers/PageNotFound';
 import Feature from '../connector';
+import asyncComponent from '../../../common/asyncComponent';
+
+const PageNotFound = asyncComponent(() => import('./containers/PageNotFound'));
 
 export default new Feature({
   route: <Route component={PageNotFound} />

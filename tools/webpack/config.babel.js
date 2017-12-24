@@ -65,7 +65,7 @@ const getPlugins = () => {
       }
     }),
     // Style lint
-    new StyleLintPlugin({ failOnError: stylelint }),
+   // new StyleLintPlugin({ failOnError: stylelint }),
     // Setup enviorment variables for client
     new webpack.EnvironmentPlugin({ NODE_ENV: JSON.stringify(nodeEnv) }),
     // Setup global variables for client

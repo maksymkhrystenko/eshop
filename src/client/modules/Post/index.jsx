@@ -1,13 +1,12 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
-//import { MenuItem } from '../Antd/components';
-
-import Post from './containers/Post';
-import PostEdit from './containers/PostEdit';
 
 import reducers from './reducers';
-
 import Feature from '../connector';
+import asyncComponent from '../../../common/asyncComponent';
+
+const Post = asyncComponent(() => import('./containers/Post'));
+const PostEdit = asyncComponent(() => import('./containers/PostEdit'));
 
 export default new Feature({
   route: [<Route exact path="/posts" component={Post} />,
