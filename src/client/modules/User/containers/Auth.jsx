@@ -12,7 +12,6 @@ import LOGOUT from '../graphql/Logout.graphql';
 const checkAuth = (cookies, scope) => {
   let token = null;
   let refreshToken = null;
-
   if (cookies && cookies.get('r-token')) {
     token = cookies.get('r-token');
     refreshToken = cookies.get('r-refresh-token');
@@ -160,6 +159,7 @@ AuthLoggedIn.propTypes = {
 };
 
 const AuthRoute = withCookies(({component: Component, cookies,path, scope, ...rest}) => {
+
   return (
     <Route
       {...rest}

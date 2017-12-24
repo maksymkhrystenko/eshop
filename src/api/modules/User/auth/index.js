@@ -20,7 +20,7 @@ export const createTokens = async (user, secret, refreshSecret) => {
 
   const createRefreshToken = jwt.sign(
     {
-      user: user.id
+      user: tokenUser
     },
     refreshSecret,
     {
@@ -35,13 +35,13 @@ export const refreshTokens = async (token, refreshToken, User, SECRET) => {
   let userId = -1;
   try {
     const { user } = jwt.decode(refreshToken);
-    userId = user;
+    userId = user.id;
   } catch (err) {
     return {};
   }
 
   const user = await User.getUserWithPassword(userId);
-  if (!user) {
+    if (!user) {
     return {};
   }
   const refreshSecret = SECRET + user.password;

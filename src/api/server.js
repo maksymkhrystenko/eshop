@@ -11,12 +11,15 @@ import React from 'react';
 import http from 'http';
 import createHistory from 'history/createMemoryHistory';
 import {renderToString, renderToStaticMarkup} from 'react-dom/server';
-import {StaticRouter, matchPath} from 'react-router-dom';
+import {matchPath, Switch} from 'react-router-dom';
+
+import App from '../client/containers/App/index';
+import {StaticRouter} from 'react-router';
 import {Provider} from 'react-redux';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import {graphqlExpress} from 'graphql-server-express';
-import {ApolloProvider} from 'react-apollo';
+import {ApolloProvider, getDataFromTree} from 'react-apollo';
 import {ApolloLink} from 'apollo-link';
 import {LoggingLink} from "apollo-logger";
 import {BatchHttpLink} from "apollo-link-batch-http";
@@ -31,7 +34,6 @@ import clientModules from '../client/modules';
 import schema from './schema';
 import configureStore from '../common/createReduxStore';
 import Html from '../client/utils/Html';
-import App from '../client/containers/App/index';
 import routes from '../client/routes';
 import {port, host} from '../client/config/index';
 import createApolloClient from '../common/createApolloClient';
@@ -148,7 +150,6 @@ app.get('*', (req, res) => {
             refreshToken={refreshToken}
       />
     );
-
     return `<!doctype html>${html}`;
   };
 
@@ -176,22 +177,23 @@ app.get('*', (req, res) => {
   };
 
 
-
   (async () => {
     try {
       // Load data from server-side first
       await loadBranchData();
       // Setup React-Router server-side rendering
       const routerContext = {};
-      const htmlContent = renderToString(
-        clientModules.getWrappedRoot(<Provider store={store}>
-          <ApolloProvider client={client}>
-            <StaticRouter location={req.url} context={routerContext}>
-              <App/>
-            </StaticRouter>
-          </ApolloProvider>
-        </Provider>)
-      );
+      let component = clientModules.getWrappedRoot(<Provider store={store}>
+        <ApolloProvider client={client}>
+          <StaticRouter location={req.url} context={routerContext}>
+            <App/>
+          </StaticRouter>
+        </ApolloProvider>
+      </Provider>, req ? req : undefined);
+      //   await getDataFromTree(component);
+
+      const htmlContent = renderToString(component);
+
       // Check if the render result contains a redirect, if so we need to set
       // the specific status and redirect header and end the response
       if (routerContext.url) {
@@ -201,7 +203,6 @@ app.get('*', (req, res) => {
       }
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200;
-
       // Pass the route and initial state into html template
       res.status(status).send(renderHtml(store, htmlContent));
     } catch (err) {

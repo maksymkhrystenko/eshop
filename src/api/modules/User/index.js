@@ -126,7 +126,6 @@ export const parseUser = async ({ req, connectionParams, webSocket }) => {
     // for local testing without client certificates
     serial = settings.user.auth.certificate.enabled;
   }
-
   if (
     connectionParams &&
     connectionParams.token &&
@@ -143,11 +142,6 @@ export const parseUser = async ({ req, connectionParams, webSocket }) => {
   } else if (req) {
     if (req.user) {
       return req.user;
-    } else if (settings.user.auth.certificate.enabled) {
-      const user = await User.getUserWithSerial(serial);
-      if (user) {
-        return user;
-      }
     }
   } else if (webSocket) {
     if (settings.user.auth.certificate.enabled) {
