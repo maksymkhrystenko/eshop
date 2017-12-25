@@ -1,14 +1,15 @@
 module.exports = {
   host: process.env.NODE_HOST || 'localhost', // Define your host from 'package.json'
   port: process.env.PORT,
+  language: 'ru',
   app: {
-    htmlAttributes: { lang: 'en' },
-    title: 'React Cool Starter',
-    titleTemplate: 'React Cool Starter - %s',
+    htmlAttributes: { lang: 'ru' },
+    title: 'EShop',
+    titleTemplate: 'EShop - %s',
     meta: [
       {
         name: 'description',
-        content: 'The best react universal starter boilerplate in the world.'
+        content: 'Best products for people.'
       }
     ]
   }

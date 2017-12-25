@@ -1,18 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ADButton from 'antd/lib/button';
+import {Button as ADButton} from 'antd';
 
-const Button = ({ children, color, type, size, ...props }) => {
-  let buttonSize = 'default';
-
-  if (size === 'sm') {
-    buttonSize = 'small';
-  } else if (size === 'lg') {
-    buttonSize = 'large';
-  }
-
+const Button = ({children, ...props}) => {
   return (
-    <ADButton type={color} htmlType={type} size={buttonSize} {...props}>
+    <ADButton  {...props}>
       {children}
     </ADButton>
   );

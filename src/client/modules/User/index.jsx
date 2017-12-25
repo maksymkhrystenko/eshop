@@ -1,6 +1,7 @@
 import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {NavLink} from 'react-router-dom';
+import i18next from 'i18next';
 
 import reducers from './reducers';
 import {MenuItem} from '../../common/components';
@@ -8,27 +9,9 @@ import {AuthRoute, AuthLoggedInRoute, AuthNav, AuthLogin, AuthProfile} from './c
 import Feature from '../connector';
 
 import {Profile,Users,UserEdit,Register,Login,ForgotPassword,ResetPassword} from './chunks';
-
-//import asyncComponent from '../../../common/asyncComponent';
-//const Register = asyncComponent(() => import('./containers/Register'));
-//import loadable from 'loadable-components';
-
-//const Register = loadable(() => import('./containers/Register'));
-/*const Profile = asyncComponent(() => import('./containers/Profile'));
-const Users = asyncComponent(() => import('./components/Users'));
-const UserEdit = asyncComponent(() => import('./containers/UserEdit'));
-const Register = asyncComponent(() => import('./containers/Register'));
-const Login = asyncComponent(() => import('./containers/Login'));
-const ForgotPassword = asyncComponent(() => import('./containers/ForgotPassword'));
-const ResetPassword = asyncComponent(() => import('./containers/ResetPassword'));*/
-
-/*import Profile from './containers/Profile';
-import Users from './components/Users';
-import UserEdit from './containers/UserEdit';
-import Register from './containers/Register';
-import Login from './containers/Login';
-import ForgotPassword from './containers/ForgotPassword';
-import ResetPassword from './containers/ResetPassword';*/
+import config from '../../config';
+import {setLanguage} from '../../common/utils/helpers';
+setLanguage(config.language);
 
 function tokenMiddleware(req, options, next) {
   options.headers['x-token'] = window.localStorage.getItem('token');
@@ -54,7 +37,6 @@ function connectionParam() {
     refreshToken: window.localStorage.getItem('refreshToken')
   };
 }
-
 export default new Feature({
   route: [
     <AuthRoute exact path="/profile" scope="user" component={Profile}/>,
@@ -69,7 +51,7 @@ export default new Feature({
     <MenuItem key="/users">
       <AuthNav scope="admin">
         <NavLink to="/users" className="nav-link" activeClassName="active">
-          Users
+          {i18next.t('NAVBAR_MENU_USERS')}
         </NavLink>
       </AuthNav>
     </MenuItem>
@@ -81,7 +63,7 @@ export default new Feature({
     <MenuItem key="/login">
       <AuthLogin>
         <NavLink to="/login" className="nav-link" activeClassName="active">
-          Sign In
+          {i18next.t('NAVBAR_MENU_SIGN_IN')}
         </NavLink>
       </AuthLogin>
     </MenuItem>

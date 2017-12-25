@@ -1,17 +1,20 @@
 'use strict'; // eslint-disable-line
 
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
-const parallelUglifyPlugin = new ParallelUglifyPlugin({uglifyES: {
+const parallelUglifyPlugin = new ParallelUglifyPlugin({
+  uglifyES: {
     compress: {
       warnings: false
     }
-  },});
+  },
+});
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isDev = nodeEnv !== 'production';
@@ -59,7 +62,7 @@ const getPlugins = () => {
     new webpack.LoaderOptionsPlugin({
       options: {
         // Javascript lint
-        eslint: { failOnError: eslint },
+        eslint: {failOnError: eslint},
         debug: isDev,
         minimize: !isDev
       }
@@ -69,9 +72,9 @@ const getPlugins = () => {
       './asyncChunks'
     ),
     // Style lint
-   // new StyleLintPlugin({ failOnError: stylelint }),
+    // new StyleLintPlugin({ failOnError: stylelint }),
     // Setup enviorment variables for client
-    new webpack.EnvironmentPlugin({ NODE_ENV: JSON.stringify(nodeEnv) }),
+    new webpack.EnvironmentPlugin({NODE_ENV: JSON.stringify(nodeEnv)}),
     // Setup global variables for client
     new webpack.DefinePlugin({
       __CLIENT__: true,
@@ -94,7 +97,7 @@ const getPlugins = () => {
   } else {
     plugins.push(
       // For production
-    //  new MinifyPlugin({}, { test: /\.jsx?$/, comments: false }),
+      //  new MinifyPlugin({}, { test: /\.jsx?$/, comments: false }),
       parallelUglifyPlugin,
       new webpack.HashedModuleIdsPlugin(),
       new webpack.optimize.CommonsChunkPlugin({
@@ -136,12 +139,16 @@ const getEntry = () => {
   return entry;
 };
 
+
+const lessToJs = require('less-vars-to-js');
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../../src/client/common/styles/variables.less'), 'utf8'));
+
 // Setting webpack config
 module.exports = {
   name: 'client',
   target: 'web',
   cache: isDev,
-  devtool: isDev ? 'cheap-module-eval-source-map' :  'hidden-source-map',
+  devtool: isDev ? 'cheap-module-eval-source-map' : 'hidden-source-map',
   context: path.join(process.cwd()),
   entry: getEntry(),
   output: {
@@ -154,12 +161,12 @@ module.exports = {
   },
   module: {
     rules: [
-  /*    {
-        test: /\.jsx?$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        loader: 'eslint'
-      },*/
+      /*    {
+            test: /\.jsx?$/,
+            enforce: 'pre',
+            exclude: /node_modules/,
+            loader: 'eslint'
+          },*/
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -167,9 +174,12 @@ module.exports = {
         options: {
           cacheDirectory: isDev,
           babelrc: false,
-          presets: [['env', { modules: false }], 'react', 'stage-0', 'flow'],
-          plugins: ['transform-runtime', 'react-hot-loader/babel', 'lodash', ['import', { libraryName: "antd", style: true }]],
-          env: { production: { plugins: ['transform-remove-console'] } }
+          presets: [['env', {modules: false}], 'react', 'stage-0', 'flow'],
+          plugins: ['transform-runtime', 'react-hot-loader/babel', 'lodash', ['import', {
+            libraryName: "antd",
+            style: true
+          }]],
+          env: {production: {plugins: ['transform-remove-console']}}
         }
       },
       {
@@ -179,38 +189,38 @@ module.exports = {
       },
       {
         test: /\.css$/,
-       /* use: [ 'style-loader', 'css-loader' ]*/
-           loader:
+        /* use: [ 'style-loader', 'css-loader' ]*/
+        loader:
 
           ExtractTextPlugin.extract({
-             fallback: 'style',
-             use: [
-               {
-                 loader: 'css',
-                 options: {
-                   importLoaders: 1,
-                   sourceMap: true,
-                   modules: CSSModules,
-                   // "context" and "localIdentName" need to be the same with server config,
-                   // or the style will flick when page first loaded
-                   context: path.join(process.cwd(), './src'),
-                   localIdentName: '[name]__[local]--[hash:base64:5]',
-                   minimize: !isDev
-                 }
-               },
-               { loader: 'postcss', options: { sourceMap: true } }
-             ]
-           })
+            fallback: 'style',
+            use: [
+              {
+                loader: 'css',
+                options: {
+                  importLoaders: 1,
+                  sourceMap: true,
+                  modules: CSSModules,
+                  // "context" and "localIdentName" need to be the same with server config,
+                  // or the style will flick when page first loaded
+                  context: path.join(process.cwd(), './src'),
+                  localIdentName: '[name]__[local]--[hash:base64:5]',
+                  minimize: !isDev
+                }
+              },
+              {loader: 'postcss', options: {sourceMap: true}}
+            ]
+          })
       },
       {
         test: /\.(scss|sass)$/,
-   /*     use: [{
-          loader: "style-loader" // creates style nodes from JS strings
-        }, {
-          loader: "css-loader" // translates CSS into CommonJS
-        }, {
-          loader: "sass-loader" // compiles Sass to CSS
-        }]*/
+        /*     use: [{
+               loader: "style-loader" // creates style nodes from JS strings
+             }, {
+               loader: "css-loader" // translates CSS into CommonJS
+             }, {
+               loader: "sass-loader" // compiles Sass to CSS
+             }]*/
         loader: ExtractTextPlugin.extract({
           fallback: 'style',
           use: [
@@ -226,7 +236,7 @@ module.exports = {
                 minimize: !isDev
               }
             },
-            { loader: 'postcss', options: { sourceMap: true } },
+            {loader: 'postcss', options: {sourceMap: true}},
             {
               loader: 'sass',
               options: {
@@ -245,18 +255,23 @@ module.exports = {
           use: [
             {loader: "css"},
             /*{ loader: 'postcss', options: { sourceMap: true } },*/
-            {loader: "less",
-              /* options: {
-                 modifyVars: themeVariables
-               }*/
+            {
+              loader: "less",
+              options: {
+                modifyVars: themeVariables
+              }
             }
           ]
         })
       },
       {
+        test: /\.json$/,
+        loader: 'json'
+      },
+      {
         test: /\.(woff2?|ttf|eot|svg)$/,
         loader: 'url',
-        options: { limit: 10000 }
+        options: {limit: 10000}
       },
       {
         test: webpackIsomorphicToolsPlugin.regular_expression('images'),
@@ -264,12 +279,12 @@ module.exports = {
         use: [
           {
             loader: 'url',
-            options: { limit: 10240 }
+            options: {limit: 10240}
           },
           // Using for image optimization
           {
             loader: 'image-webpack',
-            options: { bypassOnDebug: true }
+            options: {bypassOnDebug: true}
           }
         ]
       }

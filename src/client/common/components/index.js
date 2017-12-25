@@ -16,6 +16,8 @@ export { default as Alert } from './Alert';
 export { default as Container } from './Container';
 export { default as Row } from './Row';
 export { default as Col } from './Col';
+export { default as Link } from './Link';
+export { default as Tabs } from './Tabs';
 
 export { default as Card } from './Card';
 export { default as CardGroup } from './CardGroup';

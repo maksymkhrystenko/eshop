@@ -7,6 +7,7 @@ import {MenuItem} from '../../common/components';
 import reducers from './reducers';
 import Feature from '../connector';
 import {File} from './chunks';
+import i18next from "i18next";
 
 export default new Feature({
   catalogInfo: { upload: true },
@@ -14,7 +15,7 @@ export default new Feature({
   navItem: (
     <MenuItem key="/upload">
       <NavLink to="/upload" className="nav-link" activeClassName="active">
-        Upload
+        {i18next.t('NAVBAR_MENU_UPLOAD')}
       </NavLink>
     </MenuItem>
   ),

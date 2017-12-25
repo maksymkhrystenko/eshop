@@ -181,7 +181,7 @@ hr {
   &:hover {
     text-decoration: none;
     color: $white;
-    background: $light-yellow;
+    background: $yellow-light;
   }
   &.mg-t-0{
     margin-top: 0;
@@ -207,7 +207,7 @@ hr {
 }
 .fr-box{
   border-radius: 4px;
-  border: 2px solid $light-yellow;
+  border: 2px solid $yellow-light;
   .fr-toolbar{
     box-shadow: none;
     border-top: none;

@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+
+.Tabs{
+  color: $light-gray6;
+  &:hover{
+    color: $yellow;
+  }
+}

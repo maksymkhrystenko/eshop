@@ -20,8 +20,12 @@ import {ApolloProvider} from 'react-apollo';
 
 import configureStore from '../client/common/utils/createReduxStore';
 import createApolloClient from './common/utils/createApolloClient';
+import {setLanguage} from './common/utils/helpers';
 import modules from './modules';
+import config from "./config";
 
+
+setLanguage(config.language);
 
 const fetch = createApolloFetch({
   uri: '/graphql',

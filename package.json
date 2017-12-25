@@ -70,7 +70,7 @@
       }
     },
     "build": {
-      "command": "webpack --progress --hide-modules --config ./tools/webpack/config.babel.js",
+      "command": "webpack --progress  --config ./tools/webpack/config.babel.js",
       "env": {
         "NODE_ENV": "production"
       }
@@ -261,11 +261,14 @@
     "helmet": "3.9.0",
     "history": "^4.7.2",
     "hpp": "^0.2.2",
+    "i18next": "^10.2.1",
     "immutability-helper": "^2.6.2",
+    "json-loader": "^0.5.7",
     "jsonwebtoken": "8.1.0",
     "jwt-decode": "^2.2.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
+    "less-vars-to-js": "^1.2.1",
     "loadable-components": "^0.4.0",
     "lodash": "^4.17.4",
     "merge-graphql-schemas": "^1.4.0",
@@ -280,6 +283,7 @@
     "passport-facebook": "2.1.1",
     "passport-google-oauth": "1.0.0",
     "prop-types": "^15.6.0",
+    "raw-loader": "^0.5.1",
     "react": "16.2.0",
     "react-apollo": "^2.0.4",
     "react-cookie": "^2.1.2",

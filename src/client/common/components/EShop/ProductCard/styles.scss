@@ -1,0 +1,70 @@
+@import '../../../styles/variables';
+
+.ProductCard {
+  text-align: center;
+  background: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 12px;
+  border-left: 1px solid $light-gray;
+  border-right: 1px solid $light-gray;
+  padding: 0 10px;
+  width: 20%;
+  margin-top: 10px;
+  min-height: 100px;
+  .Feedbacks{
+
+  }
+  .RateBlock {
+    float: left;
+    font-size: 11px;
+    color: #ececec;
+    margin-top: 4px;
+    padding-left: 8px;
+  }
+  .Info{
+    padding-left: 14px;
+    padding-right: 14px;
+    .PriceBloack{
+      justify-content: flex-end;
+      display: flex;
+      flex-direction: column;
+      .Price{
+        color: $yellow2;
+        font-weight: bold;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        margin-top: 6px;
+        font-size: 22px;
+      }
+    }
+    i{
+      margin-top: 22px;
+      font-size: 36px;
+    }
+    .Title {
+      font-size: 14px;
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+      line-height: 14px;
+      display: -webkit-box;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .DescriptionBlock {
+      color: $gray;
+      font-size: 12px;
+      display: -webkit-box;
+      text-align: left;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      margin-top: 14px;
+    }
+  }
+
+}

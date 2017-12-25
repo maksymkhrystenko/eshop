@@ -1,0 +1,63 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.ant-row {
+  &.NavBar {
+    height: 60px;
+    background: $white;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
+    z-index: 2;
+    .ContentWrapper {
+      @include ContentWrapper;
+      .Menu {
+        line-height: 60px;
+        background: $white;
+        border-bottom: 0;
+        .ant-menu-item {
+          &:hover {
+            background: $yellow;
+          }
+          a {
+            color: $black;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+          }
+          &.ant-menu-item-selected {
+            background: $yellow;
+            a {
+              color: $white;
+              text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+      .RightMenu {
+        line-height: 60px;
+        background: $white;
+        border-bottom: 0;
+        float: right;
+        .ant-menu-item {
+          &:hover {
+            background: $yellow;
+          }
+          a {
+            color: $black;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+          }
+          &.ant-menu-item-selected {
+            background: $yellow;
+            a {
+              color: $white;
+              text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+

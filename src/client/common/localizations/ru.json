@@ -1,0 +1,19 @@
+{
+  "ru": {
+    "translation": {
+      "FEEDBACKS": "отзывов",
+      "TO_ORDER": "Заказать",
+      "CURRENCY": "грн.",
+      "NAVBAR_MENU_MAIN": "Главная",
+      "NAVBAR_MENU_CATEGORIES": "Категории",
+      "NAVBAR_MENU_USERS": "Пользователи",
+      "NAVBAR_MENU_SIGN_IN": "Авторизоваться",
+      "TOP_MENU_CART": "Корзина",
+      "TOP_MENU_MY_PROFILE": "Мой кабинет",
+      "NAVBAR_MENU_UPLOAD": "Загрузить",
+      "BEST_SELLERS_TABS_ALL_PRODUCTS": "Все товары",
+      "BEST_SELLERS_TABS_BEST_SELLER_PRODUCTS": "Самые продаваемые",
+      "BEST_SELLERS_TABS_BEST_RATES_PRODUCTS": "Самые популярные"
+    }
+  }
+}

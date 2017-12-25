@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+
+.Link {
+  color: $light-gray6;
+  &:hover {
+    color: $yellow;
+  }
+}
