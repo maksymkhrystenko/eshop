@@ -1,0 +1,16 @@
+@import '../../styles/variables';
+
+.RateBlock {
+  .Rate {
+    float: left;
+    font-size: 20px;
+    color: $gray;
+    margin-top: 4px;
+  }
+  .Feedbacks {
+    float: left;
+    font-size: 14px;
+    color: #000000;
+    margin-top: 9px;
+  }
+}

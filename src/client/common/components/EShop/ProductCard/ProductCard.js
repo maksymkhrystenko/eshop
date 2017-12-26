@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {Icon, Card} from 'antd';
 import i18next from 'i18next';
 
-import {Col, Row, Label, Link, Button} from '../../../components';
+import {Col, Row, Link, Rates} from '../../../components';
+import Price from '../../../components/EShop/Price';
 import styles from './styles.scss';
 
 
@@ -14,39 +15,34 @@ export default class ProductCard extends Component {
       name: this.props.product.name,
       shortDescription: this.props.product.shortDescription,
       imageUrl: this.props.product.imageUrl,
-      uid: this.props.product.uid,
+      id: this.props.product.id,
+      countOfProductsPerRow: this.props.countOfProductsPerRow,
     };
   }
 
   render() {
-    const {price, name, imageUrl, shortDescription, uid} = this.state;
+    const {price, name, imageUrl, shortDescription, id, countOfProductsPerRow} = this.state;
     let list = true;
     return (<Card
         hoverable
         className={styles.ProductCard}
+        style={{width: `${100 / countOfProductsPerRow}%`}}
       >
         <Row>
           <img src={imageUrl} alt=""/>
-          <Col span={14} className={styles.RateBlock}>
-            <Icon type="star"/>
-            <Icon type="star"/>
-            <Icon type="star"/>
-            <Icon type="star"/>
-            <Icon type="star"/>
-          </Col>
-          <Col span={10} className={styles.Feedbacks}>
-            {'(0) '}{i18next.t('FEEDBACKS')}
+          <Col>
+            <Rates/>
           </Col>
         </Row>
         <Row>
           <Col className={styles.Info} span={24}>
-            <Link className={styles.Title} to={`/product/test-category/${uid}`}>
+            <Link className={styles.Title} to={`product-card/${id}`}>
               {name}
             </Link>
             <Col span={24} className={styles.DescriptionBlock}>{shortDescription}</Col>
             <Col className={styles.PriceBloack} span={12}>
-              <span className={styles.Price}>{price} {i18next.t('CURRENCY')}</span>
-              <Button size="small" type="primary">{i18next.t('TO_ORDER')}</Button>
+              <Price price={455}/>
+              <Link to={'product-card/8'} className="ant-btn ant-btn-primary ant-small">{i18next.t('TO_ORDER')}</Link>
             </Col>
             <Col span={6}>
               <Link to={'#'}>

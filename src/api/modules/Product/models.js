@@ -5,13 +5,13 @@ export default class ModelClass {
     return new Promise((resolve, reject) => {
       let query = {};
       if (offset === 0) {
-        query = {uid: {$gte: offset}};
+        query = {id: {$gte: offset}};
       } else {
-        query = {uid: {$lt: offset}};
+        query = {id: {$lt: offset}};
       }
       return ProductSchema.find(query, {}, {
         limit: limit,
-        sort: {uid: -1}
+        sort: {id: -1}
       }).then((res) => resolve(res)).catch((err) => reject(err));
     });
   }
@@ -38,9 +38,9 @@ export default class ModelClass {
     });
   }
 
-  getNextPageFlag(uid) {
+  getNextPageFlag(id) {
     return new Promise((resolve, reject) => {
-      return ProductSchema.count({uid: {$lt: uid}}, (err, flag) => {
+      return ProductSchema.count({id: {$lt: id}}, (err, flag) => {
           if (err) {
             reject(err);
           }
@@ -50,18 +50,18 @@ export default class ModelClass {
     });
   }
 
-  getProduct(uid) {
+  getProduct(id) {
     return new Promise((resolve, reject) => {
-      return ProductSchema.findOne({uid}).then((res) => resolve(res)).catch((err) => reject(err));
+      return ProductSchema.findOne({id}).then((res) => resolve(res)).catch((err) => reject(err));
     });
   }
 
   addProduct({title, description, price, properties, sku, shortDescription}) {
     return new Promise(async (resolve, reject) => {
-      let maxItem = await ProductSchema.find({uid: {$gte: 0}}).sort('-uid').limit(1);
-      let uid = (maxItem && maxItem.length > 0) ? maxItem[maxItem.length - 1].uid + 1 : 0;
+      let maxItem = await ProductSchema.find({id: {$gte: 0}}).sort('-id').limit(1);
+      let id = (maxItem && maxItem.length > 0) ? maxItem[maxItem.length - 1].id + 1 : 0;
       const product = new ProductSchema({
-        uid,
+        id,
         title,
         description,
         sku,
@@ -74,17 +74,17 @@ export default class ModelClass {
     });
   }
 
-  deleteProduct(uid) {
+  deleteProduct(id) {
     return new Promise((resolve, reject) => {
-      return ProductSchema.remove({uid}).then((res) => {
+      return ProductSchema.remove({id}).then((res) => {
         return resolve(res);
       }).catch((err) => reject(err));
     });
   }
 
-  editProduct({uid, title, description, price}) {
+  editProduct({id, title, description, price}) {
     return new Promise((resolve, reject) => {
-      return ProductSchema.findOneAndUpdate({uid}, {
+      return ProductSchema.findOneAndUpdate({id}, {
         $set: {
           'title': title,
           'description': description,

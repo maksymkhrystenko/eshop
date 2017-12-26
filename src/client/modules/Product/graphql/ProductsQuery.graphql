@@ -1,0 +1,17 @@
+#import "./Product.graphql"
+
+query products($limit: Int!, $offset: Int) {
+  products(limit: $limit, offset: $offset) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ... ProductInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+
+.Price {
+  color: $yellow2;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 22px;
+}
+
+.OldPrice {
+  color: $gray;
+  font-weight: bold;
+  text-decoration: line-through;
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 16px;
+  margin-left: 10px;
+}

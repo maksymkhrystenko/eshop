@@ -1,0 +1,12 @@
+#import "./Comment.graphql"
+
+subscription onCommentUpdated($productId: Int!) {
+  commentUpdated(productId: $productId) {
+    mutation
+    id
+    productId
+    node {
+      ... CommentInfo
+    }
+  }
+}

@@ -1,0 +1,5 @@
+fragment ProductInfo on Product {
+  id
+  title
+  description
+}

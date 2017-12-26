@@ -1,0 +1,7 @@
+#import "./Product.graphql"
+
+subscription onProductUpdated($id: Int!) {
+  productUpdated(id: $id) {
+    ... ProductInfo
+  }
+}

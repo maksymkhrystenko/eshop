@@ -5,9 +5,9 @@ export default pubsub => ({
       let products = await context.Product.getProductsPagination(limit, parseInt(offset));
       products.map(product => {
         edgesArray.push({
-          cursor: product.uid,
+          cursor: product.id,
           node: {
-            uid: product.uid,
+            id: product.id,
             title: product.title,
             description: product.description,
             shortDescription: product.shortDescription,
@@ -27,33 +27,33 @@ export default pubsub => ({
         }
       };
     },
-    product(obj, {uid}, context) {
-      return context.Product.getProduct(uid);
+    product(obj, {id}, context) {
+      return context.Product.getProduct(id);
     },
   },
   Mutation: {
     async addProduct(obj, {input}, context) {
       let product = await context.Product.addProduct(input);
       pubsub.publish('productsUpdated', {mutation: 'CREATED', node: product});
-      return await context.Product.getProduct(product.uid);
+      return await context.Product.getProduct(product.id);
     },
-    async deleteProduct(obj, {uid}, context) {
-      let product = await context.Product.getProduct(uid);
-      let isDeleted = await context.Product.deleteProduct(uid);
+    async deleteProduct(obj, {id}, context) {
+      let product = await context.Product.getProduct(id);
+      let isDeleted = await context.Product.deleteProduct(id);
       if (isDeleted) {
         pubsub.publish('productsUpdated', {mutation: 'DELETED', node: product});
-        return product.uid;
+        return product.id;
       } else {
         return null;
       }
     },
     async editProduct(obj, {input}, context) {
       await context.Product.editProduct(input);
-      let product = await context.Product.getProduct(input.uid);
+      let product = await context.Product.getProduct(input.id);
       // publish for products list
       pubsub.publish('productsUpdated', {mutation: 'UPDATED', node: product});
       // publish for edit product page
-      pubsub.publish('productUpdated', {mutation: 'UPDATED',node: product});
+      pubsub.publish('productUpdated', {mutation: 'UPDATED', node: product});
       return product;
     },
   },

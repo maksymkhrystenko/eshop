@@ -1,0 +1,7 @@
+#import "./Product.graphql"
+
+mutation editProduct($input: EditProductInput!) {
+  editProduct(input: $input) {
+    ... ProductInfo
+  }
+}

@@ -1,0 +1,11 @@
+#import "./Product.graphql"
+#import "./Comment.graphql"
+
+query product($id: Int!) {
+  product(id: $id) {
+    ... ProductInfo
+    comments {
+      ... CommentInfo
+    }
+  }
+}

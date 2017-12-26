@@ -1,5 +1,6 @@
 import home from './Home';
-import post from './Post';
+import post from './Product';
+import product from './Post';
 import pageNotFound from './PageNotFound';
 import user from './User';
 import file from './File';
@@ -13,4 +14,4 @@ const eShopFeature = new Feature(user, file, home, post, pageNotFound, ui, dashb
 
 export default { eShopFeature, adminFeature };*/
 
-export default new Feature(user, file, home, post, pageNotFound, ui, dashboard);
+export default new Feature(user, file, home, post, product, pageNotFound, ui, dashboard);

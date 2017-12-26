@@ -1,21 +1,31 @@
 {
   "ru": {
     "translation": {
+      "CATEGORIES": "Категории",
       "FEEDBACKS": "отзывов",
       "TO_ORDER": "Заказать",
       "CURRENCY": "грн.",
+      "PRICE_NAME": "Цена",
+      "ABILITY_IN_STOCK": "Наличие на складе:",
+      "PRESENCE": "Присутствует",
+      "ABSENSE": "Отсутствует",
+      "COUNT": "Количество:",
+      "BUTTON_ADD_TO_CART": "Добавить в корзину",
       "NAVBAR_MENU_MAIN": "Главная",
       "NAVBAR_MENU_CATEGORIES": "Категории",
       "NAVBAR_MENU_USERS": "Пользователи",
       "NAVBAR_MENU_SIGN_IN": "Авторизоваться",
       "NAVBAR_MENU_POSTS": "Статьи",
-      "NAVBAR_MENU_PRODUCTS": "Статьи",
+      "NAVBAR_MENU_PRODUCTS": "Товары",
+      "FILTER_SIDEBAR_CHECK_ALL": "Выбрать всё",
       "TOP_MENU_CART": "Корзина",
       "TOP_MENU_MY_PROFILE": "Мой кабинет",
       "NAVBAR_MENU_UPLOAD": "Загрузить",
       "BEST_SELLERS_TABS_ALL_PRODUCTS": "Все товары",
       "BEST_SELLERS_TABS_BEST_SELLER_PRODUCTS": "Самые продаваемые",
-      "BEST_SELLERS_TABS_BEST_RATES_PRODUCTS": "Самые популярные"
+      "BEST_SELLERS_TABS_BEST_RATES_PRODUCTS": "Самые популярные",
+      "PRODUCT_CARD_TABS_DESCRIPTION": "Описание",
+      "PRODUCT_CARD_TABS_FEEDBACKS": "Отзывы"
     }
   }
 }

@@ -8,11 +8,12 @@ type Product {
     createdAt: String!
     title: String!
     description: String!
-    uid: Int
+    id: Int
     price: Int!
     properties: [PropertyOutput]
     sku: String!
     shortDescription: String
+    comments: [Comment]
 }
 
 input PropertyInput {
@@ -33,7 +34,7 @@ input AddProductInput {
 
 # Input for editProduct Mutation
 input EditProductInput {
-    uid: Int
+    id: Int
     title: String!
     description: String!
     price: Int!
@@ -72,7 +73,7 @@ type UpdateProductPayload {
 
 extend type Query {
     # Product
-   product(uid: Int): Product
+   product(id: Int): Product
     # Products pagination query
    productsQuery(limit: Int, offset: Int): ProductsQuery
 }
@@ -81,14 +82,14 @@ extend type Mutation {
     # Create new Product
     addProduct(input: AddProductInput!): Product
     # Delete a Product
-    deleteProduct(uid: Int): Int
+    deleteProduct(id: Int): Int
     # Edit a Product
     editProduct(input: EditProductInput!): Product
 }
 
 extend type Subscription {
     # Subscription for when editing a product
-    productUpdated(uid: Int): UpdateProductPayload
+    productUpdated(id: Int): UpdateProductPayload
     # Subscription for products list
     productsUpdated(endCursor: Int): UpdateProductsPayload
 }

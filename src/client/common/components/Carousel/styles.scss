@@ -1,0 +1,28 @@
+@import '../../styles/variables';
+
+.Carousel {
+  /* For demo */
+  padding-bottom: 90px;
+  .ant-carousel .slick-initialized .slick-slide {
+    text-align: center;
+    height: 318px;
+    line-height: 318px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ant-carousel .slick-slide h3 {
+    color: #fff;
+  }
+  .Dot {
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

@@ -17,6 +17,10 @@ export { default as Container } from './Container';
 export { default as Row } from './Row';
 export { default as Col } from './Col';
 export { default as Link } from './Link';
+export { default as List } from './List';
+export { default as AbilityInStock } from './AbilityInStock';
+export { default as Counter } from './Counter';
+export { default as Rates } from './Rates';
 export { default as Tabs } from './Tabs';
 
 export { default as Card } from './Card';
@@ -26,3 +30,5 @@ export { default as CardText } from './CardText';
 export { default as Table } from './Table';
 export { default as ListGroup } from './ListGroup';
 export { default as ListItem } from './ListItem';
+export { default as BreadCrumbs } from './BreadCrumbs';
+export { default as Carousel } from './Carousel';
