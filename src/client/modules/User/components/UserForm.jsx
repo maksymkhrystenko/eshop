@@ -40,7 +40,7 @@ const UserForm = ({handleSubmit, submitting, onSubmit, error}) => {
         validate={[required, minLength(5)]}
       />
       {error && <Alert color="error">{error}</Alert>}
-      <Button color="primary" type="submit" disabled={submitting}>
+      <Button color="primary" htmlType="submit" disabled={submitting}>
         Save
       </Button>
     </Form>

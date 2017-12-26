@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
-import {PageLayout, Table, Button} from '../../../common/components';
+import {PageLayout, Table, Button, Col} from '../../../../common/components';
+import styles from './styles.scss';
 
 class PostList extends React.PureComponent {
   hendleDeletePost = id => {
@@ -60,7 +61,7 @@ class PostList extends React.PureComponent {
           render: (text, record) => (
             <Button
               color="primary"
-              size="sm"
+              size="small"
               className="delete-button"
               onClick={() => this.hendleDeletePost(record.id)}
             >
@@ -71,6 +72,7 @@ class PostList extends React.PureComponent {
       ];
       return (
         <PageLayout>
+          <Col className={styles.PostList}>
           {this.renderMetaData()}
           <h2>Posts</h2>
           <Link to="/post/add">
@@ -78,12 +80,13 @@ class PostList extends React.PureComponent {
           </Link>
           <h1/>
           <Table dataSource={posts.edges.map(({node}) => node)} columns={columns}/>
-          <div>
+          <Col>
             <small>
               ({posts.edges.length} / {posts.totalCount})
             </small>
-          </div>
+          </Col>
           {this.renderLoadMore(posts, loadMoreRows)}
+          </Col>
         </PageLayout>
       );
     }

@@ -34,7 +34,7 @@ const RegisterForm = ({handleSubmit, submitting, onSubmit, error}) => {
       />
       <div className="text-center">
         {error && <Alert color="error">{error}</Alert>}
-        <Button color="primary" type="submit">
+        <Button color="primary" htmlType="submit">
           Register
         </Button>
       </div>

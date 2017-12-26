@@ -19,11 +19,11 @@ export default pubsub => ({
 
       const values = await Promise.all([context.Post.getTotal(), context.Post.getNextPageFlag(endCursor)]);
       return {
-        totalCount: values[0].count,
+        totalCount: values[0],
         edges: edgesArray,
         pageInfo: {
           endCursor: endCursor,
-          hasNextPage: values[1].count > 0
+          hasNextPage: values[1] > 0
         }
       };
     },

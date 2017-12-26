@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Button } from '../../../common/components';
-import PostCommentForm from './PostCommentForm';
+import { Table, Button } from '../../../../common/components';
+import PostCommentForm from '../PostCommentForm';
 
 class PostCommentsView extends React.PureComponent {
-  hendleEditComment = (id, content) => {
+  handleEditComment = (id, content) => {
     const { onCommentSelect } = this.props;
     onCommentSelect({ id, content });
   };
 
-  hendleDeleteComment = id => {
+  handleDeleteComment = id => {
     const { comment, onCommentSelect, deleteComment } = this.props;
 
     if (comment.id === id) {
@@ -49,17 +49,17 @@ class PostCommentsView extends React.PureComponent {
           <div style={{ width: 120 }}>
             <Button
               color="primary"
-              size="sm"
+              size="small"
               className="edit-comment"
-              onClick={() => this.hendleEditComment(record.id, record.content)}
+              onClick={() => this.handleEditComment(record.id, record.content)}
             >
               Edit
             </Button>{' '}
             <Button
               color="primary"
-              size="sm"
+              size="small"
               className="delete-comment"
-              onClick={() => this.hendleDeleteComment(record.id)}
+              onClick={() => this.handleDeleteComment(record.id)}
             >
               Delete
             </Button>

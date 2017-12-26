@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 
-import { PageLayout } from '../../../common/components';
-import PostForm from './PostForm';
-import PostComments from '../containers/PostComments';
+import { PageLayout, Col } from '../../../../common/components';
+import PostForm from '../PostForm';
+import PostComments from '../../containers/PostComments';
+import styles from './styles.scss';
+import {SubmissionError} from "redux-form";
 
-const onSubmit = (post, addPost, editPost) => values => {
+const  onSubmit = (post, addPost, editPost) =>  values => {
   if (post) {
     editPost(post.id, values.title, values.content);
   } else {
@@ -45,6 +47,7 @@ const PostEditView = ({ loading, post, match, location, subscribeToMore, addPost
   } else {
     return (
       <PageLayout>
+        <Col className={styles.PostEditView}>
         {renderMetaData()}
         <Link id="back-button" to="/posts">
           Back
@@ -59,6 +62,7 @@ const PostEditView = ({ loading, post, match, location, subscribeToMore, addPost
             subscribeToMore={subscribeToMore}
           />
         )}
+        </Col>
       </PageLayout>
     );
   }

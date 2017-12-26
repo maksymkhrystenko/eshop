@@ -21,5 +21,8 @@
   padding-bottom: 50px;
   .ContentWrapper {
     @include ContentWrapper;
+    &>div{
+      width: 100%;
+    }
   }
 }

@@ -33,7 +33,7 @@ const LoginForm = ({handleSubmit, submitting, onSubmit, error}) => {
       />
       <div className="text-center">{error && <Alert color="error">{error}</Alert>}</div>
       <div className="text-center">
-        <Button color="primary" type="submit" disabled={submitting}>
+        <Button color="primary" htmlType="submit" disabled={submitting}>
           Login
         </Button>
         {/*    {settings.user.auth.facebook.enabled && (
