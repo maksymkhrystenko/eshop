@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DebounceInput} from 'react-debounce-input';
-import {Form, FormItem, Select, Option, Label, Input} from '../../../common/components';
+import {Field, reduxForm} from 'redux-form';
 
-export default class UsersFilterView extends React.PureComponent {
+import {Form, FormItem, Select, Option, Label, Input, RenderSelect, RenderCheckBox} from '../../../common/components';
+
+class UsersFilterView extends React.PureComponent {
   static propTypes = {
     searchText: PropTypes.string,
     role: PropTypes.string,
@@ -18,9 +20,9 @@ export default class UsersFilterView extends React.PureComponent {
     onSearchTextChange(e.target.value);
   };
 
-  handleRole = e => {
+  handleRole = value => {
     const {onRoleChange} = this.props;
-    onRoleChange(e.target.value);
+    onRoleChange(value);
   };
 
   handleIsActive = () => {
@@ -30,8 +32,24 @@ export default class UsersFilterView extends React.PureComponent {
 
   render() {
     const {role, isActive} = this.props;
+
+    const options = [
+      {
+        name: 'SELECT',
+        content: ''
+      },
+      {
+        name: 'USER',
+        content: 'user'
+      },
+      {
+        name: 'ADMIN',
+        content: 'admin'
+      },
+    ];
+
     return (
-      <Form layout="inline">
+      <Form name="usersFilter" layout="inline">
         <FormItem label="Filter">
           <DebounceInput
             minLength={2}
@@ -42,26 +60,14 @@ export default class UsersFilterView extends React.PureComponent {
           />
         </FormItem>
         &nbsp;
-        <FormItem label="Role">
-          <Select name="role" defaultValue={role} onChange={this.handleRole}>
-            <Option key={1} value="">
-              Select ...
-            </Option>
-            <Option key={2} value="user">
-              user
-            </Option>
-            <Option key={3} value="admin">
-              admin
-            </Option>
-          </Select>
-        </FormItem>
+        <RenderSelect style={{width: 200, marginTop:'-8px'}}  name="role" defaultValue={options[0].content} options={options} type="select" label="Role" change={this.handleRole} />
         &nbsp;
-        <FormItem>
-          <Label>
-            <Input type="checkbox" defaultChecked={isActive} onChange={this.handleIsActive}/> Is Active
-          </Label>
-        </FormItem>
+        <RenderCheckBox name="isActive" type="checkbox" change={this.handleIsActive} label="Is Active"/>
       </Form>
     );
   }
 }
+
+export default reduxForm({
+  form: 'usersFilter'
+})(UsersFilterView);

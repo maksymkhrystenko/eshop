@@ -8,8 +8,31 @@ import settings from '../../user-config';
 
 export default pubsub => ({
   Query: {
-    users: withAuth(['user:view:all'], (obj, {orderBy, filter}, context) => {
-      return context.User.getUsers(orderBy, filter);
+    users: withAuth(['user:view:all'], async (obj, {limit, offset, orderBy, filter}, context) => {
+      let edgesArray = [];
+      let users = await context.User.getUsers({limit, offset, orderBy, filter});
+      users.map(user => {
+        edgesArray.push({
+          cursor: user.id,
+          node: user
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+      const values = await Promise.all([context.User.getTotal({
+        limit,
+        offset,
+        orderBy,
+        filter
+      }), context.User.getNextPageFlag({limit, offset, orderBy, filter, id: endCursor})]);
+      console.log(values);
+      return {
+        totalCount: values[0],
+        edges: edgesArray,
+        pageInfo: {
+          endCursor: endCursor,
+          hasNextPage: values[1].length > 0
+        }
+      };
     }),
     user: withAuth(
       (obj, args, context) => {
@@ -37,14 +60,14 @@ export default pubsub => ({
   },
   UserProfile: {
     firstName(obj) {
-      return obj.firstName;
+      return obj.profile.firstName;
     },
     lastName(obj) {
-      return obj.lastName;
+      return obj.profile.lastName;
     },
     fullName(obj) {
-      if (obj.firstName && obj.lastName) {
-        return `${obj.firstName} ${obj.lastName}`;
+      if (obj.profile.firstName && obj.profile.lastName) {
+        return `${obj.profile.firstName} ${obj.profile.lastName}`;
       } else {
         return null;
       }
@@ -212,12 +235,9 @@ export default pubsub => ({
           let user = await context.User.register({...input});
           await context.User.editUserProfile({id: user.id, ...input});
 
-          if (settings.user.auth.certificate.enabled) {
-            await context.User.editAuthCertificate({id: user.id, ...input});
-          }
-
           user = await context.User.getUser(user.id);
-
+          console.log(999999);
+          console.log(user);
           if (context.mailer && settings.user.auth.password.sendAddNewUserEmail && !emailExists && context.req) {
             // async email
             jwt.sign({user: pick(user, 'id')}, context.SECRET, {expiresIn: '1d'}, (err, emailToken) => {

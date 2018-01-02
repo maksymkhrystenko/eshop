@@ -5,6 +5,7 @@ import {graphql, compose} from 'react-apollo';
 import UsersListView from '../components/UsersListView';
 import USERS_QUERY from '../graphql/UsersQuery.graphql';
 import DELETE_USER from '../graphql/DeleteUser.graphql';
+import settings from '../../../config';
 
 class UsersList extends React.PureComponent {
   render() {
@@ -19,12 +20,37 @@ const UsersListWithApollo = compose(
         fetchPolicy: 'cache-and-network',
         variables: {
           orderBy: orderBy,
-          filter: {searchText, role, isActive}
+          filter: {searchText, role, isActive},
+          limit: settings.app.paginationLength,
+          offset: 0
         }
       };
     },
-    props({data: {loading, users, refetch, error}}) {
-      return {loading, users, refetch, errors: error ? error.graphQLErrors : null};
+    props({data: {loading, users, refetch, error, fetchMore}}) {
+      const loadMoreRows = () => {
+        return fetchMore({
+          variables: {
+            offset: users.edges.length
+          },
+          updateQuery: (previousResult, {fetchMoreResult}) => {
+            const totalCount = fetchMoreResult.users.totalCount;
+            const newEdges = fetchMoreResult.users.edges;
+            const pageInfo = fetchMoreResult.users.pageInfo;
+
+            return {
+              // By returning `cursor` here, we update the `fetchMore` function
+              // to the new cursor.
+              users: {
+                totalCount,
+                edges: [...previousResult.users.edges, ...newEdges],
+                pageInfo,
+                __typename: 'Users'
+              }
+            };
+          }
+        });
+      };
+      return {loadMoreRows, loading, users, refetch, errors: error ? error.graphQLErrors : null};
     }
   }),
   graphql(DELETE_USER, {

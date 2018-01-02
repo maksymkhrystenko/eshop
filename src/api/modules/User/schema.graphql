@@ -53,9 +53,22 @@ type Tokens {
   refreshToken: String!
 }
 
+# Edges for Posts
+type UserEdges {
+  node: User
+  cursor: Int
+}
+
+# Users relay-style pagination query
+type Users {
+  totalCount: Int
+  edges: [UserEdges]
+  pageInfo: PageInfo
+}
+
 extend type Query {
   # Get all users ordered by: OrderByUserInput add filtered by: FilterUserInput
-  users(orderBy: OrderByUserInput, filter: FilterUserInput): [User]
+  users(orderBy: OrderByUserInput, filter: FilterUserInput, limit: Int, offset: Int): Users
   # Get user by id
   user(id: Int!): User
   # Get current user

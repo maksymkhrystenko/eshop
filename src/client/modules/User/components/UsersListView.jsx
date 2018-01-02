@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {Table, Button} from '../../../common/components';
+import {Table, Button, Col} from '../../../common/components';
 import {SubmissionError} from "redux-form";
 
 export default class UsersView extends React.PureComponent {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
-    users: PropTypes.array,
+    users: PropTypes.object,
     orderBy: PropTypes.object,
+    loadMoreRows: PropTypes.func.isRequired,
     onOrderBy: PropTypes.func.isRequired,
     deleteUser: PropTypes.func.isRequired
   };
@@ -58,8 +59,18 @@ export default class UsersView extends React.PureComponent {
     return onOrderBy({column: name, order});
   };
 
+  renderLoadMore = (users, loadMoreRows) => {
+    if (users.pageInfo.hasNextPage) {
+      return (
+        <Button id="load-more" color="primary" onClick={loadMoreRows}>
+          Load more ...
+        </Button>
+      );
+    }
+  };
+
   render() {
-    const {loading, users, deleteUser} = this.props;
+    const {loading, users, deleteUser, loadMoreRows} = this.props;
     const {errors} = this.state;
 
     const columns = [
@@ -109,7 +120,7 @@ export default class UsersView extends React.PureComponent {
         title: 'Actions',
         key: 'actions',
         render: (text, record) => (
-          <Button color="primary" size="sm" onClick={async () => {
+          <Button color="primary" size="small" onClick={async () => {
             let res = await this.handleDeleteUser(record.id, deleteUser);
             this.setState(res)
           }}>
@@ -123,15 +134,21 @@ export default class UsersView extends React.PureComponent {
       return <div className="text-center">Loading...</div>;
     } else {
       return (
-        <div>
+        <Col>
           {errors &&
           errors.map(error => (
             <div className="alert alert-danger" role="alert" key={error.field}>
               {error.message}
             </div>
           ))}
-          <Table dataSource={users} columns={columns}/>
-        </div>
+          <Table dataSource={users.edges.map(({node}) => node)} columns={columns}/>
+          <Col>
+            <small>
+              ({users.edges.length} / {users.totalCount})
+            </small>
+          </Col>
+          {this.renderLoadMore(users, loadMoreRows)}
+        </Col>
       );
     }
   }

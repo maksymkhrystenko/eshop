@@ -3,6 +3,9 @@
     "translation": {
       "CATEGORIES": "Категории",
       "FEEDBACKS": "отзывов",
+      "USER": "Пользователь",
+      "ADMIN": "Админ",
+      "SELECT": "Выбрать...",
       "TO_ORDER": "Заказать",
       "CURRENCY": "грн.",
       "PRICE_NAME": "Цена",

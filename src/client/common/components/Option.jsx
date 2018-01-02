@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import Select from 'antd/lib/select';
-
-//const ADOption = Select.Option;
+import {Select} from 'antd';
 
 const Option = ({ children, ...props }) => {
-  return <option {...props}>{children}</option>;
+  return <Select.Option {...props}>{children}</Select.Option>;
 };
 
 Option.propTypes = {

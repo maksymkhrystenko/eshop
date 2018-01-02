@@ -5,6 +5,7 @@ module.exports = {
   app: {
     htmlAttributes: { lang: 'ru' },
     title: 'EShop',
+    paginationLength: 2,
     titleTemplate: 'EShop - %s',
     meta: [
       {

@@ -3,12 +3,45 @@ import {has} from 'lodash';
 import bcrypt from 'bcryptjs';
 import User from './schema-mongo';
 
+
+const getQuery = ({orderBy, filter}) => {
+  let sortQuery = {}, searchQuery = {};
+  if (orderBy.column && orderBy.order)
+    sortQuery = {
+      [orderBy.column]: orderBy.order === 'asc' ? 1 : -1
+    };
+  else sortQuery = {
+    id: -1
+  };
+  if (filter.searchText !== '')
+    searchQuery.username = {$regex: filter.searchText, $options: "gi"};
+  if (filter.role !== '')
+    searchQuery.role = filter.role;
+  if (filter.isActive)
+    searchQuery.isActive = true;
+  return {searchQuery, sortQuery}
+}
+
 // Actual query fetching and transformation in DB
 export default class ModelClass {
-  async getUsers(orderBy, filter) {
-    return User.find({}, {}, {
-      sort: {id: -1}
-    });
+  getUsers({limit, offset, orderBy, filter}) {
+    let res = getQuery({orderBy, filter});
+    let {searchQuery, sortQuery} = res;
+    return User.find(searchQuery, {}, {
+      sort: sortQuery
+    }).skip(offset).limit(limit);
+  }
+
+  getTotal({orderBy, filter}) {
+    let {searchQuery} = getQuery({orderBy, filter});
+    return User.count(searchQuery);
+  }
+
+  getNextPageFlag({limit, offset, orderBy, filter}) {
+    let {searchQuery, sortQuery} = getQuery({orderBy, filter});
+    return User.find(searchQuery, {}, {
+      sort: sortQuery
+    }).skip(offset + limit).limit(limit);
   }
 
   async getUser(id) {
@@ -64,7 +97,7 @@ export default class ModelClass {
     // const user = await User.findOne({id});
     return User.findOneAndUpdate({id}, {
       $set: {
-        userProfile: profile
+        profile: profile
       }
     });
 
