@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {Table, Button, Col} from '../../../common/components';
+import i18next from "i18next";
+
+import {Table, Button, Col, PagesInfo, LoadMore} from '../../../common/components';
 import {SubmissionError} from "redux-form";
+
 
 export default class UsersView extends React.PureComponent {
   static propTypes = {
@@ -59,16 +62,6 @@ export default class UsersView extends React.PureComponent {
     return onOrderBy({column: name, order});
   };
 
-  renderLoadMore = (users, loadMoreRows) => {
-    if (users.pageInfo.hasNextPage) {
-      return (
-        <Button id="load-more" color="primary" onClick={loadMoreRows}>
-          Load more ...
-        </Button>
-      );
-    }
-  };
-
   render() {
     const {loading, users, deleteUser, loadMoreRows} = this.props;
     const {errors} = this.state;
@@ -117,14 +110,14 @@ export default class UsersView extends React.PureComponent {
         render: text => text.toString()
       },
       {
-        title: 'Actions',
+        title: i18next.t('ACTIONS'),
         key: 'actions',
         render: (text, record) => (
           <Button color="primary" size="small" onClick={async () => {
             let res = await this.handleDeleteUser(record.id, deleteUser);
             this.setState(res)
           }}>
-            Delete
+            {i18next.t('DELETE')}
           </Button>
         )
       }
@@ -143,11 +136,14 @@ export default class UsersView extends React.PureComponent {
           ))}
           <Table dataSource={users.edges.map(({node}) => node)} columns={columns}/>
           <Col>
-            <small>
-              ({users.edges.length} / {users.totalCount})
-            </small>
+            <PagesInfo countOfShowedItems={users.edges.length} totalCount={users.totalCount}/>
+
           </Col>
-          {this.renderLoadMore(users, loadMoreRows)}
+          <Col>
+            <LoadMore hasNextPage={users.pageInfo.hasNextPage} loadMoreRows={loadMoreRows}/>
+
+          </Col>
+      {/*    {this.renderLoadMore(users, loadMoreRows)}*/}
         </Col>
       );
     }

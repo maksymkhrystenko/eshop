@@ -4,6 +4,7 @@ import {DebounceInput} from 'react-debounce-input';
 import {Field, reduxForm} from 'redux-form';
 
 import {Form, FormItem, Select, Option, Label, Input, RenderSelect, RenderCheckBox} from '../../../common/components';
+import i18next from "i18next";
 
 class UsersFilterView extends React.PureComponent {
   static propTypes = {
@@ -50,11 +51,11 @@ class UsersFilterView extends React.PureComponent {
 
     return (
       <Form name="usersFilter" layout="inline">
-        <FormItem label="Filter">
+        <FormItem label={i18next.t('FILTER')}>
           <DebounceInput
             minLength={2}
             debounceTimeout={300}
-            placeholder="Search ..."
+            placeholder={i18next.t('SEARCH')}
             element={Input}
             onChange={this.handleSearch}
           />

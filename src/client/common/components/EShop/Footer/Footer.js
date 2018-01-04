@@ -5,7 +5,6 @@ export default class Footer extends Component {
   componentDidMount() {
  /*   $(document).ready(function () {
       $("#to-top-button").click(function () {
-        console.log(88);
         $("html").animate({scrollTop: 0}, '500', 'swing', function () {
         });
       });

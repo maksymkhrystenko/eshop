@@ -236,8 +236,6 @@ export default pubsub => ({
           await context.User.editUserProfile({id: user.id, ...input});
 
           user = await context.User.getUser(user.id);
-          console.log(999999);
-          console.log(user);
           if (context.mailer && settings.user.auth.password.sendAddNewUserEmail && !emailExists && context.req) {
             // async email
             jwt.sign({user: pick(user, 'id')}, context.SECRET, {expiresIn: '1d'}, (err, emailToken) => {

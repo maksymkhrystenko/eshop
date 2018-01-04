@@ -22,6 +22,8 @@ export { default as AbilityInStock } from './AbilityInStock';
 export { default as Counter } from './Counter';
 export { default as Rates } from './Rates';
 export { default as Tabs } from './Tabs';
+export { default as PagesInfo } from './PagesInfo';
+export { default as LoadMore } from './LoadMore';
 
 export { default as Card } from './Card';
 export { default as CardGroup } from './CardGroup';

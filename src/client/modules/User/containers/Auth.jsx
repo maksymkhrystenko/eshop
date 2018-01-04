@@ -8,6 +8,7 @@ import decode from 'jwt-decode';
 import log from '../../../common/utils/log';
 import CURRENT_USER_QUERY from '../graphql/CurrentUserQuery.graphql';
 import LOGOUT from '../graphql/Logout.graphql';
+import i18next from "i18next";
 
 const checkAuth = (cookies, scope) => {
   let token = null;
@@ -79,7 +80,7 @@ AuthNav.propTypes = {
 const AuthLogin = ({children, cookies, logout}) => {
   return checkAuth(cookies) ? (
     <a href="#" onClick={() => logout()} className="nav-link">
-      Logout
+      {i18next.t('NAVBAR_MENU_LOG_OUT')}
     </a>
   ) : (
     children

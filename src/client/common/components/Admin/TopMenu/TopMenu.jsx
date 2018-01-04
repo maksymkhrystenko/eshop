@@ -21,7 +21,6 @@ class TopMenu extends Component {
         }
       },
       error: (err) => {
-        console.log('^^^^^^');
         console.log(err.responseText);
       }
     });*/
