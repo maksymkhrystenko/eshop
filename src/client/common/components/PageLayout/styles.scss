@@ -1,8 +1,8 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.ant-layout-header{
-  &.Header{
+.ant-layout-header {
+  &.Header {
     height: auto;
     position: fixed;
     width: 100%;
@@ -14,14 +14,14 @@
   }
 }
 
-.Content{
+.Content {
   background: $white;
   min-height: 280px;
   padding-top: 174px;
   padding-bottom: 50px;
   .ContentWrapper {
     @include ContentWrapper;
-    &>div{
+    & > div {
       width: 100%;
     }
   }

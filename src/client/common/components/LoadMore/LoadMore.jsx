@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 
-import {Col, Row, Label, Link, Button} from '../../components';
+import { Col, Row, Button } from '../../components';
 import styles from './styles.scss';
-import i18next from "i18next";
 
-const LoadMore = ({hasNextPage, loadMoreRows, ...props}) => {
+const LoadMore = ({ hasNextPage, loadMoreRows }) => {
   if (hasNextPage) {
     return (
       <Row type="flex" justify="end" className={styles.LoadMore}>
@@ -16,15 +16,18 @@ const LoadMore = ({hasNextPage, loadMoreRows, ...props}) => {
         </Col>
       </Row>
     );
-  } else {
-    return (
-      <Col/>
-    );
   }
+  return <Col />;
 };
 
 LoadMore.propTypes = {
-  children: PropTypes.node
+  hasNextPage: PropTypes.bool,
+  loadMoreRows: PropTypes.func
+};
+
+LoadMore.defaultProps = {
+  hasNextPage: null,
+  loadMoreRows: null
 };
 
 export default LoadMore;

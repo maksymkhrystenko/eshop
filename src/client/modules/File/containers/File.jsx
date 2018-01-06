@@ -7,6 +7,11 @@ import UPLOAD_FILES from '../graphql/UploadFiles.graphql';
 import REMOVE_FILE from '../graphql/RemoveFile.graphql';
 
 class Upload extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log('Dashboard');
+  }
+
   render() {
     return <UploadView {...this.props} />;
   }
@@ -14,11 +19,9 @@ class Upload extends React.Component {
 
 const UploadWithApollo = compose(
   graphql(FILES_QUERY, {
-    options: () => {
-      return {
-        fetchPolicy: 'cache-and-network'
-      };
-    },
+    options: () => ({
+      fetchPolicy: 'cache-and-network'
+    }),
     props({ data: { loading, error, files, refetch } }) {
       if (error) throw new Error(error);
       return { loading, files, refetch };

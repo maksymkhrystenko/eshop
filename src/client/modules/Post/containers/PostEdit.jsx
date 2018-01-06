@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {graphql, compose} from 'react-apollo';
-import {createApolloFetch} from 'apollo-fetch';
+import { graphql, compose } from 'react-apollo';
+import _ from 'lodash';
 
 import PostEditView from '../components/PostEditView';
-import {AddPost} from './Post';
-
+import { AddPost } from './Post';
 import POST_QUERY from '../graphql/PostQuery.graphql';
 import ADD_POST from '../graphql/AddPost.graphql';
 import EDIT_POST from '../graphql/EditPost.graphql';
@@ -32,20 +31,21 @@ class PostEdit extends React.PureComponent {
     }
   }
 
-  subscribeToPostEdit = postId => {
-    const {subscribeToMore} = this.props;
-    this.subscription = subscribeToMore({
-      document: POST_SUBSCRIPTION,
-      variables: {id: postId}
-    });
-  };
-
   componentWillUnmount() {
     if (this.subscription) {
       // unsubscribe
       this.subscription();
     }
   }
+
+  subscribeToPostEdit = postId => {
+    const { subscribeToMore } = this.props;
+    const subscribeToMoreQuery = {
+      document: POST_SUBSCRIPTION,
+      variables: { id: postId }
+    };
+    this.subscription = subscribeToMore(subscribeToMoreQuery);
+  };
 
   render() {
     return <PostEditView {...this.props} />;
@@ -60,47 +60,51 @@ PostEdit.propTypes = {
   subscribeToMore: PropTypes.func.isRequired
 };
 
+PostEdit.defaultProps = {
+  post: null
+};
+
 export default compose(
   graphql(POST_QUERY, {
-    options: (props) => {
+    options: props => {
       let id = 0;
-      if (props.match && props.match.params && props.match.params.id) {
+      if (_.has(props.match, 'params') && _.has(props.match, 'params.id')) {
         id = props.match.params.id;
       } else if (props.navigation) {
         id = props.navigation.state.params.id;
       }
       return {
-        variables: {id},
+        variables: { id }
       };
     },
-    props({data: {loading, post, subscribeToMore}}) {
-      return {loading, post, subscribeToMore};
+    props({ data: { loading, post, subscribeToMore } }) {
+      return { loading, post, subscribeToMore };
     }
   }),
   graphql(ADD_POST, {
-    props: ({ownProps: {history, navigation}, mutate}) => ({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
       addPost: async (title, content) => {
-        let postData = await mutate({
-          variables: {input: {title, content}},
+        const mutateQuery = {
+          variables: { input: { title, content } },
           optimisticResponse: {
             __typename: 'Mutation',
             addPost: {
               __typename: 'Post',
               id: null,
-              title: title,
-              content: content,
+              title,
+              content,
               comments: []
             }
           },
           updateQueries: {
-            posts: (prev, {mutationResult: {data: {addPost}}}) => {
-              return AddPost(prev, addPost);
-            }
+            posts: (prev, { mutationResult: { data: { addPost } } }) =>
+              AddPost(prev, addPost)
           }
-        });
+        };
+        const postData = await mutate(mutateQuery);
 
         if (history) {
-          return history.push('/post/' + postData.data.addPost.id, {
+          return history.push(`/post/${postData.data.addPost.id}`, {
             post: postData.data.addPost
           });
         } else if (navigation) {
@@ -113,10 +117,10 @@ export default compose(
     })
   }),
   graphql(EDIT_POST, {
-    props: ({ownProps: {history, navigation}, mutate}) => ({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
       editPost: async (id, title, content) => {
         await mutate({
-          variables: {input: {id, title, content}}
+          variables: { input: { id, title, content } }
         });
 
         if (history) {

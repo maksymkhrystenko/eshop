@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import {LayoutCenter, Card, CardGroup, CardTitle, CardText, PageLayout} from '../../../common/components';
+import {
+  LayoutCenter,
+  Card,
+  CardGroup,
+  CardTitle,
+  CardText,
+  PageLayout
+} from '../../../common/components';
 
 const renderMetaData = () => (
   <Helmet
-    title={`App - Profile`}
+    title="App - Profile"
     meta={[
       {
         name: 'description',
@@ -15,7 +22,7 @@ const renderMetaData = () => (
   />
 );
 
-const ProfileView = ({loading, currentUser}) => {
+const ProfileView = ({ loading, currentUser }) => {
   if (loading && !currentUser) {
     return (
       <PageLayout>
@@ -43,29 +50,32 @@ const ProfileView = ({loading, currentUser}) => {
               <CardText>{currentUser.role}</CardText>
             </CardGroup>
             {currentUser.profile &&
-            currentUser.profile.fullName && (
-              <CardGroup>
-                <CardTitle>Full Name:</CardTitle>
-                <CardText>{currentUser.profile.fullName}</CardText>
-              </CardGroup>
-            )}
+              currentUser.profile.fullName && (
+                <CardGroup>
+                  <CardTitle>Full Name:</CardTitle>
+                  <CardText>{currentUser.profile.fullName}</CardText>
+                </CardGroup>
+              )}
           </Card>
         </LayoutCenter>
       </PageLayout>
     );
-  } else {
-    return (
-      <PageLayout>
-        {renderMetaData()}
-        <h2>No current user logged in</h2>
-      </PageLayout>
-    );
   }
+  return (
+    <PageLayout>
+      {renderMetaData()}
+      <h2>No current user logged in</h2>
+    </PageLayout>
+  );
 };
 
 ProfileView.propTypes = {
   loading: PropTypes.bool.isRequired,
   currentUser: PropTypes.object
+};
+
+ProfileView.defaultProps = {
+  currentUser: null
 };
 
 export default ProfileView;

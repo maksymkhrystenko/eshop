@@ -15,7 +15,7 @@ const PageNotFound = ({ staticContext = {} }) => {
     <PageLayout>
       <Section>
         <Helmet
-          title={`App - Page not found`}
+          title="App - Page not found"
           meta={[
             {
               name: 'description',

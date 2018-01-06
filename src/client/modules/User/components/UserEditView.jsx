@@ -1,34 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import {Link} from 'react-router-dom';
-import {SubmissionError} from 'redux-form';
-import {pick} from 'lodash';
-import {PageLayout, LayoutCenter} from '../../../common/components';
+import { SubmissionError } from 'redux-form';
+import { pick } from 'lodash';
 
+import { PageLayout, Row, Col } from '../../../common/components';
+import Back from '../../../common/components/Admin/Back';
 import UserForm from './UserForm';
 
-export default class UserEditView extends React.PureComponent {
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object,
-    addUser: PropTypes.func.isRequired,
-    editUser: PropTypes.func.isRequired
-  };
-
+class UserEditView extends React.PureComponent {
   onSubmit = (user, addUser, editUser) => async values => {
     let result = null;
-
-    let insertValues = pick(values, ['username', 'email', 'role', 'isActive', 'password']);
-    insertValues['profile'] = pick(values.profile, ['firstName', 'lastName']);
+    const userValues = pick(values, [
+      'username',
+      'email',
+      'role',
+      'isActive',
+      'password'
+    ]);
+    const profile = pick(values.profile, ['firstName', 'lastName']);
+    const insertValues = { ...userValues, profile: { ...profile } };
     if (user) {
-      result = await editUser({id: user.id, ...insertValues});
+      result = await editUser({ id: user.id, ...insertValues });
     } else {
       result = await addUser(insertValues);
     }
 
     if (result.errors) {
-      let submitError = {
+      const submitError = {
         _error: 'Edit user failed!'
       };
       result.errors.map(error => (submitError[error.field] = error.message));
@@ -38,7 +37,7 @@ export default class UserEditView extends React.PureComponent {
 
   renderMetaData = () => (
     <Helmet
-      title={`App - Edit User`}
+      title="App - Edit User"
       meta={[
         {
           name: 'description',
@@ -49,7 +48,7 @@ export default class UserEditView extends React.PureComponent {
   );
 
   render() {
-    const {loading, user, addUser, editUser} = this.props;
+    const { loading, user, addUser, editUser } = this.props;
 
     if (loading && !user) {
       return (
@@ -58,19 +57,34 @@ export default class UserEditView extends React.PureComponent {
           <div className="text-center">Loading...</div>
         </PageLayout>
       );
-    } else {
-      return (
-        <PageLayout>
-          {this.renderMetaData()}
-          <Link id="back-button" to="/users">
-            Back
-          </Link>
-          <LayoutCenter>
-            <h2>{user ? 'Edit' : 'Create'} User</h2>
-            <UserForm onSubmit={this.onSubmit(user, addUser, editUser)} initialValues={user}/>
-          </LayoutCenter>
-        </PageLayout>
-      );
     }
+    return (
+      <PageLayout>
+        {this.renderMetaData()}
+        <Row>
+          <Col span={24}>
+            <Back backLink="/users" />
+            <h2>{user ? 'Edit' : 'Create'} User</h2>
+            <UserForm
+              onSubmit={this.onSubmit(user, addUser, editUser)}
+              initialValues={user}
+            />
+          </Col>
+        </Row>
+      </PageLayout>
+    );
   }
 }
+
+UserEditView.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  user: PropTypes.object,
+  addUser: PropTypes.func.isRequired,
+  editUser: PropTypes.func.isRequired
+};
+
+UserEditView.defaultProps = {
+  user: null
+};
+
+export default UserEditView;

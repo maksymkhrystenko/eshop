@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Input, Icon, Menu, Dropdown} from 'antd';
+import React, { Component } from 'react';
+import { Input, Icon, Menu, Dropdown } from 'antd';
 import i18next from 'i18next';
 
-import {Col, Row, Label, Link} from '../../../components';
+import { Col, Row, Label, Link } from '../../../components';
 import styles from './styles.scss';
 
-const Search = Input.Search;
+const { Search } = Input;
 
-const onClick = function ({key}) {
+const onClick = ({ key }) => {
   console.log(`Click on item ${key}`);
 };
 
@@ -19,7 +19,12 @@ const menu = (
   </Menu>
 );
 
-export default class MainMenu extends Component {
+class TopMenu extends Component {
+  openProfile() {
+    this.a = 3;
+    console.log('openProfile');
+  }
+
   render() {
     return (
       <Row type="flex" align="middle" className={styles.TopMenu}>
@@ -27,7 +32,7 @@ export default class MainMenu extends Component {
           <Col span={6}>
             <Col>
               <Row type="flex" align="middle">
-                <Link className={styles.Logo} to={'/'}/>
+                <Link className={styles.Logo} to="/" />
               </Row>
             </Col>
           </Col>
@@ -47,19 +52,19 @@ export default class MainMenu extends Component {
               <Col className={styles.Contacts} span={14}>
                 <Row type="flex" align="middle">
                   <Col span={8}>
-
                     <Col span={24}>
-                      <Icon className={styles.PhoneImage} type="shake"/>
+                      <Icon className={styles.PhoneImage} type="shake" />
                     </Col>
-
-                    <Col span={24} className={styles.PhoneImage}/>
+                    <Col span={24} className={styles.PhoneImage} />
                   </Col>
                   <Col span={16}>
                     <Row type="flex" align="middle" className={styles.Phones}>
                       <Col span={24}>
                         <Label>+38 (093) 453 44 53</Label>
                         <Label>+38 (067) 763 42 86</Label>
-                        <Link to={'mailto:service@skills.com.ua'}>service@skills.com.ua</Link>
+                        <Link to="mailto:service@skills.com.ua">
+                          service@skills.com.ua
+                        </Link>
                       </Col>
                     </Row>
                   </Col>
@@ -68,21 +73,39 @@ export default class MainMenu extends Component {
               <Col className={styles.UserContainer} span={10}>
                 <Row type="flex" align="middle">
                   <Col span={12}>
-                    <Row type="flex" align="middle" className={styles.ActionBlock}>
-                      <Link to={'#'}>
-                        <Col span={24}> <Icon className={styles.ShoppingCartImage} type="shopping-cart"/></Col>
-                        <Col span={24}> <Label>{i18next.t('TOP_MENU_CART')}</Label></Col>
+                    <Row
+                      type="flex"
+                      align="middle"
+                      className={styles.ActionBlock}
+                    >
+                      <Link to="#">
+                        <Col span={24}>
+                          <Icon
+                            className={styles.ShoppingCartImage}
+                            type="shopping-cart"
+                          />
+                        </Col>
+                        <Col span={24}>
+                          <Label>{i18next.t('TOP_MENU_CART')}</Label>
+                        </Col>
                       </Link>
                     </Row>
                   </Col>
                   <Col span={12}>
-                    <Row type="flex" align="middle" className={styles.ActionBlock}>
-                      <Link to={'#'}>
-                        <Col span={24}> <Icon className={styles.AvatarImage} type="user"/></Col>
+                    <Row
+                      type="flex"
+                      align="middle"
+                      className={styles.ActionBlock}
+                    >
+                      <Link to="#">
                         <Col span={24}>
-                          <Dropdown overlay={menu}>
+                          <Icon className={styles.AvatarImage} type="user" />
+                        </Col>
+                        <Col span={24}>
+                          <Dropdown click={this.openProfile} overlay={menu}>
                             <Label className="ant-dropdown-link">
-                              {i18next.t('TOP_MENU_MY_PROFILE')} <Icon type="down"/>
+                              {i18next.t('TOP_MENU_MY_PROFILE')}
+                              <Icon type="down" />
                             </Label>
                           </Dropdown>
                         </Col>
@@ -98,3 +121,5 @@ export default class MainMenu extends Component {
     );
   }
 }
+
+export default TopMenu;

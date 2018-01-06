@@ -4,23 +4,15 @@ import { Table, Button } from '../../../../common/components';
 import PostCommentForm from '../PostCommentForm';
 
 class PostCommentsView extends React.PureComponent {
-  handleEditComment = (id, content) => {
-    const { onCommentSelect } = this.props;
-    onCommentSelect({ id, content });
-  };
-
-  handleDeleteComment = id => {
-    const { comment, onCommentSelect, deleteComment } = this.props;
-
-    if (comment.id === id) {
-      onCommentSelect({ id: null, content: '' });
-    }
-
-    deleteComment(id);
-  };
-
   onSubmit = () => values => {
-    const { comment, postId, addComment, editComment, onCommentSelect, onFormSubmitted } = this.props;
+    const {
+      comment,
+      postId,
+      addComment,
+      editComment,
+      onCommentSelect,
+      onFormSubmitted
+    } = this.props;
 
     if (comment.id === null) {
       addComment(values.content, postId);
@@ -32,9 +24,21 @@ class PostCommentsView extends React.PureComponent {
     onFormSubmitted();
   };
 
+  handleEditComment = (id, content) => {
+    const { onCommentSelect } = this.props;
+    onCommentSelect({ id, content });
+  };
+
+  handleDeleteComment = id => {
+    const { comment, onCommentSelect, deleteComment } = this.props;
+    if (comment.id === id) {
+      onCommentSelect({ id: null, content: '' });
+    }
+    deleteComment(id);
+  };
+
   render() {
     const { postId, comment, comments } = this.props;
-
     const columns = [
       {
         title: 'Content',
@@ -70,7 +74,11 @@ class PostCommentsView extends React.PureComponent {
     return (
       <div>
         <h3>Comments</h3>
-        <PostCommentForm postId={postId} onSubmit={this.onSubmit()} initialValues={comment} />
+        <PostCommentForm
+          postId={postId}
+          onSubmit={this.onSubmit()}
+          initialValues={comment}
+        />
         <Table dataSource={comments} columns={columns} />
       </div>
     );
@@ -85,8 +93,7 @@ PostCommentsView.propTypes = {
   editComment: PropTypes.func.isRequired,
   deleteComment: PropTypes.func.isRequired,
   onCommentSelect: PropTypes.func.isRequired,
-  onFormSubmitted: PropTypes.func.isRequired,
-  subscribeToMore: PropTypes.func.isRequired
+  onFormSubmitted: PropTypes.func.isRequired
 };
 
 export default PostCommentsView;

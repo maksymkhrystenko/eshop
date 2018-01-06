@@ -1,13 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {List as ADList} from 'antd';
-import styles from './styles.scss';
+import { List as ADList } from 'antd';
 
-const List = ({...rest}: Props): Element<'div'> => {
-  return (
-    <ADList renderItem={item => (<ADList.Item>{item}</ADList.Item>)} {...rest} className={styles.List}/>
-  )
-};
-
+const List = ({ ...rest }): Element<'div'> => (
+  <ADList renderItem={item => <ADList.Item>{item}</ADList.Item>} {...rest} />
+);
 
 export default List;

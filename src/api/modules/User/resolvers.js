@@ -24,7 +24,6 @@ export default pubsub => ({
         orderBy,
         filter
       }), context.User.getNextPageFlag({limit, offset, orderBy, filter, id: endCursor})]);
-      console.log(values);
       return {
         totalCount: values[0],
         edges: edgesArray,

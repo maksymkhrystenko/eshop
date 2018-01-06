@@ -1,5 +1,5 @@
 import React from 'react';
-import {graphql, compose} from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
 import ResetPasswordView from '../components/ResetPasswordView';
 
@@ -13,15 +13,15 @@ class ResetPassword extends React.PureComponent {
 
 const ResetPasswordWithApollo = compose(
   graphql(RESET_PASSWORD, {
-    props: ({ownProps: {history}, mutate}) => ({
-      resetPassword: async ({password, passwordConfirmation, token}) => {
+    props: ({ ownProps: { history }, mutate }) => ({
+      resetPassword: async ({ password, passwordConfirmation, token }) => {
         try {
-          const {data: {resetPassword}} = await mutate({
-            variables: {input: {password, passwordConfirmation, token}}
+          const { data: { resetPassword } } = await mutate({
+            variables: { input: { password, passwordConfirmation, token } }
           });
 
           if (resetPassword.errors) {
-            return {errors: resetPassword.errors};
+            return { errors: resetPassword.errors };
           }
 
           history.push('/login');

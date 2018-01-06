@@ -1,10 +1,14 @@
 /* @flow */
 
-import type { Dispatch, GetState, ThunkAction, Reducer } from '../../../common/types';
+import type {
+  Dispatch,
+  GetState,
+  ThunkAction,
+  Reducer
+} from '../../../common/types';
 
 export const API_URL = 'https://jsonplaceholder.typicode.com/users';
 
-// Export this for unit testing more easily
 export const fetchUsers = (
   axios: any,
   URL: string = API_URL

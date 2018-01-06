@@ -36,7 +36,7 @@
       border-top-left-radius: 20px;
       padding-left: 30px;
       width: 500px;
-      webkit-box-shadow: 0px 0px 1px 1px rgba(245, 193, 77, 0.89) inset;
+      -webkit-box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
       box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
       font-style: italic;
     }
@@ -113,7 +113,6 @@
         .main-menu-dropdown {
           display: none;
           position: absolute;
-          background-color: #f9f9f9;
           min-width: 160px;
           box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
           z-index: 1;

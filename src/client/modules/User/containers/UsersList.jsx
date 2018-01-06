@@ -1,6 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {graphql, compose} from 'react-apollo';
+import { connect } from 'react-redux';
+import { graphql, compose } from 'react-apollo';
 
 import UsersListView from '../components/UsersListView';
 import USERS_QUERY from '../graphql/UsersQuery.graphql';
@@ -15,24 +15,22 @@ class UsersList extends React.PureComponent {
 
 const UsersListWithApollo = compose(
   graphql(USERS_QUERY, {
-    options: ({orderBy, searchText, role, isActive}) => {
-      return {
-        fetchPolicy: 'cache-and-network',
-        variables: {
-          orderBy: orderBy,
-          filter: {searchText, role, isActive},
-          limit: settings.app.paginationLength,
-          offset: 0
-        }
-      };
-    },
-    props({data: {loading, users, refetch, error, fetchMore}}) {
-      const loadMoreRows = () => {
-        return fetchMore({
+    options: ({ orderBy, searchText, role, isActive }) => ({
+      /* fetchPolicy: 'cache-and-network', */
+      variables: {
+        orderBy,
+        filter: { searchText, role, isActive },
+        limit: settings.app.paginationLength,
+        offset: 0
+      }
+    }),
+    props({ data: { loading, users, refetch, error, fetchMore } }) {
+      const loadMoreRows = () =>
+        fetchMore({
           variables: {
             offset: users.edges.length
           },
-          updateQuery: (previousResult, {fetchMoreResult}) => {
+          updateQuery: (previousResult, { fetchMoreResult }) => {
             const totalCount = fetchMoreResult.users.totalCount;
             const newEdges = fetchMoreResult.users.edges;
             const pageInfo = fetchMoreResult.users.pageInfo;
@@ -49,23 +47,28 @@ const UsersListWithApollo = compose(
             };
           }
         });
+      return {
+        loadMoreRows,
+        loading,
+        users,
+        refetch,
+        errors: error ? error.graphQLErrors : null
       };
-      return {loadMoreRows, loading, users, refetch, errors: error ? error.graphQLErrors : null};
     }
   }),
   graphql(DELETE_USER, {
-    props: ({ownProps: {refetch}, mutate}) => ({
+    props: ({ ownProps: { refetch }, mutate }) => ({
       deleteUser: async id => {
         try {
-          const {data: {deleteUser}} = await mutate({
-            variables: {id}
+          const { data: { deleteUser } } = await mutate({
+            variables: { id }
           });
 
           // refeatch USERS_QUERY
           refetch();
 
           if (deleteUser.errors) {
-            return {errors: deleteUser.errors};
+            return { errors: deleteUser.errors };
           }
         } catch (e) {
           console.log(e.graphQLErrors);

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {graphql, compose} from 'react-apollo';
+import { connect } from 'react-redux';
+import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
-import {reset} from 'redux-form';
+import { reset } from 'redux-form';
 
 import ProductCommentsView from '../components/ProductCommentsView';
 
@@ -14,7 +14,10 @@ import COMMENT_SUBSCRIPTION from '../graphql/CommentSubscription.graphql';
 
 function AddComment(prev, node) {
   // ignore if duplicate
-  if (node.id !== null && prev.product.comments.some(comment => node.id === comment.id)) {
+  if (
+    node.id !== null &&
+    prev.product.comments.some(comment => node.id === comment.id)
+  ) {
     return prev;
   }
 
@@ -62,15 +65,27 @@ class ProductComments extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.props.onCommentSelect({ id: null, content: '' });
+
+    if (this.subscription) {
+      // unsubscribe
+      this.subscription();
+    }
+  }
+
   subscribeToCommentList = productId => {
-    const {subscribeToMore} = this.props;
+    const { subscribeToMore } = this.props;
     this.subscription = subscribeToMore({
       document: COMMENT_SUBSCRIPTION,
-      variables: {productId},
-      updateQuery: (prev, {subscriptionData: {data: {commentUpdated}}}) => {
+      variables: { productId },
+      updateQuery: (
+        prev,
+        { subscriptionData: { data: { commentUpdated } } }
+      ) => {
         let newResult = prev;
         if (commentUpdated) {
-          let {mutation, id, node} = commentUpdated;
+          const { mutation, id, node } = commentUpdated;
           if (mutation === 'CREATED') {
             newResult = AddComment(prev, node);
           } else if (mutation === 'DELETED') {
@@ -81,15 +96,6 @@ class ProductComments extends React.PureComponent {
       }
     });
   };
-
-  componentWillUnmount() {
-    this.props.onCommentSelect({id: null, content: ''});
-
-    if (this.subscription) {
-      // unsubscribe
-      this.subscription();
-    }
-  }
 
   render() {
     return <ProductCommentsView {...this.props} />;
@@ -110,10 +116,10 @@ ProductComments.propTypes = {
 
 const ProductCommentsWithApollo = compose(
   graphql(ADD_COMMENT, {
-    props: ({mutate}) => ({
+    props: ({ mutate }) => ({
       addComment: (content, productId) =>
         mutate({
-          variables: {input: {content, productId}},
+          variables: { input: { content, productId } },
           /*      optimisticResponse: {
                   __typename: 'Mutation',
                   addComment: {
@@ -121,9 +127,9 @@ const ProductCommentsWithApollo = compose(
                     id: null,
                     content: content
                   }
-                },*/
+                }, */
           updateQueries: {
-            product: (prev, {mutationResult: {data: {addComment}}}) => {
+            product: (prev, { mutationResult: { data: { addComment } } }) => {
               if (prev.product) {
                 return AddComment(prev, addComment);
               }
@@ -133,35 +139,38 @@ const ProductCommentsWithApollo = compose(
     })
   }),
   graphql(EDIT_COMMENT, {
-    props: ({ownProps: {productId}, mutate}) => ({
+    props: ({ ownProps: { productId }, mutate }) => ({
       editComment: (id, content) =>
         mutate({
-          variables: {input: {id, productId, content}},
+          variables: { input: { id, productId, content } },
           optimisticResponse: {
             __typename: 'Mutation',
             editComment: {
               __typename: 'Comment',
-              id: id,
-              content: content
+              id,
+              content
             }
           }
         })
     })
   }),
   graphql(DELETE_COMMENT, {
-    props: ({ownProps: {productId}, mutate}) => ({
+    props: ({ ownProps: { productId }, mutate }) => ({
       deleteComment: id =>
         mutate({
-          variables: {input: {id, productId}},
+          variables: { input: { id, productId } },
           optimisticResponse: {
             __typename: 'Mutation',
             deleteComment: {
               __typename: 'Comment',
-              id: id
+              id
             }
           },
           updateQueries: {
-            product: (prev, {mutationResult: {data: {deleteComment}}}) => {
+            product: (
+              prev,
+              { mutationResult: { data: { deleteComment } } }
+            ) => {
               if (prev.product) {
                 return DeleteComment(prev, deleteComment.id);
               }
@@ -173,7 +182,7 @@ const ProductCommentsWithApollo = compose(
 )(ProductComments);
 
 export default connect(
-  state => ({comment: state.product.comment}),
+  state => ({ comment: state.product.comment }),
   dispatch => ({
     onCommentSelect(comment) {
       dispatch({

@@ -1,7 +1,8 @@
 import React from 'react';
 import { merge, map, union, without, castArray } from 'lodash';
 
-const combine = (features, extractor) => without(union(...map(features, res => castArray(extractor(res)))), undefined);
+const combine = (features, extractor) =>
+  without(union(...map(features, res => castArray(extractor(res)))), undefined);
 
 export default class {
   /* eslint-disable no-unused-vars */
@@ -30,11 +31,16 @@ export default class {
     this.connectionParam = combine(arguments, arg => arg.connectionParam);
     this.createFetchOptions = combine(arguments, arg => arg.createFetchOptions);
     this.stylesInsert = combine(arguments, arg => arg.stylesInsert);
-    this.rootComponentFactory = combine(arguments, arg => arg.rootComponentFactory);
+    this.rootComponentFactory = combine(
+      arguments,
+      arg => arg.rootComponentFactory
+    );
   }
 
   get routes() {
-    return this.route.map((component, idx) => React.cloneElement(component, { key: idx + this.route.length }));
+    return this.route.map((component, idx) =>
+      React.cloneElement(component, { key: idx + this.route.length })
+    );
   }
 
   get navItems() {
@@ -74,7 +80,7 @@ export default class {
       ? (...args) => {
           try {
             let result = {};
-            for (let func of this.createFetchOptions) {
+            for (const func of this.createFetchOptions) {
               result = { ...result, ...func(...args) };
             }
             return result;

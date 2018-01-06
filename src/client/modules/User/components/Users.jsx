@@ -1,7 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import {Link} from 'react-router-dom';
-import {PageLayout, Button, Col, Row} from '../../../common/components';
+import { PageLayout, Col, Row } from '../../../common/components';
 import Tools from '../../../common/components/Admin/Tools';
 import UsersFilter from '../containers/UsersFilter';
 import UsersList from '../containers/UsersList';
@@ -9,7 +8,7 @@ import UsersList from '../containers/UsersList';
 const Users = () => {
   const renderMetaData = () => (
     <Helmet
-      title={`App - Users`}
+      title="App - Users"
       meta={[
         {
           name: 'description',
@@ -18,19 +17,18 @@ const Users = () => {
       ]}
     />
   );
-
   return (
     <PageLayout>
       {renderMetaData()}
       <Row>
-      <Col span={24}>
-        <h2>Users</h2>
-        <Tools addLink={'/users/0'} />
-        <hr/>
-        <UsersFilter/>
-        <hr/>
-        <UsersList/>
-      </Col>
+        <Col span={24}>
+          <h1>Users</h1>
+          <Tools addLink="/users/0" />
+          <hr />
+          <UsersFilter />
+          <hr />
+          <UsersList />
+        </Col>
       </Row>
     </PageLayout>
   );

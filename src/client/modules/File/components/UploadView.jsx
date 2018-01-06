@@ -3,22 +3,45 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Dropzone from 'react-dropzone';
 import filesize from 'filesize';
-import {PageLayout, Row, Col, Table, Button, Alert} from '../../../common/components';
 
-export default class UploadView extends React.PureComponent {
-  static propTypes = {
-    files: PropTypes.array,
-    uploadFiles: PropTypes.func.isRequired,
-    removeFile: PropTypes.func.isRequired
+import {
+  PageLayout,
+  Row,
+  Col,
+  Table,
+  Button,
+  Alert
+} from '../../../common/components';
+
+class UploadView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null
+    };
+  }
+
+  onDrop = uploadFiles => async files => {
+    const result = await uploadFiles(files);
+    if (result && result.error) {
+      this.setState({ error: result.error });
+    } else {
+      this.setState({ error: null });
+    }
   };
 
-  state = {
-    error: null
+  handleRemoveFile = async (id, removeFile) => {
+    const result = await removeFile(id);
+    let errors = { errors: [] };
+    if (result && result.errors) {
+      errors = { errors: result.errors };
+    }
+    return errors;
   };
 
   renderMetaData = () => (
     <Helmet
-      title={`App - Upload`}
+      title="App - Upload"
       meta={[
         {
           name: 'description',
@@ -28,29 +51,9 @@ export default class UploadView extends React.PureComponent {
     />
   );
 
-  onDrop = uploadFiles => async files => {
-    const result = await uploadFiles(files);
-    if (result && result.error) {
-      this.setState({error: result.error});
-    } else {
-      this.setState({error: null});
-    }
-  };
-
-
-  handleRemoveFile = async (id, removeFile) => {
-    const result = await removeFile(id);
-    let errors = {errors: []};
-    if (result && result.errors) {
-      errors = {errors: result.errors};
-    }
-    return errors;
-  };
-
   render() {
-    const {files, uploadFiles, removeFile} = this.props;
-    const {error} = this.state;
-
+    const { files, uploadFiles, removeFile } = this.props;
+    const { error } = this.state;
     const columns = [
       {
         title: 'Name',
@@ -67,11 +70,15 @@ export default class UploadView extends React.PureComponent {
         key: 'actions',
         width: 50,
         render: (text, record) => (
-          <Button color="primary" size="sm" className="delete-button"
-                  onClick={async () => {
-                    let res = await this.handleRemoveFile(record.id, removeFile);
-                    this.setState(res)
-                  }}>
+          <Button
+            color="primary"
+            size="sm"
+            className="delete-button"
+            onClick={async () => {
+              const res = await this.handleRemoveFile(record.id, removeFile);
+              this.setState(res);
+            }}
+          >
             Delete
           </Button>
         )
@@ -85,12 +92,15 @@ export default class UploadView extends React.PureComponent {
           <Row>
             <Col xs={4}>
               <Dropzone onDrop={this.onDrop(uploadFiles)}>
-                <p>Try dropping some files here, or click to select files to upload.</p>
+                <p>
+                  Try dropping some files here, or click to select files to
+                  upload.
+                </p>
               </Dropzone>
             </Col>
             <Col xs={8}>
               {error && <Alert color="error">{error}</Alert>}
-              {files && <Table dataSource={files} columns={columns}/>}
+              {files && <Table dataSource={files} columns={columns} />}
             </Col>
           </Row>
         </div>
@@ -98,3 +108,17 @@ export default class UploadView extends React.PureComponent {
     );
   }
 }
+
+UploadView.propTypes = {
+  files: PropTypes.array,
+  uploadFiles: PropTypes.func,
+  removeFile: PropTypes.func
+};
+
+UploadView.defaultProps = {
+  files: null,
+  uploadFiles: null,
+  removeFile: null
+};
+
+export default UploadView;

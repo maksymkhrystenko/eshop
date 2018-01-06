@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {graphql, compose} from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 
 import ProductList from '../components/ProductList';
@@ -11,13 +11,16 @@ import DELETE_PRODUCT from '../graphql/DeleteProduct.graphql';
 
 export function AddProduct(prev, node) {
   // ignore if duplicate
-  if (node.id !== null && prev.products.edges.some(product => node.id === product.cursor)) {
+  if (
+    node.id !== null &&
+    prev.products.edges.some(product => node.id === product.cursor)
+  ) {
     return prev;
   }
 
   const edge = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ProductEdges'
   };
 
@@ -62,7 +65,9 @@ class Product extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.loading) {
-      const endCursor = this.props.products ? this.props.products.pageInfo.endCursor : 0;
+      const endCursor = this.props.products
+        ? this.props.products.pageInfo.endCursor
+        : 0;
       const nextEndCursor = nextProps.products.pageInfo.endCursor;
 
       // Check if props have changed and, if necessary, stop the subscription
@@ -78,16 +83,23 @@ class Product extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    if (this.subscription) {
+      // unsubscribe
+      this.subscription();
+    }
+  }
+
   subscribeToProductList = endCursor => {
-    const {subscribeToMore} = this.props;
+    const { subscribeToMore } = this.props;
     this.subscription = subscribeToMore({
       document: PRODUCTS_SUBSCRIPTION,
-      variables: {endCursor},
+      variables: { endCursor },
       updateQuery: (prev, updateQuery) => {
-        let {subscriptionData: {data: {productsUpdated}}} = updateQuery;
+        const { subscriptionData: { data: { productsUpdated } } } = updateQuery;
         let newResult = prev;
         if (productsUpdated) {
-          let {mutation, node} = productsUpdated;
+          const { mutation, node } = productsUpdated;
           if (mutation === 'CREATED') {
             newResult = AddProduct(prev, node);
           } else if (mutation === 'DELETED') {
@@ -98,13 +110,6 @@ class Product extends React.PureComponent {
       }
     });
   };
-
-  componentWillUnmount() {
-    if (this.subscription) {
-      // unsubscribe
-      this.subscription();
-    }
-  }
 
   render() {
     return <ProductList {...this.props} />;
@@ -119,21 +124,23 @@ Product.propTypes = {
   subscribeToMore: PropTypes.func.isRequired
 };
 
+Product.defaultProps = {
+  products: null
+};
+
 export default compose(
   graphql(PRODUCTS_QUERY, {
-    options: () => {
-      return {
-        variables: {limit: 10, offset: 0}
-      };
-    },
-    props: ({data}) => {
-      const {loading, products, fetchMore, subscribeToMore} = data;
-      const loadMoreRows = () => {
-        return fetchMore({
+    options: () => ({
+      variables: { limit: 10, offset: 0 }
+    }),
+    props: ({ data }) => {
+      const { loading, products, fetchMore, subscribeToMore } = data;
+      const loadMoreRows = () =>
+        fetchMore({
           variables: {
             offset: products.pageInfo.endCursor
           },
-          updateQuery: (previousResult, {fetchMoreResult}) => {
+          updateQuery: (previousResult, { fetchMoreResult }) => {
             const totalCount = fetchMoreResult.products.totalCount;
             const newEdges = fetchMoreResult.products.edges;
             const pageInfo = fetchMoreResult.products.pageInfo;
@@ -150,27 +157,25 @@ export default compose(
             };
           }
         });
-      };
 
-      return {loading, products, subscribeToMore, loadMoreRows};
+      return { loading, products, subscribeToMore, loadMoreRows };
     }
   }),
   graphql(DELETE_PRODUCT, {
-    props: ({mutate}) => ({
+    props: ({ mutate }) => ({
       deleteProduct: id => {
         mutate({
-          variables: {id},
+          variables: { id },
           optimisticResponse: {
             __typename: 'Mutation',
             deleteProduct: {
-              id: id,
+              id,
               __typename: 'Product'
             }
           },
           updateQueries: {
-            products: (prev, {mutationResult: {data: {deleteProduct}}}) => {
-              return DeleteProduct(prev, deleteProduct.id);
-            }
+            products: (prev, { mutationResult: { data: { deleteProduct } } }) =>
+              DeleteProduct(prev, deleteProduct.id)
           }
         });
       }

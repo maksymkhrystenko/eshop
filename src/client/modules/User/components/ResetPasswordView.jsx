@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import {SubmissionError} from 'redux-form';
-import {PageLayout} from '../../../common/components';
+import { SubmissionError } from 'redux-form';
+import { PageLayout } from '../../../common/components';
 
 import ResetPasswordForm from '../components/ResetPasswordForm';
 
@@ -23,7 +23,7 @@ export default class ResetPasswordView extends React.PureComponent {
     });
 
     if (result.errors) {
-      let submitError = {
+      const submitError = {
         _error: 'Reset Password failed!'
       };
       result.errors.map(error => (submitError[error.field] = error.message));
@@ -32,11 +32,11 @@ export default class ResetPasswordView extends React.PureComponent {
   };
 
   render() {
-    const {resetPassword} = this.props;
+    const { resetPassword } = this.props;
 
     const renderMetaData = () => (
       <Helmet
-        title={`App - Reset Password`}
+        title="App - Reset Password"
         meta={[
           {
             name: 'description',
@@ -50,7 +50,7 @@ export default class ResetPasswordView extends React.PureComponent {
       <PageLayout>
         {renderMetaData()}
         <h1>Reset password!</h1>
-        <ResetPasswordForm onSubmit={this.onSubmit(resetPassword)}/>
+        <ResetPasswordForm onSubmit={this.onSubmit(resetPassword)} />
       </PageLayout>
     );
   }

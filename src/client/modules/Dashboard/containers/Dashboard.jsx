@@ -1,37 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { graphql, compose } from 'react-apollo';
+import { compose } from 'react-apollo';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    console.log('Dashboard');
   }
 
   render() {
-    const { loading, history } = this.props;
+    const { loading } = this.props;
     if (loading) {
-      return (
-        <div className="text-center">
-          Loading...
-        </div>
-      );
-    } else {
-      return (
-          <div>
-            Dashboard
-          </div>
-      );
+      return <div className="text-center">Loading...</div>;
     }
+    return <div>Dashboard</div>;
   }
 }
 
 Dashboard.propTypes = {
+  loading: PropTypes.bool
+};
+
+Dashboard.defaultProps = {
+  loading: true
 };
 
 const DashboardWithApollo = compose()(Dashboard);
 
-export default connect(
-  (state) => ({}),
-  (dispatch) => ({}),
-)(DashboardWithApollo);
+export default connect(() => ({}), () => ({}))(DashboardWithApollo);

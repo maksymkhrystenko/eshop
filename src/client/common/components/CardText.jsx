@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CardText = ({ children, ...props }) => {
-  return <p {...props}>{children}</p>;
-};
+const CardText = ({ children, ...props }) => <p {...props}>{children}</p>;
 
 CardText.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node.isRequired
 };
 
 export default CardText;

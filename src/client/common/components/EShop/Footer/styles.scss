@@ -1,7 +1,7 @@
 @import '../../../styles/variables';
 
 .footer {
-  .position-relative{
+  .position-relative {
     position: relative;
   }
   #to-top-button {
@@ -24,7 +24,7 @@
     -o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
     transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
     &:hover {
-      background: $light-yellow;
+      background: $yellow-light;
       opacity: 1;
     }
   }
@@ -52,7 +52,7 @@
         border-top-left-radius: 20px;
         padding-left: 30px;
         width: 500px;
-        webkit-box-shadow: 0px 0px 1px 1px rgba(245, 193, 77, 0.89) inset;
+        -webkit-box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
         box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
       }
       .search-button {
@@ -113,9 +113,9 @@
         margin-top: 34px;
       }
       .footer-menu-list-container {
-        padding-left: 0px;
+        padding-left: 0;
         li {
-          margin-right: 0px;
+          margin-right: 0;
           list-style: none;
           a {
             font-size: 14px;
@@ -128,7 +128,7 @@
     .social-icons-container {
       width: 100%;
       display: flex;
-      padding-left: 0px;
+      padding-left: 0;
       flex-direction: row;
       li {
         margin-right: 8px;
@@ -204,5 +204,4 @@
       }
     }
   }
-
 }

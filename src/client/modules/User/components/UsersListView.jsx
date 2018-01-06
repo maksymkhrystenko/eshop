@@ -1,52 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
-import i18next from "i18next";
+import i18next from 'i18next';
 
-import {Table, Button, Col, PagesInfo, LoadMore} from '../../../common/components';
-import {SubmissionError} from "redux-form";
+import {
+  Table,
+  Button,
+  Col,
+  PagesInfo,
+  LoadMore,
+  Link
+} from '../../../common/components';
 
-
-export default class UsersView extends React.PureComponent {
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    users: PropTypes.object,
-    orderBy: PropTypes.object,
-    loadMoreRows: PropTypes.func.isRequired,
-    onOrderBy: PropTypes.func.isRequired,
-    deleteUser: PropTypes.func.isRequired
-  };
-
+class UsersView extends React.PureComponent {
   state = {
     errors: []
   };
 
   handleDeleteUser = async (id, deleteUser) => {
     const result = await deleteUser(id);
-    let errors = {errors: []};
+    let errors = { errors: [] };
     if (result && result.errors) {
-      errors = {errors: result.errors};
+      errors = { errors: result.errors };
     }
     return errors;
   };
 
-
-  renderOrderByArrow = name => {
-    const {orderBy} = this.props;
-
-    if (orderBy && orderBy.column === name) {
-      if (orderBy.order === 'desc') {
-        return <span className="badge badge-primary">&#8595;</span>;
-      } else {
-        return <span className="badge badge-primary">&#8593;</span>;
-      }
-    } else {
-      return <span className="badge badge-secondary">&#8645;</span>;
-    }
-  };
-
   orderBy = (e, name) => {
-    const {onOrderBy, orderBy} = this.props;
+    const { onOrderBy, orderBy } = this.props;
 
     e.preventDefault();
 
@@ -59,19 +39,31 @@ export default class UsersView extends React.PureComponent {
       }
     }
 
-    return onOrderBy({column: name, order});
+    return onOrderBy({ column: name, order });
+  };
+
+  renderOrderByArrow = name => {
+    const { orderBy } = this.props;
+
+    if (orderBy && orderBy.column === name) {
+      if (orderBy.order === 'desc') {
+        return <span className="badge badge-primary">&#8595;</span>;
+      }
+      return <span className="badge badge-primary">&#8593;</span>;
+    }
+    return <span className="badge badge-secondary">&#8645;</span>;
   };
 
   render() {
-    const {loading, users, deleteUser, loadMoreRows} = this.props;
-    const {errors} = this.state;
+    const { loading, users, deleteUser, loadMoreRows } = this.props;
+    const { errors } = this.state;
 
     const columns = [
       {
         title: (
-          <a onClick={e => this.orderBy(e, 'username')} href="#">
+          <Link onClick={e => this.orderBy(e, 'username')} to="#">
             Username {this.renderOrderByArrow('username')}
-          </a>
+          </Link>
         ),
         dataIndex: 'username',
         key: 'username',
@@ -83,27 +75,27 @@ export default class UsersView extends React.PureComponent {
       },
       {
         title: (
-          <a onClick={e => this.orderBy(e, 'email')} href="#">
+          <Link onClick={e => this.orderBy(e, 'email')} to="#">
             Email {this.renderOrderByArrow('email')}
-          </a>
+          </Link>
         ),
         dataIndex: 'email',
         key: 'email'
       },
       {
         title: (
-          <a onClick={e => this.orderBy(e, 'role')} href="#">
+          <Link onClick={e => this.orderBy(e, 'role')} to="#">
             Role {this.renderOrderByArrow('role')}
-          </a>
+          </Link>
         ),
         dataIndex: 'role',
         key: 'role'
       },
       {
         title: (
-          <a onClick={e => this.orderBy(e, 'isActive')} href="#">
+          <Link onClick={e => this.orderBy(e, 'isActive')} to="#">
             Is Active {this.renderOrderByArrow('isActive')}
-          </a>
+          </Link>
         ),
         dataIndex: 'isActive',
         key: 'isActive',
@@ -113,10 +105,14 @@ export default class UsersView extends React.PureComponent {
         title: i18next.t('ACTIONS'),
         key: 'actions',
         render: (text, record) => (
-          <Button color="primary" size="small" onClick={async () => {
-            let res = await this.handleDeleteUser(record.id, deleteUser);
-            this.setState(res)
-          }}>
+          <Button
+            color="primary"
+            size="small"
+            onClick={async () => {
+              const res = await this.handleDeleteUser(record.id, deleteUser);
+              this.setState(res);
+            }}
+          >
             {i18next.t('DELETE')}
           </Button>
         )
@@ -125,27 +121,49 @@ export default class UsersView extends React.PureComponent {
 
     if (loading && !users) {
       return <div className="text-center">Loading...</div>;
-    } else {
-      return (
-        <Col>
-          {errors &&
+    }
+    return (
+      <Col>
+        {errors &&
           errors.map(error => (
             <div className="alert alert-danger" role="alert" key={error.field}>
               {error.message}
             </div>
           ))}
-          <Table dataSource={users.edges.map(({node}) => node)} columns={columns}/>
-          <Col>
-            <PagesInfo countOfShowedItems={users.edges.length} totalCount={users.totalCount}/>
-
-          </Col>
-          <Col>
-            <LoadMore hasNextPage={users.pageInfo.hasNextPage} loadMoreRows={loadMoreRows}/>
-
-          </Col>
-      {/*    {this.renderLoadMore(users, loadMoreRows)}*/}
+        <Table
+          dataSource={users.edges.map(({ node }) => node)}
+          columns={columns}
+        />
+        <Col>
+          <PagesInfo
+            countOfShowedItems={users.edges.length}
+            totalCount={users.totalCount}
+          />
         </Col>
-      );
-    }
+        <Col>
+          <LoadMore
+            hasNextPage={users.pageInfo.hasNextPage}
+            loadMoreRows={loadMoreRows}
+          />
+        </Col>
+        {/*    {this.renderLoadMore(users, loadMoreRows)} */}
+      </Col>
+    );
   }
 }
+
+UsersView.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  users: PropTypes.object,
+  orderBy: PropTypes.object,
+  loadMoreRows: PropTypes.func.isRequired,
+  onOrderBy: PropTypes.func.isRequired,
+  deleteUser: PropTypes.func.isRequired
+};
+
+UsersView.defaultProps = {
+  users: null,
+  orderBy: null
+};
+
+export default UsersView;

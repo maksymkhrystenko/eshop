@@ -1,43 +1,66 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Form from 'antd/lib/form';
-import {Select} from 'antd';
-import i18next from "i18next";
+import { Select } from 'antd';
+import i18next from 'i18next';
 
 const FormItem = Form.Item;
 const ADOption = Select.Option;
 
-const RenderField = (props) => {
-  let {options, change, defaultValue, input, label, type, children, meta, style} = props;
-  let touched, error;
-  if (meta) {
-    touched = meta.touched;
-    error = meta.error;
-  }
+const RenderField = props => {
+  const {
+    options,
+    change,
+    defaultValue,
+    input,
+    label,
+    type,
+    meta,
+    style
+  } = props;
   let validateStatus = '';
-  if (touched && error) {
+  if (meta && meta.touched && meta.error) {
     validateStatus = 'error';
   }
-  const listOfOptions = options.map((option, i) => {
-    return (<ADOption className={option.className} value={option.content} key={i}>{i18next.t(option.name)}</ADOption>);
-  });
+  const listOfOptions = options.map(option => (
+    <ADOption
+      className={option.className}
+      value={option.content}
+      key={option.id}
+    >
+      {i18next.t(option.name)}
+    </ADOption>
+  ));
   return (
-    <FormItem label={label} validateStatus={validateStatus} help={error}>
-        <Select defaultValue={defaultValue} {...input} onChange={(values) => {
+    <FormItem
+      label={label}
+      validateStatus={validateStatus}
+      help={meta ? meta.error : null}
+    >
+      <Select
+        defaultValue={defaultValue}
+        {...input}
+        onChange={values => {
           change(values);
-        }} style={style} type={type}>
-          {listOfOptions}
-        </Select>
+        }}
+        style={style}
+        type={type}
+      >
+        {listOfOptions}
+      </Select>
     </FormItem>
   );
 };
 
 RenderField.propTypes = {
   input: PropTypes.object,
+  options: PropTypes.array,
+  change: PropTypes.func,
+  style: PropTypes.object,
+  defaultValue: PropTypes.any,
   label: PropTypes.string,
   type: PropTypes.string,
-  meta: PropTypes.object,
-  children: PropTypes.node
+  meta: PropTypes.object
 };
 
 export default RenderField;

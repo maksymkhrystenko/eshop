@@ -1,21 +1,38 @@
 import React from 'react';
-import {CookiesProvider} from 'react-cookie';
-import {NavLink} from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
+import { NavLink } from 'react-router-dom';
 import i18next from 'i18next';
 
 import reducers from './reducers';
-import {MenuItem} from '../../common/components';
-import {AuthRoute, AuthLoggedInRoute, AuthNav, AuthLogin, AuthProfile} from './containers/Auth';
+import { MenuItem } from '../../common/components';
+import {
+  AuthRoute,
+  AuthLoggedInRoute,
+  AuthNav,
+  AuthLogin,
+  AuthProfile
+} from './containers/Auth';
 import Feature from '../connector';
 
-import {Profile,Users,UserEdit,Register,Login,ForgotPassword,ResetPassword} from './chunks';
+import {
+  Profile,
+  Users,
+  UserEdit,
+  Register,
+  Login,
+  ForgotPassword,
+  ResetPassword
+} from './chunks';
 import config from '../../config';
-import {setLanguage} from '../../common/utils/helpers';
+import { setLanguage } from '../../common/utils/helpers';
+
 setLanguage(config.language);
 
 function tokenMiddleware(req, options, next) {
   options.headers['x-token'] = window.localStorage.getItem('token');
-  options.headers['x-refresh-token'] = window.localStorage.getItem('refreshToken');
+  options.headers['x-refresh-token'] = window.localStorage.getItem(
+    'refreshToken'
+  );
   next();
 }
 
@@ -39,13 +56,33 @@ function connectionParam() {
 }
 export default new Feature({
   route: [
-    <AuthRoute exact path="/profile" scope="user" component={Profile}/>,
-    <AuthRoute exact path="/users" scope="admin" component={Users}/>,
-    <AuthRoute exact path="/users/:id" component={UserEdit}/>,
-    <AuthLoggedInRoute exact path="/register" redirect="/profile" component={Register}/>,
-    <AuthLoggedInRoute exact path="/login" redirect="/profile" component={Login}/>,
-    <AuthLoggedInRoute exact path="/forgot-password" redirect="/profile" component={ForgotPassword}/>,
-    <AuthLoggedInRoute exact path="/reset-password/:token" redirect="/profile" component={ResetPassword}/>
+    <AuthRoute exact path="/profile" scope="user" component={Profile} />,
+    <AuthRoute exact path="/users" scope="admin" component={Users} />,
+    <AuthRoute exact path="/users/:id" component={UserEdit} />,
+    <AuthLoggedInRoute
+      exact
+      path="/register"
+      redirect="/profile"
+      component={Register}
+    />,
+    <AuthLoggedInRoute
+      exact
+      path="/login"
+      redirect="/profile"
+      component={Login}
+    />,
+    <AuthLoggedInRoute
+      exact
+      path="/forgot-password"
+      redirect="/profile"
+      component={ForgotPassword}
+    />,
+    <AuthLoggedInRoute
+      exact
+      path="/reset-password/:token"
+      redirect="/profile"
+      component={ResetPassword}
+    />
   ],
   navItem: [
     <MenuItem key="/users">
@@ -58,7 +95,7 @@ export default new Feature({
   ],
   navItemRight: [
     <MenuItem key="/profile">
-      <AuthProfile/>
+      <AuthProfile />
     </MenuItem>,
     <MenuItem key="/login">
       <AuthLogin>
@@ -68,12 +105,12 @@ export default new Feature({
       </AuthLogin>
     </MenuItem>
   ],
-  reducer: {user: reducers},
+  reducer: { user: reducers },
   middleware: tokenMiddleware,
   afterware: tokenAfterware,
-  connectionParam: connectionParam,
+  connectionParam,
   // eslint-disable-next-line react/display-name
-  rootComponentFactory: req => {
-    return <CookiesProvider cookies={req ? req.universalCookies : undefined}/>
-  }
+  rootComponentFactory: req => (
+    <CookiesProvider cookies={req ? req.universalCookies : undefined} />
+  )
 });

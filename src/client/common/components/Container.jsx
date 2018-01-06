@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Container = ({ children, ...props }) => {
-  return <div {...props}>{children}</div>;
-};
+const Container = ({ children, ...props }) => <div {...props}>{children}</div>;
 
 Container.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node.isRequired
 };
 
 export default Container;

@@ -1,9 +1,8 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import {routerMiddleware, routerReducer} from 'react-router-redux';
+import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 import axios from 'axios';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
 import modules from '../../../client/modules';
 
@@ -12,8 +11,6 @@ export const storeReducer = combineReducers({
   form: formReducer,
   ...modules.reducers
 });
-
-
 
 const createReduxStore = (history, initialState) => {
   const middlewares = [
@@ -31,8 +28,7 @@ const createReduxStore = (history, initialState) => {
   return createStore(
     storeReducer,
     initialState, // initial state
-    enhancers,
-   // routerMiddleware ? composeWithDevTools(applyMiddleware(routerMiddleware)) : undefined
+    enhancers
   );
 };
 

@@ -62,7 +62,7 @@ const getPlugins = () => {
     new webpack.LoaderOptionsPlugin({
       options: {
         // Javascript lint
-        eslint: {failOnError: eslint},
+        eslint: { failOnError: eslint },
         debug: isDev,
         minimize: !isDev
       }
@@ -72,9 +72,9 @@ const getPlugins = () => {
       './asyncChunks'
     ),
     // Style lint
-    // new StyleLintPlugin({ failOnError: stylelint }),
+    new StyleLintPlugin({ failOnError: stylelint }),
     // Setup enviorment variables for client
-    new webpack.EnvironmentPlugin({NODE_ENV: JSON.stringify(nodeEnv)}),
+    new webpack.EnvironmentPlugin({ NODE_ENV: JSON.stringify(nodeEnv) }),
     // Setup global variables for client
     new webpack.DefinePlugin({
       __CLIENT__: true,
@@ -161,12 +161,15 @@ module.exports = {
   },
   module: {
     rules: [
-      /*    {
-            test: /\.jsx?$/,
-            enforce: 'pre',
-            exclude: /node_modules/,
-            loader: 'eslint'
-          },*/
+      {
+        test: /\.jsx?$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        loader: 'eslint',
+        options: {
+          fix: true
+        }
+      },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -174,12 +177,20 @@ module.exports = {
         options: {
           cacheDirectory: isDev,
           babelrc: false,
-          presets: [['env', {modules: false}], 'react', 'stage-0', 'flow'],
-          plugins: ['transform-runtime', 'react-hot-loader/babel', 'lodash', ['import', {
-            libraryName: "antd",
-            style: true
-          }]],
-          env: {production: {plugins: ['transform-remove-console']}}
+          presets: [['env', { modules: false }], 'react', 'stage-0', 'flow'],
+          plugins: [
+            'transform-runtime',
+            'react-hot-loader/babel',
+            'lodash',
+            [
+              'import',
+              {
+                libraryName: 'antd',
+                style: true
+              }
+            ]
+          ],
+          env: { production: { plugins: ['transform-remove-console'] } }
         }
       },
       {
@@ -208,7 +219,7 @@ module.exports = {
                   minimize: !isDev
                 }
               },
-              {loader: 'postcss', options: {sourceMap: true}}
+              { loader: 'postcss', options: { sourceMap: true } }
             ]
           })
       },
@@ -236,7 +247,7 @@ module.exports = {
                 minimize: !isDev
               }
             },
-            {loader: 'postcss', options: {sourceMap: true}},
+            { loader: 'postcss', options: { sourceMap: true } },
             {
               loader: 'sass',
               options: {
@@ -253,7 +264,7 @@ module.exports = {
         loader: ExtractTextPlugin.extract({
           fallback: 'style',
           use: [
-            {loader: "css"},
+            { loader: "css" },
             /*{ loader: 'postcss', options: { sourceMap: true } },*/
             {
               loader: "less",
@@ -271,7 +282,7 @@ module.exports = {
       {
         test: /\.(woff2?|ttf|eot|svg)$/,
         loader: 'url',
-        options: {limit: 10000}
+        options: { limit: 10000 }
       },
       {
         test: webpackIsomorphicToolsPlugin.regular_expression('images'),
@@ -279,12 +290,12 @@ module.exports = {
         use: [
           {
             loader: 'url',
-            options: {limit: 10240}
+            options: { limit: 10240 }
           },
           // Using for image optimization
           {
             loader: 'image-webpack',
-            options: {bypassOnDebug: true}
+            options: { bypassOnDebug: true }
           }
         ]
       }

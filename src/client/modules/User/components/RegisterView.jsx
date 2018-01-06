@@ -1,22 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import {SubmissionError} from 'redux-form';
-import {PageLayout, LayoutCenter} from '../../../common/components';
+import { SubmissionError } from 'redux-form';
+import { PageLayout, LayoutCenter } from '../../../common/components';
 
 import RegisterForm from '../components/RegisterForm';
 
-export default class RegisterView extends React.PureComponent {
-  static propTypes = {
-    error: PropTypes.string,
-    register: PropTypes.func.isRequired
-  };
-
-
+class RegisterView extends React.PureComponent {
   onSubmit = register => async values => {
     const result = await register(values);
     if (result.errors) {
-      let submitError = {
+      const submitError = {
         _error: 'Registration failed!'
       };
       result.errors.map(error => (submitError[error.field] = error.message));
@@ -24,10 +18,9 @@ export default class RegisterView extends React.PureComponent {
     }
   };
 
-
   renderMetaData = () => (
     <Helmet
-      title={`App - Register`}
+      title="App - Register"
       meta={[
         {
           name: 'description',
@@ -38,15 +31,21 @@ export default class RegisterView extends React.PureComponent {
   );
 
   render() {
-    const {register} = this.props;
+    const { register } = this.props;
     return (
       <PageLayout>
         {this.renderMetaData()}
         <LayoutCenter>
           <h1 className="text-center">Sign Up</h1>
-          <RegisterForm onSubmit={this.onSubmit(register)}/>
+          <RegisterForm onSubmit={this.onSubmit(register)} />
         </LayoutCenter>
       </PageLayout>
     );
   }
 }
+
+RegisterView.propTypes = {
+  register: PropTypes.func.isRequired
+};
+
+export default RegisterView;

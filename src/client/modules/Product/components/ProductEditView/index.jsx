@@ -6,10 +6,8 @@ import { Link } from 'react-router-dom';
 import { PageLayout, Col } from '../../../../common/components';
 import ProductForm from '../ProductForm';
 import ProductComments from '../../containers/ProductComments';
-import styles from './styles.scss';
-import {SubmissionError} from "redux-form";
 
-const  onSubmit = (product, addProduct, editProduct) =>  values => {
+const onSubmit = (product, addProduct, editProduct) => values => {
   if (product) {
     editProduct(product.id, values.title, values.description);
   } else {
@@ -17,7 +15,15 @@ const  onSubmit = (product, addProduct, editProduct) =>  values => {
   }
 };
 
-const ProductEditView = ({ loading, product, match, location, subscribeToMore, addProduct, editProduct }) => {
+const ProductEditView = ({
+  loading,
+  product,
+  match,
+  location,
+  subscribeToMore,
+  addProduct,
+  editProduct
+}) => {
   let productObj = product;
 
   // if new product was just added read it from router
@@ -27,7 +33,7 @@ const ProductEditView = ({ loading, product, match, location, subscribeToMore, a
 
   const renderMetaData = () => (
     <Helmet
-      title={`App - Edit product`}
+      title="App - Edit product"
       meta={[
         {
           name: 'description',
@@ -44,16 +50,19 @@ const ProductEditView = ({ loading, product, match, location, subscribeToMore, a
         <div className="text-center">Loading...</div>
       </PageLayout>
     );
-  } else {
-    return (
-      <PageLayout>
-        <Col className={styles.ProductEditView}>
+  }
+  return (
+    <PageLayout>
+      <Col>
         {renderMetaData()}
         <Link id="back-button" to="/products">
           Back
         </Link>
         <h2>{product ? 'Edit' : 'Create'} Product</h2>
-        <ProductForm onSubmit={onSubmit(productObj, addProduct, editProduct)} initialValues={productObj} />
+        <ProductForm
+          onSubmit={onSubmit(productObj, addProduct, editProduct)}
+          initialValues={productObj}
+        />
         <br />
         {productObj && (
           <ProductComments
@@ -62,10 +71,9 @@ const ProductEditView = ({ loading, product, match, location, subscribeToMore, a
             subscribeToMore={subscribeToMore}
           />
         )}
-        </Col>
-      </PageLayout>
-    );
-  }
+      </Col>
+    </PageLayout>
+  );
 };
 
 ProductEditView.propTypes = {
@@ -76,6 +84,10 @@ ProductEditView.propTypes = {
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   subscribeToMore: PropTypes.func.isRequired
+};
+
+ProductEditView.defaultProps = {
+  product: null
 };
 
 export default ProductEditView;

@@ -11,34 +11,34 @@
   align-items: center;
   min-height: 800px;
   font-size: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   padding-bottom: 100px;
   border-radius: 0;
-  .menu-caption{
+  .menu-caption {
     background: $yellow;
     width: 100%;
     padding: 2px;
     font-size: 16px;
     color: $dark-gray;
   }
-  .search-container{
+  .search-container {
     display: flex;
     margin-top: 13px;
     margin-bottom: 6px;
     margin-right: 0;
     width: 200px;
-    .search-filed{
+    .search-filed {
       line-height: 26px;
       border: 2px solid $yellow;
       border-bottom-left-radius: 20px;
       border-top-left-radius: 20px;
       padding-left: 30px;
       width: 100%;
-      webkit-box-shadow: 0px 0px 1px 1px rgba(245, 193, 77, 0.89) inset;
+      -webkit-box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
       box-shadow: 0 0 1px 1px rgba(245, 193, 77, 0.89) inset;
       font-style: italic;
     }
-    .search-button{
+    .search-button {
       color: $black;
       background: $yellow;
       border: 1px solid $yellow;
@@ -55,7 +55,7 @@
     margin-bottom: 0;
     padding: 0 10px 30px 10px;
     width: 100%;
-    a:hover{
+    a:hover {
       text-decoration: none;
     }
     li {

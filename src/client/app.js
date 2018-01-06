@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Element } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import Helmet from 'react-helmet';
 
 import config from './config';
@@ -12,15 +12,11 @@ import modules from './modules';
 import './common/styles/normalize.css';
 import styles from './common/styles/styles.scss';
 
-const App = (): Element<'div'> => {
-  return (
-    <div className={styles.App}>
-      <Helmet {...config.app} />
-      <Switch>
-        {modules.routes}
-      </Switch>
-    </div>
-  );
-};
+const App = (): Element<'div'> => (
+  <div className={styles.App}>
+    <Helmet {...config.app} />
+    <Switch>{modules.routes}</Switch>
+  </div>
+);
 
 export default App;

@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Apollo
-import {graphql, compose} from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
 // Components
 import ProfileView from '../components/ProfileView';
@@ -17,10 +17,10 @@ class Profile extends React.PureComponent {
 
 export default compose(
   graphql(CURRENT_USER_QUERY, {
-    options: {fetchPolicy: 'network-only'},
-    props({data: {loading, error, currentUser}}) {
+    options: { fetchPolicy: 'network-only' },
+    props({ data: { loading, error, currentUser } }) {
       if (error) throw new Error(error);
-      return {loading, currentUser};
+      return { loading, currentUser };
     }
   })
 )(Profile);

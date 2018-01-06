@@ -1,11 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import { Form, RenderField, Row, Col, Label, Button } from '../../../../common/components';
+import {
+  Form,
+  RenderField,
+  Row,
+  Col,
+  Label,
+  Button
+} from '../../../../common/components';
 
 const required = value => (value ? undefined : 'Required');
 
-const PostCommentForm = ({ handleSubmit, submitting, initialValues, onSubmit }) => {
+const PostCommentForm = ({
+  handleSubmit,
+  submitting,
+  initialValues,
+  onSubmit
+}) => {
   let operation = 'Add';
   if (initialValues.id !== null) {
     operation = 'Edit';
@@ -14,14 +26,24 @@ const PostCommentForm = ({ handleSubmit, submitting, initialValues, onSubmit }) 
   return (
     <Form name="comment" onSubmit={handleSubmit(onSubmit)}>
       <Row>
-        <Col xs="2">
+        <Col span="2">
           <Label>{operation} comment</Label>
         </Col>
-        <Col xs="8">
-          <Field name="content" component={RenderField} type="text" validate={required} />
+        <Col span="8">
+          <Field
+            name="content"
+            component={RenderField}
+            type="text"
+            validate={required}
+          />
         </Col>
-        <Col xs="2">
-          <Button color="primary" htmlType="submit" className="float-right" disabled={submitting}>
+        <Col span="2">
+          <Button
+            color="primary"
+            htmlType="submit"
+            className="float-right"
+            disabled={submitting}
+          >
             Save
           </Button>
         </Col>
@@ -35,6 +57,13 @@ PostCommentForm.propTypes = {
   initialValues: PropTypes.object,
   onSubmit: PropTypes.func,
   submitting: PropTypes.bool
+};
+
+PostCommentForm.defaultProps = {
+  handleSubmit: null,
+  initialValues: null,
+  onSubmit: null,
+  submitting: null
 };
 
 export default reduxForm({

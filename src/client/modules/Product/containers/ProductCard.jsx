@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {graphql, compose} from 'react-apollo';
-import {createApolloFetch} from 'apollo-fetch';
+import { graphql, compose } from 'react-apollo';
+import { has } from 'lodash/fp';
 
 import ProductCardView from '../components/ProductCardView';
-import {AddProduct} from './Product';
-
+import { AddProduct } from './Product';
 import PRODUCT_QUERY from '../graphql/ProductQuery.graphql';
 import ADD_PRODUCT from '../graphql/AddProduct.graphql';
 import EDIT_PRODUCT from '../graphql/EditProduct.graphql';
@@ -26,19 +25,15 @@ class ProductEdit extends React.PureComponent {
       }
 
       // Subscribe or re-subscribe
-      if (!this.subscription && nextProps.product && nextProps.product.id !== 0) {
+      if (
+        !this.subscription &&
+        nextProps.product &&
+        nextProps.product.id !== 0
+      ) {
         this.subscribeToProductEdit(nextProps.product.id);
       }
     }
   }
-
-  subscribeToProductEdit = productId => {
-    const {subscribeToMore} = this.props;
-    this.subscription = subscribeToMore({
-      document: PRODUCT_SUBSCRIPTION,
-      variables: {id: productId}
-    });
-  };
 
   componentWillUnmount() {
     if (this.subscription) {
@@ -46,6 +41,14 @@ class ProductEdit extends React.PureComponent {
       this.subscription();
     }
   }
+
+  subscribeToProductEdit = productId => {
+    const { subscribeToMore } = this.props;
+    this.subscription = subscribeToMore({
+      document: PRODUCT_SUBSCRIPTION,
+      variables: { id: productId }
+    });
+  };
 
   render() {
     return <ProductCardView {...this.props} />;
@@ -60,47 +63,50 @@ ProductEdit.propTypes = {
   subscribeToMore: PropTypes.func.isRequired
 };
 
+ProductEdit.defaultProps = {
+  product: null
+};
+
 export default compose(
   graphql(PRODUCT_QUERY, {
-    options: (props) => {
+    options: props => {
       let id = 0;
-      if (props.match && props.match.params && props.match.params.id) {
+      if (has(props.match, 'params') && has(props.match, 'params.id')) {
         id = props.match.params.id;
       } else if (props.navigation) {
         id = props.navigation.state.params.id;
       }
       return {
-        variables: {id},
+        variables: { id }
       };
     },
-    props({data: {loading, product, subscribeToMore}}) {
-      return {loading, product, subscribeToMore};
+    props({ data: { loading, product, subscribeToMore } }) {
+      return { loading, product, subscribeToMore };
     }
   }),
   graphql(ADD_PRODUCT, {
-    props: ({ownProps: {history, navigation}, mutate}) => ({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
       addProduct: async (title, description) => {
-        let productData = await mutate({
-          variables: {input: {title, description}},
+        const productData = await mutate({
+          variables: { input: { title, description } },
           optimisticResponse: {
             __typename: 'Mutation',
             addProduct: {
               __typename: 'Product',
               id: null,
-              title: title,
-              description: description,
+              title,
+              description,
               comments: []
             }
           },
           updateQueries: {
-            products: (prev, {mutationResult: {data: {addProduct}}}) => {
-              return AddProduct(prev, addProduct);
-            }
+            products: (prev, { mutationResult: { data: { addProduct } } }) =>
+              AddProduct(prev, addProduct)
           }
         });
 
         if (history) {
-          return history.push('/product/' + productData.data.addProduct.id, {
+          return history.push(`/product/${productData.data.addProduct.id}`, {
             product: productData.data.addProduct
           });
         } else if (navigation) {
@@ -113,10 +119,10 @@ export default compose(
     })
   }),
   graphql(EDIT_PRODUCT, {
-    props: ({ownProps: {history, navigation}, mutate}) => ({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
       editProduct: async (id, title, description) => {
         await mutate({
-          variables: {input: {id, title, description}}
+          variables: { input: { id, title, description } }
         });
 
         if (history) {

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withApollo, graphql, compose} from 'react-apollo';
-import {Route, Redirect, NavLink, withRouter} from 'react-router-dom';
-import {withCookies, Cookies} from 'react-cookie';
+import { withApollo, graphql, compose } from 'react-apollo';
+import { Route, Redirect, NavLink, withRouter } from 'react-router-dom';
+import { withCookies, Cookies } from 'react-cookie';
+import i18next from 'i18next';
 import decode from 'jwt-decode';
 
 import log from '../../../common/utils/log';
 import CURRENT_USER_QUERY from '../graphql/CurrentUserQuery.graphql';
 import LOGOUT from '../graphql/Logout.graphql';
-import i18next from "i18next";
+import { Link } from '../../../common/components';
 
 const checkAuth = (cookies, scope) => {
   let token = null;
@@ -26,14 +27,14 @@ const checkAuth = (cookies, scope) => {
     return false;
   }
   try {
-    const {exp} = decode(refreshToken);
+    const { exp } = decode(refreshToken);
 
     if (exp < new Date().getTime() / 1000) {
       return false;
     }
 
     if (scope === 'admin') {
-      const {user: {role}} = decode(token);
+      const { user: { role } } = decode(token);
       if (scope !== role) {
         return false;
       }
@@ -61,36 +62,41 @@ const profileName = cookies => {
   }
 
   try {
-    const {user: {username, fullName}} = decode(token);
-    return fullName ? fullName : username;
+    const { user: { username, fullName } } = decode(token);
+    return fullName || username;
   } catch (e) {
     return '';
   }
 };
 
-const AuthNav = withCookies(({children, cookies, scope}) => {
-  return checkAuth(cookies, scope) ? children : null;
-});
+const AuthNav = withCookies(
+  ({ children, cookies, scope }) =>
+    checkAuth(cookies, scope) ? children : null
+);
 
 AuthNav.propTypes = {
   children: PropTypes.object,
   cookies: PropTypes.instanceOf(Cookies)
 };
 
-const AuthLogin = ({children, cookies, logout}) => {
-  return checkAuth(cookies) ? (
-    <a href="#" onClick={() => logout()} className="nav-link">
+const AuthLogin = ({ children, cookies, logout }) =>
+  checkAuth(cookies) ? (
+    <Link to="#" onClick={() => logout()} className="nav-link">
       {i18next.t('NAVBAR_MENU_LOG_OUT')}
-    </a>
+    </Link>
   ) : (
     children
   );
-};
 
 AuthLogin.propTypes = {
   children: PropTypes.object,
   cookies: PropTypes.instanceOf(Cookies),
   logout: PropTypes.func.isRequired
+};
+
+AuthLogin.defaultProps = {
+  children: null,
+  cookies: null
 };
 
 const AuthLoginWithApollo = withCookies(
@@ -103,14 +109,14 @@ const AuthLoginWithApollo = withCookies(
           props: ({ownProps: {client, history, navigation}, mutate}) => ({
             logout: async () => {
               try {
-                const {data: {logout}} = await mutate();
+                const { data: { logout } } = await mutate();
 
                 if (logout.errors) {
-                  return {errors: logout.errors};
+                  return { errors: logout.errors };
                 }
 
                 // comment out until https://github.com/apollographql/apollo-client/issues/1186 is fixed
-                //await client.resetStore();
+                // await client.resetStore();
 
                 window.localStorage.setItem('token', null);
                 window.localStorage.setItem('refreshToken', null);
@@ -132,25 +138,27 @@ const AuthLoginWithApollo = withCookies(
   )
 );
 
-const AuthProfile = withCookies(({cookies}) => {
-  return checkAuth(cookies) ? (
-    <NavLink to="/profile" className="nav-link" activeClassName="active">
-      {profileName(cookies)}
-    </NavLink>
-  ) : null;
-});
+const AuthProfile = withCookies(
+  ({ cookies }) =>
+    checkAuth(cookies) ? (
+      <NavLink to="/profile" className="nav-link" activeClassName="active">
+        {profileName(cookies)}
+      </NavLink>
+    ) : null
+);
 
 AuthProfile.propTypes = {
   cookies: PropTypes.instanceOf(Cookies)
 };
 
-const AuthLoggedIn = withCookies(({cookies, label, to, ...rest}) => {
-  return checkAuth(cookies) ? (
-    <NavLink to={to} {...rest}>
-      {label}
-    </NavLink>
-  ) : null;
-});
+const AuthLoggedIn = withCookies(
+  ({ cookies, label, to, ...rest }) =>
+    checkAuth(cookies) ? (
+      <NavLink to={to} {...rest}>
+        {label}
+      </NavLink>
+    ) : null
+);
 
 AuthLoggedIn.propTypes = {
   component: PropTypes.func,
@@ -159,35 +167,40 @@ AuthLoggedIn.propTypes = {
   to: PropTypes.string
 };
 
-const AuthRoute = withCookies(({component: Component, cookies,path, scope, ...rest}) => {
-
-  return (
+const AuthRoute = withCookies(
+  ({ component: Component, cookies, path, scope, ...rest }) => (
     <Route
       {...rest}
       render={props =>
-      {
-        return checkAuth(cookies, scope) ? <Component {...props} /> : <Redirect to={{pathname: '/login'}}/>}
+        checkAuth(cookies, scope) ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={{ pathname: '/login' }} />
+        )
       }
     />
-  );
-});
+  )
+);
 
 AuthRoute.propTypes = {
   component: PropTypes.func,
   cookies: PropTypes.instanceOf(Cookies)
 };
 
-const AuthLoggedInRoute = withCookies(({component: Component, cookies, redirect,path, scope, ...rest}) => {
-  return (
+const AuthLoggedInRoute = withCookies(
+  ({ component: Component, cookies, redirect, path, scope, ...rest }) => (
     <Route
       {...rest}
       render={props =>
-      {
-      return  checkAuth(cookies, scope) ? <Redirect to={{pathname: redirect}}/> : <Component {...props} />}
+        checkAuth(cookies, scope) ? (
+          <Redirect to={{ pathname: redirect }} />
+        ) : (
+          <Component {...props} />
+        )
       }
     />
-  );
-});
+  )
+);
 
 AuthLoggedInRoute.propTypes = {
   component: PropTypes.func,
@@ -196,9 +209,9 @@ AuthLoggedInRoute.propTypes = {
   scope: PropTypes.string
 };
 
-export {AuthNav};
-export {AuthLoggedIn};
-export {AuthLoginWithApollo as AuthLogin};
-export {AuthProfile};
-export {AuthRoute};
-export {AuthLoggedInRoute};
+export { AuthNav };
+export { AuthLoggedIn };
+export { AuthLoginWithApollo as AuthLogin };
+export { AuthProfile };
+export { AuthRoute };
+export { AuthLoggedInRoute };

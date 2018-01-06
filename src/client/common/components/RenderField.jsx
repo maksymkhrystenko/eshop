@@ -10,7 +10,6 @@ const RenderField = ({ input, label, type, meta: { touched, error } }) => {
   if (touched && error) {
     validateStatus = 'error';
   }
-
   return (
     <FormItem label={label} validateStatus={validateStatus} help={error}>
       <div>
@@ -25,6 +24,13 @@ RenderField.propTypes = {
   label: PropTypes.string,
   type: PropTypes.string,
   meta: PropTypes.object
+};
+
+RenderField.defaultProps = {
+  input: null,
+  label: null,
+  type: null,
+  meta: null
 };
 
 export default RenderField;

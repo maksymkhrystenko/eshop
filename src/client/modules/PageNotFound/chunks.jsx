@@ -1,1 +1,1 @@
-export { default as PageNotFound} from './containers/PageNotFound';
+export { default as PageNotFound } from './containers/PageNotFound';

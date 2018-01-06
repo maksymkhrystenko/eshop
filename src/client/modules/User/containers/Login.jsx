@@ -3,7 +3,7 @@
 import React from 'react';
 
 // Apollo
-import {graphql, compose} from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
 // Components
 import LoginView from '../components/LoginView';
@@ -18,18 +18,18 @@ class Login extends React.PureComponent {
 
 const LoginWithApollo = compose(
   graphql(LOGIN, {
-    props: ({ownProps: {history, navigation}, mutate}) => ({
-      login: async ({email, password}) => {
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
+      login: async ({ email, password }) => {
         try {
-          const {data: {login}} = await mutate({
-            variables: {input: {email, password}}
+          const { data: { login } } = await mutate({
+            variables: { input: { email, password } }
           });
 
           if (login.errors) {
-            return {errors: login.errors};
+            return { errors: login.errors };
           }
 
-          const {token, refreshToken} = login.tokens;
+          const { token, refreshToken } = login.tokens;
           localStorage.setItem('token', token);
           localStorage.setItem('refreshToken', refreshToken);
 

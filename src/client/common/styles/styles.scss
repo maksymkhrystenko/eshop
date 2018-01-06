@@ -6,7 +6,7 @@ html {
 }
 
 html,
-body, #content, #content>div {
+body, #content, #content > div {
   min-height: 100%;
 }
 
@@ -20,14 +20,16 @@ hr {
   margin-top: 4px;
   margin-bottom: 4px;
 }
-.clearfix{
+
+.clearfix {
   clear: both;
 }
+
 .main-container {
   display: flex;
   flex-direction: row;
   margin-top: 154px;
-  &.admin{
+  &.admin {
     margin-top: 102px;
   }
   .sidebar {
@@ -37,31 +39,36 @@ hr {
   }
   .content-container {
     width: calc(100% - 240px);
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
-.full-width{
+
+.full-width {
   width: 100%;
 }
-.bold-link{
+
+.bold-link {
   font-weight: bold;
   font-size: 12px;
   text-decoration: underline;
   margin-right: 30px;
   cursor: pointer;
 }
-.Select div.Select-control{
+
+.Select div.Select-control {
   border: 2px solid #fed700;
   margin-bottom: 6px;
   border-radius: 20px;
 }
-.regular-link{
+
+.regular-link {
   font-size: 12px;
   text-decoration: underline;
   margin-right: 30px;
   cursor: pointer;
 }
+
 .display-flex {
   display: flex;
   align-items: center;
@@ -102,10 +109,11 @@ hr {
     background: $light-green;
   }
 }
+
 .orange-button {
-  background-image: -webkit-radial-gradient(176% 141%, circle farthest-side, rgba(255,225,0,1) 0, rgba(255,225,0,1) 1%, rgba(255,131,0,1) 100%);
-  background-image: -moz-radial-gradient(176% 141%, circle farthest-side, rgba(255,225,0,1) 0, rgba(255,225,0,1) 1%, rgba(255,131,0,1) 100%);
-  background-image: radial-gradient(circle farthest-side at 176% 141%, rgba(255,225,0,1) 0, rgba(255,225,0,1) 1%, rgba(255,131,0,1) 100%);
+  background-image: -webkit-radial-gradient(176% 141%, circle farthest-side, rgba(255, 225, 0, 1) 0, rgba(255, 225, 0, 1) 1%, rgba(255, 131, 0, 1) 100%);
+  background-image: -moz-radial-gradient(176% 141%, circle farthest-side, rgba(255, 225, 0, 1) 0, rgba(255, 225, 0, 1) 1%, rgba(255, 131, 0, 1) 100%);
+  background-image: radial-gradient(circle farthest-side at 176% 141%, rgba(255, 225, 0, 1) 0, rgba(255, 225, 0, 1) 1%, rgba(255, 131, 0, 1) 100%);
   background-position: 50% 50%;
   -webkit-background-origin: padding-box;
   background-origin: padding-box;
@@ -120,12 +128,12 @@ hr {
   text-align: center;
   padding: 6px;
   width: 100%;
-  -webkit-box-shadow: 0 0px 3px 0px rgba(0,0,0,0.21);
-  box-shadow: 0 0px 3px 0px rgba(0,0,0,0.21);
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.21);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.21);
   &:hover {
-    background-image: -webkit-radial-gradient(176% 141%, circle farthest-side, rgba(255,242,0,1) 0, rgba(255,242,0,1) 1%, rgba(255,212,0,1) 100%);
-    background-image: -moz-radial-gradient(176% 141%, circle farthest-side, rgba(255,242,0,1) 0, rgba(255,242,0,1) 1%, rgba(255,212,0,1) 100%);
-    background-image: radial-gradient(circle farthest-side at 176% 141%, rgba(255,242,0,1) 0, rgba(255,242,0,1) 1%, rgba(255,212,0,1) 100%);
+    background-image: -webkit-radial-gradient(176% 141%, circle farthest-side, rgba(255, 242, 0, 1) 0, rgba(255, 242, 0, 1) 1%, rgba(255, 212, 0, 1) 100%);
+    background-image: -moz-radial-gradient(176% 141%, circle farthest-side, rgba(255, 242, 0, 1) 0, rgba(255, 242, 0, 1) 1%, rgba(255, 212, 0, 1) 100%);
+    background-image: radial-gradient(circle farthest-side at 176% 141%, rgba(255, 242, 0, 1) 0, rgba(255, 242, 0, 1) 1%, rgba(255, 212, 0, 1) 100%);
     background-position: 50% 50%;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;
@@ -141,13 +149,14 @@ hr {
   }
 }
 
-.big-button{
+.big-button {
   padding: 10px;
   text-transform: uppercase;
   font-weight: bold;
   border-radius: 8px;
 }
-.bordered-button{
+
+.bordered-button {
   background: none;
   border: 2px solid #fed700;
   border-radius: 15px;
@@ -156,7 +165,7 @@ hr {
   font-size: 12px;
   font-weight: bold;
   margin-top: 10px;
-  &:hover{
+  &:hover {
     border-radius: 15px;
     background: $yellow;
     color: $white;
@@ -183,51 +192,58 @@ hr {
     color: $white;
     background: $yellow-light;
   }
-  &.mg-t-0{
+  &.mg-t-0 {
     margin-top: 0;
   }
 }
-.validation-message{
+
+.validation-message {
   font-size: 12px;
   font-weight: bold;
   padding-top: 2px;
   padding-left: 14px;
   line-height: 12px;
 }
-.error-message{
+
+.error-message {
   color: $light-red;
 }
-.warning-message{
+
+.warning-message {
   color: $light-orange;
 }
-.page-title{
+
+.page-title {
   padding-left: 46px;
   padding-bottom: 12px;
   padding-top: 10px;
 }
-.fr-box{
+
+.fr-box {
   border-radius: 4px;
   border: 2px solid $yellow-light;
-  .fr-toolbar{
+  .fr-toolbar {
     box-shadow: none;
     border-top: none;
     border-bottom: 2px solid #fed809;
   }
-  .fr-wrapper{
+  .fr-wrapper {
     box-shadow: none;
   }
 }
 
-.hidden{
+.hidden {
   display: none;
 }
 
-select{
+select {
   height: 38px;
 }
-.pd-0{
+
+.pd-0 {
   padding: 0;
 }
-.pd-r-0{
+
+.pd-r-0 {
   padding-right: 0;
 }

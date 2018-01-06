@@ -1,6 +1,5 @@
-import React from 'react';
-import {Menu} from 'antd';
+import { Menu } from 'antd';
 
-const SubMenu = Menu.SubMenu;
+const { SubMenu } = Menu;
 
 export default SubMenu;

@@ -14,15 +14,15 @@
   width: 20%;
   margin-top: 10px;
   min-height: 100px;
-  .Info{
+  .Info {
     padding-left: 14px;
     padding-right: 14px;
-    .PriceBloack{
+    .PriceBloack {
       justify-content: flex-end;
       display: flex;
       flex-direction: column;
     }
-    i{
+    i {
       margin-top: 22px;
       font-size: 36px;
     }
@@ -47,5 +47,4 @@
       margin-top: 14px;
     }
   }
-
 }

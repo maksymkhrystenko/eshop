@@ -1,28 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link as ADLink} from 'react-router-dom';
+import i18next from 'i18next';
 
-import {Icon} from 'antd';
-import {Col, Row, Label, Link, Button} from '../../../components';
+import { Col, Row, Link, Button } from '../../../components';
 import styles from './styles.scss';
-import i18next from "i18next";
 
-const Tools = ({children, addLink, ...props}) => {
-  return (
-    <Row type="flex" justify="end" className={styles.ToolsBlock}>
-      <Col>
-        {addLink &&
+const Tools = ({ addLink }) => (
+  <Row type="flex" justify="end" className={styles.ToolsBlock}>
+    <Col>
+      {addLink && (
         <Link to={addLink}>
-          <Button color="primary">Add</Button>
+          <Button color="primary">{i18next.t('ADD')}</Button>
         </Link>
-        }
-      </Col>
-    </Row>
-  );
-};
+      )}
+    </Col>
+  </Row>
+);
 
 Tools.propTypes = {
-  children: PropTypes.node
+  addLink: PropTypes.string.isRequired
 };
 
 export default Tools;

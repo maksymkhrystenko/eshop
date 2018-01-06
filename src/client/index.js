@@ -2,28 +2,27 @@
 
 import React from 'react';
 // $FlowFixMe: it's not an error
-import {hydrate, unmountComponentAtNode} from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
-import {Provider} from 'react-redux';
+import { hydrate, unmountComponentAtNode } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import {ConnectedRouter, routerMiddleware} from 'react-router-redux';
-import {SubscriptionClient} from "subscriptions-transport-ws";
+import { ConnectedRouter } from 'react-router-redux';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 import RedBox from 'redbox-react';
-import {getOperationAST} from 'graphql';
-import {createApolloFetch} from 'apollo-fetch';
-import {BatchHttpLink} from 'apollo-link-batch-http';
-import {ApolloLink} from 'apollo-link';
-import {WebSocketLink} from 'apollo-link-ws';
-import {InMemoryCache} from 'apollo-cache-inmemory';
-import {LoggingLink} from 'apollo-logger';
-import {ApolloProvider} from 'react-apollo';
+import { getOperationAST } from 'graphql';
+import { createApolloFetch } from 'apollo-fetch';
+import { BatchHttpLink } from 'apollo-link-batch-http';
+import { ApolloLink } from 'apollo-link';
+import { WebSocketLink } from 'apollo-link-ws';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+// import { LoggingLink } from 'apollo-logger';
+import { ApolloProvider } from 'react-apollo';
 
 import configureStore from '../client/common/utils/createReduxStore';
 import createApolloClient from './common/utils/createApolloClient';
-import {setLanguage} from './common/utils/helpers';
+import { setLanguage } from './common/utils/helpers';
 import modules from './modules';
-import config from "./config";
-
+import config from './config';
 
 setLanguage(config.language);
 
@@ -34,7 +33,7 @@ const fetch = createApolloFetch({
 const cache = new InMemoryCache();
 
 for (const middleware of modules.middlewares) {
-  fetch.batchUse(({requests, options}, next) => {
+  fetch.batchUse(({ requests, options }, next) => {
     options.credentials = 'same-origin';
     options.headers = options.headers || {};
     const reqs = [...requests];
@@ -53,27 +52,27 @@ for (const middleware of modules.middlewares) {
 }
 
 for (const afterware of modules.afterwares) {
-  fetch.batchUseAfter(({response, options}, next) => {
+  fetch.batchUseAfter(({ response, options }, next) => {
     afterware(response, options, next);
   });
 }
 
-let connectionParams = {};
+const connectionParams = {};
 for (const connectionParam of modules.connectionParams) {
   Object.assign(connectionParams, connectionParam());
 }
 
-const wsUri = ('http://localhost:3004/graphql').replace(/^http/, 'ws');
+const wsUri = 'http://localhost:3004/graphql'.replace(/^http/, 'ws');
 
 const wsClient = new SubscriptionClient(wsUri, {
   reconnect: true,
-  connectionParams: connectionParams
+  connectionParams
 });
 
 wsClient.use([
   {
     applyMiddleware(operationOptions, next) {
-      let params = {};
+      const params = {};
       for (const param of modules.connectionParams) {
         Object.assign(params, param());
       }
@@ -85,20 +84,23 @@ wsClient.use([
 ]);
 
 wsClient.onDisconnected(() => {
-  //console.log('onDisconnected');
+  console.log('onDisconnected');
 });
 
 wsClient.onReconnected(() => {
-  //console.log('onReconnected');
+  console.log('onReconnected');
 });
 
-let link = ApolloLink.split(
+const link = ApolloLink.split(
   operation => {
-    const operationAST = getOperationAST(operation.query, operation.operationName);
+    const operationAST = getOperationAST(
+      operation.query,
+      operation.operationName
+    );
     return !!operationAST && operationAST.operation === 'subscription';
   },
   new WebSocketLink(wsClient),
-  new BatchHttpLink({fetch})
+  new BatchHttpLink({ fetch })
 );
 
 // if (__PERSIST_GQL__) {
@@ -106,7 +108,8 @@ let link = ApolloLink.split(
 // }
 
 const client = createApolloClient({
-  link: ApolloLink.from(([new LoggingLink()]).concat([link])),
+  // link: ApolloLink.from([new LoggingLink()].concat([link])),
+  link: ApolloLink.from([link]),
   cache
 });
 
@@ -114,18 +117,15 @@ if (window.__APOLLO_STATE__) {
   cache.restore(window.__APOLLO_STATE__);
 }
 
-
-// Get initial state from server-side rendering
-const initialState = window.__APOLLO_STATE__;
+// const initialState = window.__APOLLO_STATE__;
 const history = createHistory();
-
 let store;
 if (module.hot && module.hot.data && module.hot.data.store) {
   // console.log("Restoring Redux store:", JSON.stringify(module.hot.data.store.getState()));
   store = module.hot.data.store;
-  store.replaceReducer(storeReducer);
+  //  store.replaceReducer(storeReducer);
 } else {
-  store = configureStore(history,{});
+  store = configureStore(history, {});
 }
 
 if (module.hot) {
@@ -137,23 +137,23 @@ if (module.hot) {
   });
 }
 
-
-
-//const store = configureStore(history, initialState);
+// const store = configureStore(history, initialState);
 const mountNode = document.getElementById('react-view');
 
 const renderApp = () => {
   const App = require('./app').default;
   hydrate(
-    modules.getWrappedRoot(<AppContainer errorReporter={({error}) => <RedBox error={error}/>}>
-      <Provider store={store}>
-        <ApolloProvider client={client}>
-          <ConnectedRouter history={history}>
-            <App/>
-          </ConnectedRouter>
-        </ApolloProvider>
-      </Provider>
-    </AppContainer>),
+    modules.getWrappedRoot(
+      <AppContainer errorReporter={({ error }) => <RedBox error={error} />}>
+        <Provider store={store}>
+          <ApolloProvider client={client}>
+            <ConnectedRouter history={history}>
+              <App />
+            </ConnectedRouter>
+          </ApolloProvider>
+        </Provider>
+      </AppContainer>
+    ),
     mountNode
   );
 };
@@ -164,7 +164,7 @@ if (module.hot) {
     try {
       renderApp();
     } catch (error) {
-      hydrate(<RedBox error={error}/>, mountNode);
+      hydrate(<RedBox error={error} />, mountNode);
     }
   };
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withRouter, NavLink} from 'react-router-dom';
-import {Icon, Menu, Dropdown} from 'antd';
+import { withRouter, NavLink } from 'react-router-dom';
+import { Icon, Menu, Dropdown } from 'antd';
+import i18next from 'i18next';
 
-import {Col, Row, Label, Link} from '../../components';
+import { Col, Row, Link } from '../../components';
 import SubMenu from './SubMenu';
 import styles from './styles.scss';
 import modules from '../../../modules';
-import i18next from "i18next";
 
 const menu = (
   <Menu>
@@ -24,16 +24,9 @@ const menu = (
   </Menu>
 );
 
-
 class NavBar extends React.PureComponent {
-  state = {
-    current: '/'
-  };
-
-  handleClick = e => {
-    this.setState({
-      current: e.key
-    });
+  handleClick = () => {
+    console.log('handleClick');
   };
 
   render() {
@@ -55,9 +48,9 @@ class NavBar extends React.PureComponent {
               </Menu.Item>
               <Menu.Item key="/categories">
                 <Dropdown overlay={menu}>
-                  <a className="ant-dropdown-link" href="#">
-                    {i18next.t('NAVBAR_MENU_CATEGORIES')} <Icon type="down"/>
-                  </a>
+                  <Link className="ant-dropdown-link" to="#">
+                    {i18next.t('NAVBAR_MENU_CATEGORIES')} <Icon type="down" />
+                  </Link>
                 </Dropdown>
               </Menu.Item>
               {modules.navItems}
