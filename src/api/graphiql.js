@@ -6,7 +6,5 @@ const subscriptionsUrl = `ws://localhost:${port}`;
 export default graphiqlExpress({
   endpointURL: '/graphql',
   subscriptionsEndpoint: subscriptionsUrl,
-  query:
-   '{\n' +
-   '}'
+  query: '{\n}'
 });

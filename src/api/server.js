@@ -10,24 +10,23 @@ import favicon from 'serve-favicon';
 import React from 'react';
 import http from 'http';
 import createHistory from 'history/createMemoryHistory';
-import {renderToString, renderToStaticMarkup} from 'react-dom/server';
-import {matchPath, Switch} from 'react-router-dom';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+// import { matchPath, Switch } from 'react-router-dom';
 
-import App from '../client/app';
-import {StaticRouter} from 'react-router';
-import {Provider} from 'react-redux';
+import { StaticRouter } from 'react-router';
+import { Provider } from 'react-redux';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
-import {graphqlExpress} from 'graphql-server-express';
-import {ApolloProvider, getDataFromTree} from 'react-apollo';
-import {ApolloLink} from 'apollo-link';
-import {LoggingLink} from "apollo-logger";
-import {BatchHttpLink} from "apollo-link-batch-http";
-import {createApolloFetch} from "apollo-fetch";
-import {InMemoryCache} from "apollo-cache-inmemory";
+import { graphqlExpress } from 'graphql-server-express';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloLink } from 'apollo-link';
+import { LoggingLink } from 'apollo-logger';
+import { BatchHttpLink } from 'apollo-link-batch-http';
+import { createApolloFetch } from 'apollo-fetch';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import cookiesMiddleware from 'universal-cookie-express';
-import { getLoadableState } from 'loadable-components/server';
 
+import App from '../client/app';
 import graphiqlMiddleware from './graphiql';
 import './mongodb';
 import modules from './modules';
@@ -35,7 +34,7 @@ import clientModules from '../client/modules';
 import schema from './schema';
 import configureStore from '../client/common/utils/createReduxStore';
 import Html from '../client/html';
-import {port, host} from '../client/config/index';
+import { port, host } from '../client/config/index';
 import createApolloClient from '../client/common/utils/createApolloClient';
 import addGraphQLSubscriptions from './subscriptions';
 
@@ -48,14 +47,15 @@ app.use(helmet());
 app.use(hpp());
 // Compress all requests
 app.use(compression());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 for (const applyMiddleware of modules.middlewares) {
   applyMiddleware(app);
 }
 
-app.use('/graphql',
+app.use(
+  '/graphql',
   graphqlExpress(async (req, res, next) => {
     try {
       const query = req.query.query || req.body.query;
@@ -64,26 +64,26 @@ app.use('/graphql',
       }
       return {
         schema,
-        context: await modules.createContext(req, res),
+        context: await modules.createContext(req, res)
       };
     } catch (e) {
       next(e);
     }
-  }));
+  })
+);
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use((req, res, next) => {
   if (req.originalUrl === '/') {
     express.static('assets')(req, res, next);
   } else {
-    express.static('dist')(req, res, next)
+    express.static('dist')(req, res, next);
   }
 });
 
 // Use morgan for http request debug (only show error)
-app.use(morgan('dev', {skip: (req, res) => res.statusCode < 400}));
+app.use(morgan('dev', { skip: (req, res) => res.statusCode < 400 }));
 app.use(favicon(path.join(process.cwd(), './public/favicon.ico')));
 app.use(express.static(path.join(process.cwd(), './public')));
-
 
 // Run express as webpack dev server
 if (__DEV__) {
@@ -96,7 +96,7 @@ if (__DEV__) {
     require('webpack-dev-middleware')(compiler, {
       publicPath: webpackConfig.output.publicPath,
       hot: true,
-      stats: {colors: true},
+      stats: { colors: true },
       quiet: true,
       serverSideRender: true
     })
@@ -109,10 +109,12 @@ if (__DEV__) {
 app.get('*', (req, res) => {
   if (__DEV__) webpackIsomorphicTools.refresh();
 
-
   const apiUrl = 'http://localhost:3004/graphql';
-  const fetch = createApolloFetch({uri: apiUrl, constructOptions: modules.constructFetchOptions});
-  fetch.batchUse(({options}, next) => {
+  const fetch = createApolloFetch({
+    uri: apiUrl,
+    constructOptions: modules.constructFetchOptions
+  });
+  fetch.batchUse(({ options }, next) => {
     try {
       options.credentials = 'include';
       options.headers = req.headers;
@@ -124,9 +126,9 @@ app.get('*', (req, res) => {
   });
 
   const cache = new InMemoryCache();
-  let link = new BatchHttpLink({fetch});
+  const link = new BatchHttpLink({ fetch });
   const client = createApolloClient({
-    link: ApolloLink.from(([new LoggingLink()]).concat([link])),
+    link: ApolloLink.from([new LoggingLink()].concat([link])),
     cache
   });
 
@@ -135,20 +137,23 @@ app.get('*', (req, res) => {
 
   const apolloState = Object.assign({}, cache.extract());
 
-  const token = req.universalCookies.get('x-token') ? req.universalCookies.get('x-token') : null;
+  const token = req.universalCookies.get('x-token')
+    ? req.universalCookies.get('x-token')
+    : null;
   const refreshToken = req.universalCookies.get('x-refresh-token')
     ? req.universalCookies.get('x-refresh-token')
     : null;
 
   // eslint-disable-next-line no-shadow
-  const renderHtml = (store, htmlContent/*, loadableState*/) => {
+  const renderHtml = (store, htmlContent /* , loadableState */) => {
     const html = renderToStaticMarkup(
-      <Html store={store}
-            htmlContent={htmlContent}
-            state={apolloState}
-            token={token}
-            refreshToken={refreshToken}
-            /*loadableState={loadableState}*/
+      <Html
+        store={store}
+        htmlContent={htmlContent}
+        state={apolloState}
+        token={token}
+        refreshToken={refreshToken}
+        /* loadableState={loadableState} */
       />
     );
     return `<!doctype html>${html}`;
@@ -161,7 +166,7 @@ app.get('*', (req, res) => {
   }
 
   // Here's the method for loading data from server-side
-/* const loadBranchData = (): Promise<*> | Object => {
+  /* const loadBranchData = (): Promise<*> | Object => {
     const promises = [];
 
     routes.some(route => {
@@ -175,24 +180,26 @@ app.get('*', (req, res) => {
     });
 
     return Promise.all(promises);
-  };*/
-
+  }; */
 
   (async () => {
     try {
       // Load data from server-side first
-    //  await loadBranchData();
+      //  await loadBranchData();
       // Setup React-Router server-side rendering
       const routerContext = {};
-      let component = clientModules.getWrappedRoot(<Provider store={store}>
-        <ApolloProvider client={client}>
-          <StaticRouter location={req.url} context={routerContext}>
-            <App/>
-          </StaticRouter>
-        </ApolloProvider>
-      </Provider>, req ? req : undefined);
+      const component = clientModules.getWrappedRoot(
+        <Provider store={store}>
+          <ApolloProvider client={client}>
+            <StaticRouter location={req.url} context={routerContext}>
+              <App />
+            </StaticRouter>
+          </ApolloProvider>
+        </Provider>,
+        req || undefined
+      );
       //   await getDataFromTree(component);
-     // const loadableState = await getLoadableState(component);
+      // const loadableState = await getLoadableState(component);
       const htmlContent = renderToString(component);
 
       // Check if the render result contains a redirect, if so we need to set
@@ -205,7 +212,9 @@ app.get('*', (req, res) => {
       // Checking is page is 404
       const status = routerContext.status === '404' ? 404 : 200;
       // Pass the route and initial state into html template
-      res.status(status).send(renderHtml(store, htmlContent/*, loadableState*/));
+      res
+        .status(status)
+        .send(renderHtml(store, htmlContent /* , loadableState */));
     } catch (err) {
       res.status(404).send('Not Found :(');
       console.error(`==> 😭  Rendering routes error: ${err}`);
@@ -213,25 +222,25 @@ app.get('*', (req, res) => {
   })();
 });
 
-
-if (port) {
-  let server = http.createServer(app);
-  try {
-    addGraphQLSubscriptions(server);
-  } catch (error) {
-    console.log(error);
-  }
-  const url = `http://${host}:${port}`;
-  server.listen(port, () => {
-    console.info(`API is now running on ${url}`);
-    // Open Google Chrome
-    //require('../../tools/openBrowser/index')(url);
-  });
-  server.on('close', () => {
-    server = undefined;
-  });
-} else {
+let server = http.createServer(app);
+try {
+  addGraphQLSubscriptions(server);
+} catch (error) {
+  console.log(error);
+}
+const url = `http://${host}:${port}`;
+server.listen(port, () => {
+  console.info(`API is now running on ${url}`);
+  // Open Google Chrome
+  // require('../../tools/openBrowser/index')(url);
+});
+server.on('close', () => {
+  server = undefined;
+});
+if (!port) {
   console.error(
     chalk.red('==> 😭  OMG!!! No PORT environment variable has been specified')
   );
 }
+
+export default server;

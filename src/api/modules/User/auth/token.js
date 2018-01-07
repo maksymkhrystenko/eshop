@@ -1,6 +1,4 @@
-import settings from '../../../user-config';
-
-import {refreshTokens} from './index';
+import { refreshTokens } from './index';
 
 export default (SECRET, User, jwt) => async (req, res, next) => {
   try {
@@ -9,8 +7,10 @@ export default (SECRET, User, jwt) => async (req, res, next) => {
     if (req.universalCookies.get('x-token')) {
       // check if header token matches cookie token
       if (
-        req.universalCookies.get('x-token') !== req.universalCookies.get('r-token') ||
-        req.universalCookies.get('x-refresh-token') !== req.universalCookies.get('r-refresh-token')
+        req.universalCookies.get('x-token') !==
+          req.universalCookies.get('r-token') ||
+        req.universalCookies.get('x-refresh-token') !==
+          req.universalCookies.get('r-refresh-token')
       ) {
         // if x-token is not empty and not the same as cookie x-token revoke authentication
         token = undefined;
@@ -18,11 +18,18 @@ export default (SECRET, User, jwt) => async (req, res, next) => {
     }
     if (token && token !== 'null') {
       try {
-        const {user} = jwt.verify(token, SECRET);
+        const { user } = jwt.verify(token, SECRET);
         req.user = user;
       } catch (err) {
-        const refreshToken = req.universalCookies.get('x-refresh-token') || req.headers['x-refresh-token'];
-        const newTokens = await refreshTokens(token, refreshToken, User, SECRET);
+        const refreshToken =
+          req.universalCookies.get('x-refresh-token') ||
+          req.headers['x-refresh-token'];
+        const newTokens = await refreshTokens(
+          token,
+          refreshToken,
+          User,
+          SECRET
+        );
         if (newTokens.token && newTokens.refreshToken) {
           res.set('Access-Control-Expose-Headers', 'x-token, x-refresh-token');
           res.set('x-token', newTokens.token);

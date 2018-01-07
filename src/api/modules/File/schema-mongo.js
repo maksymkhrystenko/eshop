@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+
 const autoIncrement = require('mongoose-auto-increment');
+
 autoIncrement.initialize(mongoose);
 
 const fileSchema = mongoose.Schema({
@@ -11,8 +13,12 @@ const fileSchema = mongoose.Schema({
     type: Number,
     required: true,
     unique: true
-  },
+  }
 });
 
-fileSchema.plugin(autoIncrement.plugin, {model: 'File', field: 'id', startAt: 1});
-export default mongoose.model('File', fileSchema );
+fileSchema.plugin(autoIncrement.plugin, {
+  model: 'File',
+  field: 'id',
+  startAt: 1
+});
+export default mongoose.model('File', fileSchema);

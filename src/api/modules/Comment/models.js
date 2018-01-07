@@ -1,4 +1,4 @@
-import _ from 'lodash';
+/* import _ from 'lodash';
 import Comment from './schema-mongo';
 
 const orderedFor = (rows, collection, field, singleObject) => {
@@ -11,10 +11,10 @@ const orderedFor = (rows, collection, field, singleObject) => {
     }
     return singleObject ? {} : [];
   });
-};
+}; */
 
-export default class ModelClass{
- /* postsPagination(limit, offset) {
+export default class ModelClass {
+  /* postsPagination(limit, offset) {
     let query = {};
     if (offset > 0) {
       query = {id: {$lt: offset}};
@@ -102,5 +102,5 @@ export default class ModelClass{
         .update({
           content: content
         });
-    }*/
+    } */
 }

@@ -9,7 +9,12 @@ import modules from '../client/modules';
 
 type Props = { store: Store, htmlContent?: string };
 
-const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: Props): Element<'html'> => {
+const Html = ({
+  htmlContent,
+  state,
+  token,
+  refreshToken /* , loadableState */
+}: Props): Element<'html'> => {
   // Should be declared after "renderToStaticMarkup()" of "../server.js" or it won't work
   const head = Helmet.renderStatic();
   const attrs = head.htmlAttributes.toComponent();
@@ -55,10 +60,9 @@ const Html = ({ htmlContent , state,  token, refreshToken/*, loadableState*/}: P
           // Store the initial state into window
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html:
-              `window.__APOLLO_STATE__=${serialize(state, {
-                isJSON: true
-              })};window.localStorage.setItem('token','${token}');window.localStorage.setItem('refreshToken','${refreshToken}');`
+            __html: `window.__APOLLO_STATE__=${serialize(state, {
+              isJSON: true
+            })};window.localStorage.setItem('token','${token}');window.localStorage.setItem('refreshToken','${refreshToken}');`
           }}
         />
         {_.keys(assets.javascript)

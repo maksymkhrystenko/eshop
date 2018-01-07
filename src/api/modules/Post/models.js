@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+
 import _ from 'lodash';
 import Post from './schema-mongo';
 import Comment from '../Comment/schema-mongo';
@@ -14,24 +16,28 @@ const orderedFor = (rows, collection, field, singleObject) => {
   });
 };
 
-export default class ModelClass{
+export default class ModelClass {
   postsPagination(limit, offset) {
     let query = {};
     if (offset > 0) {
-      query = {id: {$lt: offset}};
+      query = { id: { $lt: offset } };
     }
-    return Post.find(query, {}, {
-      limit: limit,
-      sort: {id: -1}
-    });
+    return Post.find(
+      query,
+      {},
+      {
+        limit,
+        sort: { id: -1 }
+      }
+    );
   }
 
   getTotal() {
     return Post.count({});
   }
 
-  getNextPageFlag( id) {
-    return Post.count({id: {$lt: id}});
+  getNextPageFlag(id) {
+    return Post.count({ id: { $lt: id } });
   }
 
   addPost({ title, content }) {
@@ -43,48 +49,59 @@ export default class ModelClass{
   }
 
   post(id) {
-    return Post.findOne({id});
+    return Post.findOne({ id });
   }
 
-    async getCommentsForPostIds(postIds) {
-      let res = await Comment.find({postId:{$in:postIds}}, {}, {
-        sort: {id: -1}
-      });
-      return orderedFor(res, postIds, 'postId', false);
-    }
+  async getCommentsForPostIds(postIds) {
+    const res = await Comment.find(
+      { postId: { $in: postIds } },
+      {},
+      {
+        sort: { id: -1 }
+      }
+    );
+    return orderedFor(res, postIds, 'postId', false);
+  }
 
-    deletePost(id) {
-      return Post.remove({id});
-    }
+  deletePost(id) {
+    return Post.remove({ id });
+  }
 
-    editPost({ id, title, content }) {
-      return Post.findOneAndUpdate({id}, {
+  editPost({ id, title, content }) {
+    return Post.findOneAndUpdate(
+      { id },
+      {
         $set: {
-          title,content
+          title,
+          content
         }
-      });
-    }
+      }
+    );
+  }
 
-    addComment({ content, postId }) {
-      return new Comment({
-        content,
-        postId
-      }).save();
-    }
+  addComment({ content, postId }) {
+    return new Comment({
+      content,
+      postId
+    }).save();
+  }
 
-    getComment(id) {
-      return Comment.findOne({id});
-    }
+  getComment(id) {
+    return Comment.findOne({ id });
+  }
 
-    deleteComment(id) {
-      return Comment.remove({id});
-    }
+  deleteComment(id) {
+    return Comment.remove({ id });
+  }
 
-    editComment({ id, content }) {
-      return Comment.findOneAndUpdate({id}, {
+  editComment({ id, content }) {
+    return Comment.findOneAndUpdate(
+      { id },
+      {
         $set: {
           content
         }
-      });
-    }
+      }
+    );
+  }
 }

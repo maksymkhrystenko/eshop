@@ -1,6 +1,5 @@
-/*eslint-disable no-unused-vars*/
+/* eslint-disable no-unused-vars */
 import shell from 'shelljs';
-import fs from 'fs';
 
 export default pubsub => ({
   Query: {
@@ -9,9 +8,8 @@ export default pubsub => ({
     }
   },
   Mutation: {
-    uploadFiles: async (obj, { files }, { File }) => {
-      return await File.saveFiles(files);
-    },
+    uploadFiles: async (obj, { files }, { File }) =>
+      await File.saveFiles(files),
     removeFile: async (obj, { id }, { File }) => {
       const file = await File.file(id);
       if (!file) {

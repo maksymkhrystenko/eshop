@@ -1,18 +1,19 @@
 const winston = require('winston');
 
 const tsFormat = () => {
-  function getDateString(addT){
-    var time = new Date();
-    time.setHours(time.getHours() + addT );
-    return ((time.getHours()<10)?"0":"")+time.getHours() + ':' + time.getMinutes();
+  function getDateString(addT) {
+    const time = new Date();
+    time.setHours(time.getHours() + addT);
+    return `${(time.getHours() < 10 ? '0' : '') +
+      time.getHours()}:${time.getMinutes()}`;
   }
   return getDateString(3);
 };
 
-export const logger = new (winston.Logger)({
+export const logger = new winston.Logger({
   transports: [
     // colorize the output to the console
-    new (winston.transports.Console)({
+    new winston.transports.Console({
       timestamp: tsFormat,
       handleExceptions: true,
       colorize: true
@@ -31,6 +32,6 @@ export const logger = new (winston.Logger)({
          handleExceptions: true,
          timestamp: tsFormat,
          level:  'info'
-       })*/
+       }) */
   ]
 });

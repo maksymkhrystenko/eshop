@@ -5,8 +5,10 @@ import settings from '../../../user-config';
 import FieldError from '../../../../client/common/utils/fieldError';
 
 export const createTokens = async (user, secret, refreshSecret) => {
-  let tokenUser = pick(user, ['id', 'username', 'role']);
-  tokenUser.fullName = user.firstName ? `${user.firstName} ${user.lastName}` : null;
+  const tokenUser = pick(user, ['id', 'username', 'role']);
+  tokenUser.fullName = user.firstName
+    ? `${user.firstName} ${user.lastName}`
+    : null;
 
   const createToken = jwt.sign(
     {
@@ -41,7 +43,7 @@ export const refreshTokens = async (token, refreshToken, User, SECRET) => {
   }
 
   const user = await User.getUserWithPassword(userId);
-    if (!user) {
+  if (!user) {
     return {};
   }
   const refreshSecret = SECRET + user.password;
@@ -52,7 +54,11 @@ export const refreshTokens = async (token, refreshToken, User, SECRET) => {
     return {};
   }
 
-  const [newToken, newRefreshToken] = await createTokens(user, SECRET, refreshSecret);
+  const [newToken, newRefreshToken] = await createTokens(
+    user,
+    SECRET,
+    refreshSecret
+  );
 
   return {
     token: newToken,
@@ -100,7 +106,11 @@ export const tryLoginSerial = async (serial, User, SECRET) => {
     const user = await User.getUserWithPassword(certAuth.id);
 
     const refreshSecret = SECRET + user.password;
-    const [token, refreshToken] = await createTokens(user, SECRET, refreshSecret);
+    const [token, refreshToken] = await createTokens(
+      user,
+      SECRET,
+      refreshSecret
+    );
 
     return {
       user,

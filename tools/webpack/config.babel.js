@@ -8,12 +8,13 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+
 const parallelUglifyPlugin = new ParallelUglifyPlugin({
   uglifyES: {
     compress: {
       warnings: false
     }
-  },
+  }
 });
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -67,10 +68,7 @@ const getPlugins = () => {
         minimize: !isDev
       }
     }),
-    new webpack.NormalModuleReplacementPlugin(
-      /\/chunks/,
-      './asyncChunks'
-    ),
+    new webpack.NormalModuleReplacementPlugin(/\/chunks/, './asyncChunks'),
     // Style lint
     new StyleLintPlugin({ failOnError: stylelint }),
     // Setup enviorment variables for client
@@ -139,9 +137,14 @@ const getEntry = () => {
   return entry;
 };
 
-
 const lessToJs = require('less-vars-to-js');
-const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../../src/client/common/styles/variables.less'), 'utf8'));
+
+const themeVariables = lessToJs(
+  fs.readFileSync(
+    path.join(__dirname, '../../src/client/common/styles/variables.less'),
+    'utf8'
+  )
+);
 
 // Setting webpack config
 module.exports = {
@@ -196,32 +199,30 @@ module.exports = {
       {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
-        loader: 'graphql-tag/loader',
+        loader: 'graphql-tag/loader'
       },
       {
         test: /\.css$/,
-        /* use: [ 'style-loader', 'css-loader' ]*/
-        loader:
-
-          ExtractTextPlugin.extract({
-            fallback: 'style',
-            use: [
-              {
-                loader: 'css',
-                options: {
-                  importLoaders: 1,
-                  sourceMap: true,
-                  modules: CSSModules,
-                  // "context" and "localIdentName" need to be the same with server config,
-                  // or the style will flick when page first loaded
-                  context: path.join(process.cwd(), './src'),
-                  localIdentName: '[name]__[local]--[hash:base64:5]',
-                  minimize: !isDev
-                }
-              },
-              { loader: 'postcss', options: { sourceMap: true } }
-            ]
-          })
+        /* use: [ 'style-loader', 'css-loader' ] */
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style',
+          use: [
+            {
+              loader: 'css',
+              options: {
+                importLoaders: 1,
+                sourceMap: true,
+                modules: CSSModules,
+                // "context" and "localIdentName" need to be the same with server config,
+                // or the style will flick when page first loaded
+                context: path.join(process.cwd(), './src'),
+                localIdentName: '[name]__[local]--[hash:base64:5]',
+                minimize: !isDev
+              }
+            },
+            { loader: 'postcss', options: { sourceMap: true } }
+          ]
+        })
       },
       {
         test: /\.(scss|sass)$/,
@@ -231,7 +232,7 @@ module.exports = {
                loader: "css-loader" // translates CSS into CommonJS
              }, {
                loader: "sass-loader" // compiles Sass to CSS
-             }]*/
+             }] */
         loader: ExtractTextPlugin.extract({
           fallback: 'style',
           use: [
@@ -242,7 +243,7 @@ module.exports = {
                 sourceMap: true,
                 modules: CSSModules,
                 context: path.join(process.cwd(), './src'),
-                //localIdentName: '[name]__[local]--[hash:base64:5]',
+                // localIdentName: '[name]__[local]--[hash:base64:5]',
                 localIdentName: '[local]',
                 minimize: !isDev
               }
@@ -264,10 +265,10 @@ module.exports = {
         loader: ExtractTextPlugin.extract({
           fallback: 'style',
           use: [
-            { loader: "css" },
-            /*{ loader: 'postcss', options: { sourceMap: true } },*/
+            { loader: 'css' },
+            /* { loader: 'postcss', options: { sourceMap: true } }, */
             {
-              loader: "less",
+              loader: 'less',
               options: {
                 modifyVars: themeVariables
               }

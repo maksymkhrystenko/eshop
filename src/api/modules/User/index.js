@@ -28,7 +28,7 @@ if (settings.user.auth.facebook.enabled) {
         scope: settings.user.auth.facebook.scope,
         profileFields: settings.user.auth.facebook.profileFields
       },
-      async function(accessToken, refreshToken, profile, cb) {
+      async (accessToken, refreshToken, profile, cb) => {
         const { id, username, displayName, emails: [{ value }] } = profile;
         try {
           let user = await User.getUserByFbIdOrEmail(id, value);
@@ -36,7 +36,7 @@ if (settings.user.auth.facebook.enabled) {
           if (!user) {
             const isActive = true;
             const [createdUserId] = await User.register({
-              username: username ? username : displayName,
+              username: username || displayName,
               email: value,
               password: id,
               isActive
@@ -74,7 +74,7 @@ if (settings.user.auth.google.enabled) {
         clientSecret: settings.user.auth.google.clientSecret,
         callbackURL: '/auth/google/callback'
       },
-      async function(accessToken, refreshToken, profile, cb) {
+      async (accessToken, refreshToken, profile, cb) => {
         const { id, username, displayName, emails: [{ value }] } = profile;
         try {
           let user = await User.getUserByGoogleIdOrEmail(id, value);
@@ -82,7 +82,7 @@ if (settings.user.auth.google.enabled) {
           if (!user) {
             const isActive = true;
             const [createdUserId] = await User.register({
-              username: username ? username : value,
+              username: username || value,
               email: value,
               password: id,
               isActive
@@ -136,7 +136,12 @@ export const parseUser = async ({ req, connectionParams, webSocket }) => {
       const { user } = jwt.verify(connectionParams.token, SECRET);
       return user;
     } catch (err) {
-      const newTokens = await refreshTokens(connectionParams.token, connectionParams.refreshToken, User, SECRET);
+      const newTokens = await refreshTokens(
+        connectionParams.token,
+        connectionParams.refreshToken,
+        User,
+        SECRET
+      );
       return newTokens.user;
     }
   } else if (req) {
@@ -164,7 +169,7 @@ export default new Feature({
   createContextFunc: async (req, connectionParams, webSocket) => {
     const tokenUser = await parseUser({ req, connectionParams, webSocket });
     const auth = {
-      isAuthenticated: tokenUser ? true : false,
+      isAuthenticated: !!tokenUser,
       scope: tokenUser ? scopes[tokenUser.role] : null
     };
 
@@ -189,34 +194,39 @@ export default new Feature({
 
       app.get('/auth/facebook', passport.authenticate('facebook'));
 
-      app.get('/auth/facebook/callback', passport.authenticate('facebook', { session: false }), async function(
-        req,
-        res
-      ) {
-        const user = await User.getUserWithPassword(req.user.id);
-        const refreshSecret = SECRET + user.password;
-        const [token, refreshToken] = await createTokens(req.user, SECRET, refreshSecret);
+      app.get(
+        '/auth/facebook/callback',
+        passport.authenticate('facebook', { session: false }),
+        async (req, res) => {
+          const user = await User.getUserWithPassword(req.user.id);
+          const refreshSecret = SECRET + user.password;
+          const [token, refreshToken] = await createTokens(
+            req.user,
+            SECRET,
+            refreshSecret
+          );
 
-        req.universalCookies.set('x-token', token, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true
-        });
-        req.universalCookies.set('x-refresh-token', refreshToken, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true
-        });
+          req.universalCookies.set('x-token', token, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: true
+          });
+          req.universalCookies.set('x-refresh-token', refreshToken, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: true
+          });
 
-        req.universalCookies.set('r-token', token, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: false
-        });
-        req.universalCookies.set('r-refresh-token', refreshToken, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: false
-        });
+          req.universalCookies.set('r-token', token, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: false
+          });
+          req.universalCookies.set('r-refresh-token', refreshToken, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: false
+          });
 
-        res.redirect('/profile');
-      });
+          res.redirect('/profile');
+        }
+      );
     }
 
     // Setup Google OAuth
@@ -230,32 +240,40 @@ export default new Feature({
         })
       );
 
-      app.get('/auth/google/callback', passport.authenticate('google', { session: false }), async function(req, res) {
-        const user = await User.getUserWithPassword(req.user.id);
+      app.get(
+        '/auth/google/callback',
+        passport.authenticate('google', { session: false }),
+        async (req, res) => {
+          const user = await User.getUserWithPassword(req.user.id);
 
-        const refreshSecret = SECRET + user.password;
-        const [token, refreshToken] = await createTokens(req.user, SECRET, refreshSecret);
+          const refreshSecret = SECRET + user.password;
+          const [token, refreshToken] = await createTokens(
+            req.user,
+            SECRET,
+            refreshSecret
+          );
 
-        req.universalCookies.set('x-token', token, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true
-        });
-        req.universalCookies.set('x-refresh-token', refreshToken, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true
-        });
+          req.universalCookies.set('x-token', token, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: true
+          });
+          req.universalCookies.set('x-refresh-token', refreshToken, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: true
+          });
 
-        req.universalCookies.set('r-token', token, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: false
-        });
-        req.universalCookies.set('r-refresh-token', refreshToken, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: false
-        });
+          req.universalCookies.set('r-token', token, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: false
+          });
+          req.universalCookies.set('r-refresh-token', refreshToken, {
+            maxAge: 60 * 60 * 24 * 7,
+            httpOnly: false
+          });
 
-        res.redirect('/profile');
-      });
+          res.redirect('/profile');
+        }
+      );
     }
   }
 });

@@ -1,12 +1,13 @@
-import { withFilter } from 'graphql-subscriptions';
+/* import { withFilter } from 'graphql-subscriptions';
 
 const POST_SUBSCRIPTION = 'post_subscription';
 const POSTS_SUBSCRIPTION = 'posts_subscription';
-const COMMENT_SUBSCRIPTION = 'comment_subscription';
+const COMMENT_SUBSCRIPTION = 'comment_subscription'; */
 
-export default pubsub => ({
+// export default pubsub => ({
+export default () => ({
   Query: {
-/*    async posts(obj, { limit, offset }, context) {
+    /*    async posts(obj, { limit, offset }, context) {
       let edgesArray = [];
       let posts = await context.Post.postsPagination( limit, offset);
 
@@ -36,13 +37,13 @@ export default pubsub => ({
     },
   post(obj, { id }, context) {
       return context.Post.post(id);
-    }*/
+    } */
   },
-/*  Post: {
+  /*  Post: {
     comments({ id }, args, context) {
       return context.loaders.getCommentsForPostIds.load(id);
     }
-  },*/
+  }, */
   Mutation: {
     /*  async addPost(obj, { input }, context) {
        const oldPost = await context.Post.addPost(input);
@@ -128,10 +129,10 @@ export default pubsub => ({
            }
          });
          return comment;
-       }*/
+       } */
   },
   Subscription: {
- /*   postsUpdated: {
+    /*   postsUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(POSTS_SUBSCRIPTION),
         (payload, variables) => {
@@ -155,6 +156,6 @@ export default pubsub => ({
           return payload.commentUpdated.postId === variables.postId;
         }
       )
-    }*/
+    } */
   }
 });

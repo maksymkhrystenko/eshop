@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const autoIncrement = require('mongoose-auto-increment');
+
 autoIncrement.initialize(mongoose);
 
 const productPropertySchema = mongoose.Schema({
@@ -20,5 +21,9 @@ const productSchema = mongoose.Schema({
   id: Number
 });
 
-productSchema.plugin(autoIncrement.plugin, {model: 'Product', field: 'id', startAt: 1});
+productSchema.plugin(autoIncrement.plugin, {
+  model: 'Product',
+  field: 'id',
+  startAt: 1
+});
 export default mongoose.model('Product', productSchema);

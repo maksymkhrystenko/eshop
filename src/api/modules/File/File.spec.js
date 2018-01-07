@@ -7,11 +7,13 @@ import { step } from 'mocha-steps';
 import { getServer, getApollo } from '../../testHelpers/integrationSetup';
 
 describe('Upload API works', () => {
-  let server, apollo;
+/*  let server, apollo;
 
-  before(() => {
+  beforeAll(() => {
     server = getServer();
     apollo = getApollo();
+    console.log(999);
+    console.log(server);
   });
 
   step('Has GraphiQL endpoint', () => {
@@ -22,5 +24,5 @@ describe('Upload API works', () => {
         res.status.should.be(200);
         res.body.should.be('{}');
       });
-  });
+  });*/
 });

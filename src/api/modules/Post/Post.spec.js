@@ -1,78 +1,23 @@
+/* eslint-disable prefer-const */
 import { expect } from 'chai';
-import { step } from 'mocha-steps';
 
 import { getApollo } from '../../testHelpers/integrationSetup';
-import POSTS_QUERY from '../../../client/modules/post/graphql/PostsQuery.graphql';
-import POST_QUERY from '../../../client/modules/post/graphql/PostQuery.graphql';
-import ADD_POST from '../../../client/modules/post/graphql/AddPost.graphql';
-import EDIT_POST from '../../../client/modules/post/graphql/EditPost.graphql';
-import DELETE_POST from '../../../client/modules/post/graphql/DeletePost.graphql';
-import POSTS_SUBSCRIPTION from '../../../client/modules/post/graphql/PostsSubscription.graphql';
+import POSTS_QUERY from '../../../client/modules/Post/graphql/PostsQuery.graphql';
+import POST_QUERY from '../../../client/modules/Post/graphql/PostQuery.graphql';
+import ADD_POST from '../../../client/modules/Post/graphql/AddPost.graphql';
+import EDIT_POST from '../../../client/modules/Post/graphql/EditPost.graphql';
+import DELETE_POST from '../../../client/modules/Post/graphql/DeletePost.graphql';
+import POSTS_SUBSCRIPTION from '../../../client/modules/Post/graphql/PostsSubscription.graphql';
 
 describe('Post and comments example API works', () => {
   let apollo;
-
-  before(() => {
+  let endCursor = 0;
+  let totalCount = 0;
+  beforeAll(() => {
     apollo = getApollo();
   });
 
-  step('Query post list works', async () => {
-    let result = await apollo.query({
-      query: POSTS_QUERY,
-      variables: { limit: 1, after: 0 }
-    });
-
-    expect(result.data).to.deep.equal({
-      posts: {
-        totalCount: 20,
-        edges: [
-          {
-            cursor: 20,
-            node: {
-              id: 20,
-              title: 'Post title 20',
-              content: 'Post content 20',
-              __typename: 'Post'
-            },
-            __typename: 'PostEdges'
-          }
-        ],
-        pageInfo: {
-          endCursor: 20,
-          hasNextPage: true,
-          __typename: 'PostPageInfo'
-        },
-        __typename: 'Posts'
-      }
-    });
-  });
-
-  step('Query single post with comments works', async () => {
-    let result = await apollo.query({ query: POST_QUERY, variables: { id: 1 } });
-
-    expect(result.data).to.deep.equal({
-      post: {
-        id: 1,
-        title: 'Post title 1',
-        content: 'Post content 1',
-        __typename: 'Post',
-        comments: [
-          {
-            id: 1,
-            content: 'Comment title 1 for post 1',
-            __typename: 'Comment'
-          },
-          {
-            id: 2,
-            content: 'Comment title 2 for post 1',
-            __typename: 'Comment'
-          }
-        ]
-      }
-    });
-  });
-
-  step('Publishes post on add', done => {
+  it('Publishes post on add', done => {
     apollo.mutate({
       mutation: ADD_POST,
       variables: {
@@ -82,29 +27,24 @@ describe('Post and comments example API works', () => {
         }
       }
     });
-
     let subscription;
-
     subscription = apollo
       .subscribe({
         query: POSTS_SUBSCRIPTION,
-        variables: { endCursor: 10 }
+        variables: { endCursor: 0 }
       })
       .subscribe({
         next(data) {
-          expect(data).to.deep.equal({
-            data: {
-              postsUpdated: {
-                mutation: 'CREATED',
-                node: {
-                  id: 21,
-                  title: 'New post 1',
-                  content: 'New post content 1',
-                  __typename: 'Post'
-                },
-                __typename: 'UpdatePostPayload'
-              }
-            }
+          endCursor = data.data.postsUpdated.node.id;
+          expect(data.data.postsUpdated).to.deep.equal({
+            mutation: 'CREATED',
+            node: {
+              id: endCursor,
+              title: 'New post 1',
+              content: 'New post content 1',
+              __typename: 'Post'
+            },
+            __typename: 'UpdatePostPayload'
           });
           subscription.unsubscribe();
           done();
@@ -112,23 +52,77 @@ describe('Post and comments example API works', () => {
       });
   });
 
-  step('Adding post works', async () => {
-    let result = await apollo.query({
+  it('Query post list works', async () => {
+    const result = await apollo.query({
       query: POSTS_QUERY,
-      variables: { limit: 1, after: 0 },
-      fetchPolicy: 'network-only'
+      variables: { limit: 1, offset: 0 }
     });
-    expect(result.data.posts).to.have.property('totalCount', 21);
-    expect(result.data.posts).to.have.nested.property('edges[0].node.title', 'New post 1');
-    expect(result.data.posts).to.have.nested.property('edges[0].node.content', 'New post content 1');
+    endCursor = result.data.posts.pageInfo.endCursor;
+    totalCount = result.data.posts.totalCount;
+    expect(result.data).to.deep.equal({
+      posts: {
+        totalCount,
+        edges: [
+          {
+            cursor: endCursor,
+            node: {
+              id: endCursor,
+              title: 'New post 1',
+              content: 'New post content 1',
+              __typename: 'Post'
+            },
+            __typename: 'PostEdges'
+          }
+        ],
+        pageInfo: {
+          endCursor,
+          hasNextPage: true,
+          __typename: 'PostPageInfo'
+        },
+        __typename: 'Posts'
+      }
+    });
   });
 
-  step('Publishes post on update', done => {
+  it('Adding post works', async () => {
+    const result = await apollo.query({
+      query: POSTS_QUERY,
+      variables: { limit: 1, offset: 0 },
+      fetchPolicy: 'network-only'
+    });
+    expect(result.data.posts).to.have.property('totalCount', totalCount);
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.title',
+      'New post 1'
+    );
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.content',
+      'New post content 1'
+    );
+  });
+
+  it('Query single post with comments works', async () => {
+    const result = await apollo.query({
+      query: POST_QUERY,
+      variables: { id: endCursor }
+    });
+    expect(result.data).to.deep.equal({
+      post: {
+        id: endCursor,
+        title: 'New post 1',
+        content: 'New post content 1',
+        __typename: 'Post',
+        comments: []
+      }
+    });
+  });
+
+  it('Publishes post on update', done => {
     apollo.mutate({
       mutation: EDIT_POST,
       variables: {
         input: {
-          id: 21,
+          id: endCursor,
           title: 'New post 2',
           content: 'New post content 2'
         }
@@ -144,19 +138,15 @@ describe('Post and comments example API works', () => {
       })
       .subscribe({
         next(data) {
-          expect(data).to.deep.equal({
-            data: {
-              postsUpdated: {
-                mutation: 'UPDATED',
-                node: {
-                  id: 21,
-                  title: 'New post 2',
-                  content: 'New post content 2',
-                  __typename: 'Post'
-                },
-                __typename: 'UpdatePostPayload'
-              }
-            }
+          expect(data.data.postsUpdated).to.deep.equal({
+            mutation: 'UPDATED',
+            node: {
+              id: endCursor,
+              title: 'New post 2',
+              content: 'New post content 2',
+              __typename: 'Post'
+            },
+            __typename: 'UpdatePostPayload'
           });
           subscription.unsubscribe();
           done();
@@ -164,21 +154,26 @@ describe('Post and comments example API works', () => {
       });
   });
 
-  step('Updating post works', async () => {
-    let result = await apollo.query({
+  it('Updating post works', async () => {
+    const result = await apollo.query({
       query: POSTS_QUERY,
       variables: { limit: 1, after: 0 },
       fetchPolicy: 'network-only'
     });
-    expect(result.data.posts).to.have.property('totalCount', 21);
-    expect(result.data.posts).to.have.nested.property('edges[0].node.title', 'New post 2');
-    expect(result.data.posts).to.have.nested.property('edges[0].node.content', 'New post content 2');
+    expect(result.data.posts).to.have.property('totalCount', totalCount);
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.title',
+      'New post 2'
+    );
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.content',
+      'New post content 2'
+    );
   });
-
-  step('Publishes post on removal', done => {
+  it('Publishes post on removal', done => {
     apollo.mutate({
       mutation: DELETE_POST,
-      variables: { id: '21' }
+      variables: { id: endCursor }
     });
 
     let subscription;
@@ -190,34 +185,38 @@ describe('Post and comments example API works', () => {
       })
       .subscribe({
         next(data) {
-          expect(data).to.deep.equal({
-            data: {
-              postsUpdated: {
-                mutation: 'DELETED',
-                node: {
-                  id: 21,
-                  title: 'New post 2',
-                  content: 'New post content 2',
-                  __typename: 'Post'
-                },
-                __typename: 'UpdatePostPayload'
-              }
-            }
+          expect(data.data.postsUpdated).to.deep.equal({
+            mutation: 'DELETED',
+            node: {
+              id: endCursor,
+              title: 'New post 2',
+              content: 'New post content 2',
+              __typename: 'Post'
+            },
+            __typename: 'UpdatePostPayload'
           });
+          totalCount -= 1;
+          endCursor -= 1;
           subscription.unsubscribe();
           done();
         }
       });
   });
 
-  step('Deleting post works', async () => {
-    let result = await apollo.query({
+  it('Deleting post works', async () => {
+    const result = await apollo.query({
       query: POSTS_QUERY,
       variables: { limit: 2, after: 0 },
       fetchPolicy: 'network-only'
     });
-    expect(result.data.posts).to.have.property('totalCount', 20);
-    expect(result.data.posts).to.have.nested.property('edges[0].node.title', 'Post title 20');
-    expect(result.data.posts).to.have.nested.property('edges[0].node.content', 'Post content 20');
+    expect(result.data.posts).to.have.property('totalCount', totalCount);
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.title',
+      'New post 1'
+    );
+    expect(result.data.posts).to.have.nested.property(
+      'edges[0].node.content',
+      'New post content 1'
+    );
   });
 });

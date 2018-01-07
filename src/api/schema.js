@@ -1,10 +1,10 @@
-import {makeExecutableSchema, addErrorLoggingToSchema} from 'graphql-tools';
-import {PubSub} from 'graphql-subscriptions';
+import { makeExecutableSchema, addErrorLoggingToSchema } from 'graphql-tools';
+import { PubSub } from 'graphql-subscriptions';
 import { addApolloLogging } from 'apollo-logger';
 
 import modules from './modules';
 import rootSchema from './root-schema.graphql';
-import {logger} from './winston';
+import { logger } from './winston';
 
 const pubsub = addApolloLogging(new PubSub());
 
@@ -16,8 +16,8 @@ const executableSchema = makeExecutableSchema({
 });
 
 addErrorLoggingToSchema(executableSchema, {
-  log: (e) => {
-    logger.error(e)
+  log: e => {
+    logger.error(e);
   }
 });
 export default executableSchema;
