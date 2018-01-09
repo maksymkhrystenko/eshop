@@ -16,7 +16,6 @@ describe('Post and comments example API works', () => {
   beforeAll(() => {
     apollo = getApollo();
   });
-
   it('Publishes post on add', done => {
     apollo.mutate({
       mutation: ADD_POST,

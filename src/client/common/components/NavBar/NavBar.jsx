@@ -65,11 +65,9 @@ class NavBar extends React.PureComponent {
               className={styles.RightMenu}
             >
               {modules.navItemsRight}
-              {__DEV__ && (
-                <Menu.Item>
-                  <a href="/graphiql">GraphiQL</a>
-                </Menu.Item>
-              )}
+              <Menu.Item>
+                <a href="/graphiql">GraphiQL</a>
+              </Menu.Item>
             </Menu>
           </Col>
         </Col>

@@ -1,28 +1,30 @@
-/*eslint-disable no-unused-vars*/
+/* eslint-disable no-unused-vars */
 // General imports
-import chai from 'chai';
-import { step } from 'mocha-steps';
+import chai, { expect } from 'chai';
+import chaiHttp from 'chai-http';
 
-// Helpers
 import { getServer, getApollo } from '../../testHelpers/integrationSetup';
 
 describe('Upload API works', () => {
-/*  let server, apollo;
+  let server;
+  let apollo;
 
-  beforeAll(() => {
-    server = getServer();
+  beforeAll(async () => {
+    server = await getServer();
     apollo = getApollo();
-    console.log(999);
-    console.log(server);
   });
 
-  step('Has GraphiQL endpoint', () => {
-    return chai
+  it('Has GraphiQL endpoint', done =>
+    chai
       .request(server)
       .get('/graphiql')
-      .end((err, res) => {
-        res.status.should.be(200);
-        res.body.should.be('{}');
-      });
-  });*/
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.deep.equal({});
+        done();
+      })
+      .catch(err => {
+        console.error(err);
+        throw err;
+      }));
 });

@@ -1,6 +1,7 @@
 module.exports = {
   host: process.env.NODE_HOST || 'localhost', // Define your host from 'package.json'
   port: process.env.PORT,
+  portForTests: 3005,
   language: 'ru',
   app: {
     htmlAttributes: { lang: 'ru' },

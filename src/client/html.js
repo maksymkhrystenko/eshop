@@ -2,12 +2,17 @@ import React from 'react';
 import type { Element } from 'react';
 import Helmet from 'react-helmet';
 import serialize from 'serialize-javascript';
-import _ from 'lodash/fp';
+import _ from 'lodash';
 
 import type { Store } from './common/types';
-import modules from '../client/modules';
 
-type Props = { store: Store, htmlContent?: string };
+type Props = {
+  store: Store,
+  htmlContent?: String,
+  state?: Object,
+  token?: String,
+  refreshToken?: String
+};
 
 const Html = ({
   htmlContent,

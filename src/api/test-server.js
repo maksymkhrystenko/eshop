@@ -28,13 +28,13 @@ import cookiesMiddleware from 'universal-cookie-express';
 
 import App from '../client/app';
 import graphiqlMiddleware from './graphiql';
-import './mongodb';
+// import './mongodb';
 import modules from './modules';
 import clientModules from '../client/modules';
 import schema from './schema';
 import configureStore from '../client/common/utils/createReduxStore';
 import Html from '../client/html';
-import { port, host } from '../client/config/index';
+import { host, portForTests } from '../client/config/index';
 import createApolloClient from '../client/common/utils/createApolloClient';
 import addGraphQLSubscriptions from './subscriptions';
 
@@ -85,6 +85,7 @@ app.use(morgan('dev', { skip: (req, res) => res.statusCode < 400 }));
 app.use(favicon(path.join(process.cwd(), './public/favicon.ico')));
 app.use(express.static(path.join(process.cwd(), './public')));
 // Run express as webpack dev server
+/*
 if (__DEV__) {
   const webpack = require('webpack');
   const webpackConfig = require('../../tools/webpack/config.babel');
@@ -102,10 +103,11 @@ if (__DEV__) {
   );
   app.use(require('webpack-hot-middleware')(compiler));
 }
+*/
 
 // Register server-side rendering middleware
 app.get('*', (req, res) => {
-  if (__DEV__) webpackIsomorphicTools.refresh();
+  // if (process.env.__DEV__) webpackIsomorphicTools.refresh();
 
   const apiUrl = 'http://localhost:3004/graphql';
   const fetch = createApolloFetch({
@@ -158,10 +160,10 @@ app.get('*', (req, res) => {
   };
 
   // If __SSR__ = false, disable server side rendering
-  if (!__SSR__) {
+  /*  if (!__SSR__) {
     res.send(renderHtml(store));
     return;
-  }
+  } */
 
   // Here's the method for loading data from server-side
   /* const loadBranchData = (): Promise<*> | Object => {
@@ -220,14 +222,14 @@ app.get('*', (req, res) => {
   })();
 });
 
-export let server = http.createServer(app);
+let server = http.createServer(app);
 try {
   addGraphQLSubscriptions(server);
 } catch (error) {
   console.log(error);
 }
-const url = `http://${host}:${port}`;
-server.listen(port, () => {
+const url = `http://${host}:${portForTests}`;
+server.listen(portForTests, () => {
   console.info(`API is now running on ${url}`);
   // Open Google Chrome
   // require('../../tools/openBrowser/index')(url);
@@ -235,8 +237,10 @@ server.listen(port, () => {
 server.on('close', () => {
   server = undefined;
 });
-if (!port) {
+if (!portForTests) {
   console.error(
     chalk.red('==> 😭  OMG!!! No PORT environment variable has been specified')
   );
 }
+
+export { server };

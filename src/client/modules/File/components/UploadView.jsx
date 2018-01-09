@@ -72,7 +72,7 @@ class UploadView extends React.PureComponent {
         render: (text, record) => (
           <Button
             color="primary"
-            size="sm"
+            size="small"
             className="delete-button"
             onClick={async () => {
               const res = await this.handleRemoveFile(record.id, removeFile);

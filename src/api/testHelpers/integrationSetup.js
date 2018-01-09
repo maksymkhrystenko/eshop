@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-
+import WebSocket from 'ws';
 import { getOperationAST } from 'graphql';
 import { createApolloFetch } from 'apollo-fetch';
 import { BatchHttpLink } from 'apollo-link-batch-http';
@@ -8,19 +8,12 @@ import { ApolloLink } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
-import WebSocket from 'ws';
-
-chai.use(chaiHttp);
-chai.should();
 
 let server;
 let apollo;
 
 beforeAll(async () => {
-  // server = require('../server').default;
-  // console.log(99999999);
-  // console.log(process.env.PORT);
-  // console.log(server);
+  chai.use(chaiHttp);
   const fetch = createApolloFetch({
     uri: `http://localhost:3004/graphql`
   });
@@ -44,8 +37,6 @@ beforeAll(async () => {
     link: ApolloLink.from([link]),
     cache
   });
-  /*  console.log(99999999);
-  console.log(apollo); */
 });
 
 afterAll(() => {
@@ -54,5 +45,6 @@ afterAll(() => {
   }
 });
 
-export const getServer = () => server;
+export const getServer = async () =>
+  (server = require('../test-server').server);
 export const getApollo = () => apollo;
