@@ -128,6 +128,12 @@ if (module.hot && module.hot.data && module.hot.data.store) {
   store = configureStore(history, {});
 }
 
+/* store.subscribe(() => {
+  console.log(store.getState());
+});
+
+store.dispatch({ type: 'TEST_ACTION', payload: 33 }); */
+
 if (module.hot) {
   module.hot.dispose(data => {
     // console.log("Saving Redux store:", JSON.stringify(store.getState()));
