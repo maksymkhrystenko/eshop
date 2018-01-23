@@ -9,7 +9,7 @@ Project with the most popular technologies:
 * [React Router v4](https://reacttraining.com/react-router/) as the router.
 * [Redux](https://github.com/reactjs/redux)'s futuristic [Flux](https://facebook.github.io/react/blog/2014/05/06/flux.html) implementation.
 * [Express](https://expressjs.com/) server.
-* [Webpack 3](https://webpack.js.org/) for bundling and [**"Tree-Shaking"**](https://webpack.js.org/guides/tree-shaking/) support.
+* [Webpack 3](https://webpack.js.org/) support.
 * [Babel](https://babeljs.io/) for ES6 and ES7 transpiling.
 * [React Hot Loader 3](https://github.com/gaearon/react-hot-loader) to tweak React components in real time.
 * [nodemon](https://nodemon.io/) to monitor for any changes in your node.js application and automatically restart the server.
@@ -84,41 +84,6 @@ I use [better-npm-run](https://github.com/benoror/better-npm-run) to manage the 
 `clean:all`|Remove the client/server bundled stuff and the coverage report.
 `clean:build`|Remove the `./public/assets` folder to clean the client bundled files.
 `clean:test`|Remove the `./coverage` folder to clean the code coverage report.
-
-
-## App Structure
-
-Here is the structure of the app, which serves as generally accepted guidelines and patterns for building scalable apps.
-
-```
-.
-├── public                            # Express server static path/Webpack bundled output
-│   └── favicon.ico                   # Favicon is placed in the same path with the main HTML page       
-├── src                               # App source code
-│   ├── config                        # App configuration settings
-│   │   ├── default.js                # Default settings
-│   │   ├── index.js                  # Configuration entry point
-│   │   └── prod.js                   # Production settings (overrides the default settings)
-│   ├── components                    # Reusable components (including scss/testing files)
-│   ├── containers                    # Container components (including assets/action/reducer/scss/testing files)
-│   ├── utils                         # App-wide utils (e.g. HTML component)
-│   ├── redux                         # Redux related configuration scripts
-│   │   ├── reducers.js               # The root reducer (registry and injection)
-│   │   └── store.js                  # Configure and instrument Redux store   
-│   ├── theme                         # App-wide style and vendor CSS framework
-│   ├── types                         # Flow types for actions, reducers and more
-│   ├── client.js                     # App bootstrap and rendering (webpack entry)
-│   ├── routes.js                     # Routes configuration for both client and server side
-│   └── server.js                     # Express server (with webpack dev/hot middlewares)                  
-├── tools                             # Project related configurations (testing/build etc.)
-│   ├── flow                          # Flow types, interface, module aliasing definitions
-│   ├── openBrowser                   # Utility for opening Google Chrome
-│   ├── jest                          # Jest CSS modules and assets mocks settings
-│   ├── webpack                       # Webpack settings
-│   │   ├── config.babel.js           # Webpack configuration
-│   │   └── WIT.config.js             # Webpack Isomorphic Tools configuration file        
-└── index.js                          # App entry point
-```
 
 ## Troubleshooting
 

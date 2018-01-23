@@ -1,6 +1,8 @@
 .DS_Store
 *.log
 
+.tmp
+.idea
 coverage
 node_modules
 public/assets
